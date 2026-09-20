@@ -1,0 +1,3150 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Subbayya Gari Hotel | Famous Andhra Pure Veg Butta Bhojanam Since 1950</title>
+  
+  <!-- SEO & Social Meta Tags -->
+  <meta name="description" content="Experience legendary Godavari vegetarian hospitality at Subbayya Gari Hotel. Serving the iconic Butta Bhojanam, unlimited banana leaf meals, pure ghee podis, Gutti Vankaya, and Atreyapuram Pootharekulu." />
+  <meta name="keywords" content="Subbayya Gari Hotel, Butta Bhojanam, Andhra Vegetarian Meals, Pure Veg Restaurant Hyderabad, Kakinada Subbayya Hotel, KPHB Kukatpally, Banana Leaf Thali, Godavari Food" />
+  <meta property="og:title" content="Subbayya Gari Hotel - Iconic Andhra Butta Bhojanam" />
+  <meta property="og:description" content="Authentic East Godavari vegetarian meals served with pure warm ghee and boundless love since 1950." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?auto=format&fit=crop&w=1200&q=80" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧺</text></svg>" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ==========================================================================
+       TOP ANNOUNCEMENT BAR
+       ========================================================================== -->
+  <aside class="announcement-bar" aria-label="Announcement">
+    <div>
+      <span class="announcement-badge">TRADITION SINCE 1950</span>
+      <span>Authentic East Godavari Pure Vegetarian Bhojanam with Overflowing Warm Ghee!</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <a href="#catering">Book Event Catering 🍛</a>
+      <span>|</span>
+      <a href="tel:+919010888842">📞 Helpline: 9010 888 842</a>
+    </div>
+  </aside>
+
+  <!-- ==========================================================================
+       APP MODE SWITCHER (Customer, Loyalty, Table QR, Manager CRM)
+       ========================================================================== -->
+  <div class="app-mode-bar" id="app-mode-bar" role="navigation" aria-label="App Role Switcher">
+    <button class="mode-btn active" onclick="switchAppMode('guest')" id="mode-btn-guest">
+      <span>🍽️ Feast & Order</span>
+    </button>
+    <button class="mode-btn" onclick="switchAppMode('loyalty')" id="mode-btn-loyalty">
+      <span>👑 Godavari Loyalty</span>
+    </button>
+    <button class="mode-btn" onclick="switchAppMode('table-qr')" id="mode-btn-table-qr">
+      <span>📱 Table QR & Ghee Bell</span>
+    </button>
+    <button class="mode-btn" onclick="switchAppMode('crm')" id="mode-btn-crm">
+      <span>📊 Manager CRM & Analytics</span>
+    </button>
+  </div>
+
+  <!-- ==========================================================================
+       STICKY HEADER / NAVBAR
+       ========================================================================== -->
+  <header class="site-header" id="site-header">
+    <div class="container nav-container">
+      
+      <!-- Brand Logo -->
+      <a href="#hero" class="brand-logo" aria-label="Subbayya Gari Hotel Home">
+        <div class="logo-emblem">
+          <span>సు</span>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">SUBBAYYA GARI</span>
+          <span class="brand-subtitle">HOTEL • ESTD 1950 • KAKINADA</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Menu -->
+      <nav aria-label="Main Navigation">
+        <ul class="nav-menu" id="nav-menu">
+          <li><a href="#hero" class="nav-link active">Home</a></li>
+          <li><a href="#unbox" class="nav-link">Butta Bhojanam</a></li>
+          <li><a href="#menu" class="nav-link">Our Menu</a></li>
+          <li><a href="#reservations" class="nav-link">Reserve Table</a></li>
+          <li><a href="#catering" class="nav-link">Catering</a></li>
+          <li><a href="#branches" class="nav-link">Branches</a></li>
+          <li><a href="#reviews" class="nav-link">Reviews</a></li>
+        </ul>
+      </nav>
+
+      <!-- Header Action Items -->
+      <div class="header-actions">
+        <!-- Quick Branch Selector with Interactive Popover -->
+        <div class="branch-selector-wrapper" id="branch-selector-wrapper">
+          <button class="branch-select-pill" id="branch-select-pill" onclick="toggleBranchPopover()" aria-label="Change Dining Branch" title="Click to Change Branch">
+            <span class="status-dot"></span>
+            <span id="active-branch-pill-name">Jubilee Hills, Hyd</span>
+            <span style="font-size: 0.75rem;">▾</span>
+          </button>
+
+          <!-- Branch Dropdown Popover -->
+          <div class="branch-dropdown-popover" id="branch-dropdown-popover" style="max-height: 380px; overflow-y: auto;">
+            <div class="branch-popover-header">
+              <span>Select Dining Branch</span>
+              <span style="color: var(--color-primary); font-weight: 700;">14 Outlets</span>
+            </div>
+
+            <!-- HYDERABAD -->
+            <div style="padding: 0.35rem 0.75rem; font-size: 0.7rem; font-weight: 800; color: var(--color-gold); background: var(--color-surface-muted); text-transform: uppercase; letter-spacing: 0.05em;">Hyderabad & Telangana</div>
+
+            <div class="branch-option-item selected" data-branch="kphb" onclick="selectActiveBranch('kphb')">
+              <div class="branch-opt-info">
+                <div class="branch-opt-title">KPHB Colony, Hyderabad</div>
+                <div class="branch-opt-sub">MIG 295, Rd No. 4, Kukatpally</div>
+              </div>
+              <span class="branch-opt-check" id="check-kphb">✓</span>
+            </div>
+
+            <div class="branch-option-item" data-branch="kondapur" onclick="selectActiveBranch('kondapur')">
+              <div class="branch-opt-info">
+                <div class="branch-opt-title">Kondapur / Hitech City</div>
+                <div class="branch-opt-sub">Raghavendra Colony, Opp Harsha Toyota</div>
+              </div>
+              <span class="branch-opt-check" id="check-kondapur" style="display: none;">✓</span>
+            </div>
+
+            <div class="branch-option-item" data-branch="ameerpet" onclick="selectActiveBranch('ameerpet')">
+              <div class="branch-opt-info">
+                <div class="branch-opt-title">Ameerpet, Hyderabad</div>
+                <div class="branch-opt-sub">Beside Metro Pillar 1070, Behind VRK Silks</div>
+              </div>
+              <span class="branch-opt-check" id="check-ameerpet" style="display: none;">✓</span>
+            </div>
+
+            <div class="branch-option-item" data-branch="jubilee-hills" onclick="selectActiveBranch('jubilee-hills')">
+              <div class="branch-opt-info">
+                <div class="branch-opt-title">Jubilee Hills, Hyderabad</div>
+                <div class="branch-opt-sub">Road No. 36, Near Peddamma Temple</div>
+              </div>
+              <span class="branch-opt-check" id="check-jubilee-hills" style="display: none;">✓</span>
+            </div>
+
+            <div class="branch-option-item" data-branch="malakpet" onclick="selectActiveBranch('malakpet')">
+              <div class="branch-opt-info">
+                <div class="branch-opt-title">Malakpet, Hyderabad</div>
+                <div class="branch-opt-sub">Beside Yashoda Hospital, Main Road</div>
+              </div>
+              <span class="branch-opt-check" id="check-malakpet" style="display: none;">✓</span>
+            </div>
+
+            <div class="branch-option-item" data-branch="vanasthalipuram" onclick="selectActiveBranch('vanasthalipuram')">
+              <div class="branch-opt-info">
+                <div class="branch-opt-title">Vanasthalipuram, Hyderabad</div>
+                <div class="branch-opt-sub">Sahara Road, Near Rythu Bazar</div>
+              </div>
+              <span class="branch-opt-check" id="check-vanasthalipuram" style="display: none;">✓</span>
+            </div>
+
+            <div class="branch-option-item" data-branch="suryapet" onclick="selectActiveBranch('suryapet')">
+              <div class="branch-opt-info">
+                <div class="branch-opt-title">Suryapet Highway Branch</div>
+                <div class="branch-opt-sub">NH-65 Highway, Near Janagaon Cross</div>
+              </div>
+              <span class="branch-opt-check" id="check-suryapet" style="display: none;">✓</span>
+            </div>
+
+            <!-- ANDHRA PRADESH -->
+            <div style="padding: 0.35rem 0.75rem; font-size: 0.7rem; font-weight: 800; color: var(--color-gold); background: var(--color-surface-muted); text-transform: uppercase; letter-spacing: 0.05em;">Andhra Pradesh Outlets</div>
+
+            <div class="branch-option-item" data-branch="kakinada" onclick="selectActiveBranch('kakinada')">
+              <div class="branch-opt-info">
+                <div class="branch-opt-title">Heritage Flagship, Kakinada</div>
+                <div class="branch-opt-sub">Ramaraopeta, Since 1950 Original Hub</div>
+              </div>
+              <span class="branch-opt-check" id="check-kakinada" style="display: none;">✓</span>
+            </div>
+
+            <div class="branch-option-item" data-branch="vizag-dwarakanagar" onclick="selectActiveBranch('vizag-dwarakanagar')">
+              <div class="branch-opt-info">
+                <div class="branch-opt-title">Dwaraka Nagar, Vizag</div>
+                <div class="branch-opt-sub">47-10-18, Diamond Park Road</div>
+              </div>
+              <span class="branch-opt-check" id="check-vizag-dwarakanagar" style="display: none;">✓</span>
+            </div>
+
+            <div class="branch-option-item" data-branch="vizag-gajuwaka" onclick="selectActiveBranch('vizag-gajuwaka')">
+              <div class="branch-opt-info">
+                <div class="branch-opt-title">Gajuwaka, Visakhapatnam</div>
+                <div class="branch-opt-sub">Main Road, Old Gajuwaka Junction</div>
+              </div>
+              <span class="branch-opt-check" id="check-vizag-gajuwaka" style="display: none;">✓</span>
+            </div>
+
+            <div class="branch-option-item" data-branch="vijayawada" onclick="selectActiveBranch('vijayawada')">
+              <div class="branch-opt-info">
+                <div class="branch-opt-title">MG Road, Vijayawada</div>
+                <div class="branch-opt-sub">Near Benz Circle, Bandar Road</div>
+              </div>
+              <span class="branch-opt-check" id="check-vijayawada" style="display: none;">✓</span>
+            </div>
+
+            <div class="branch-option-item" data-branch="rajahmundry" onclick="selectActiveBranch('rajahmundry')">
+              <div class="branch-opt-info">
+                <div class="branch-opt-title">Pushkar Ghat, Rajahmundry</div>
+                <div class="branch-opt-sub">Godavari Bund, Main Road</div>
+              </div>
+              <span class="branch-opt-check" id="check-rajahmundry" style="display: none;">✓</span>
+            </div>
+
+            <!-- BENGALURU -->
+            <div style="padding: 0.35rem 0.75rem; font-size: 0.7rem; font-weight: 800; color: var(--color-gold); background: var(--color-surface-muted); text-transform: uppercase; letter-spacing: 0.05em;">Bengaluru Outlets</div>
+
+            <div class="branch-option-item" data-branch="bangalore-marathahalli" onclick="selectActiveBranch('bangalore-marathahalli')">
+              <div class="branch-opt-info">
+                <div class="branch-opt-title">Marathahalli, Bengaluru</div>
+                <div class="branch-opt-sub">Outer Ring Road, Opp Innovative Multiplex</div>
+              </div>
+              <span class="branch-opt-check" id="check-bangalore-marathahalli" style="display: none;">✓</span>
+            </div>
+
+            <div class="branch-option-item" data-branch="bangalore-koramangala" onclick="selectActiveBranch('bangalore-koramangala')">
+              <div class="branch-opt-info">
+                <div class="branch-opt-title">Koramangala, Bengaluru</div>
+                <div class="branch-opt-sub">80 Feet Road, 4th Block</div>
+              </div>
+              <span class="branch-opt-check" id="check-bangalore-koramangala" style="display: none;">✓</span>
+            </div>
+
+            <div class="branch-option-item" data-branch="bangalore-brookefield" onclick="selectActiveBranch('bangalore-brookefield')">
+              <div class="branch-opt-info">
+                <div class="branch-opt-title">Brookefield / Whitefield</div>
+                <div class="branch-opt-sub">ITPL Main Road, AECS Layout</div>
+              </div>
+              <span class="branch-opt-check" id="check-bangalore-brookefield" style="display: none;">✓</span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Theme Toggle -->
+        <button class="theme-toggle-btn" id="theme-toggle-btn" aria-label="Toggle Dark or Light Mode" title="Toggle Light / Dark Mode">
+          🌙
+        </button>
+
+        <!-- Cart Drawer Toggle -->
+        <div class="cart-btn-wrap">
+          <button class="cart-toggle-btn" id="cart-toggle-btn" onclick="toggleCart(true)" aria-label="View Plate / Cart">
+            🧺
+            <span class="cart-count-badge" id="cart-count-badge" style="display: none;">0</span>
+          </button>
+        </div>
+
+        <!-- User Account / Login Button -->
+        <div id="auth-header-container" style="display: flex; align-items: center;">
+          <button class="btn btn-outline-gold btn-sm" id="auth-header-btn" onclick="openAuthModal('login')" style="padding: 0.4rem 0.8rem; font-size: 0.82rem; font-weight: 700; display: flex; align-items: center; gap: 0.35rem; border-radius: 50px;">
+            <span>👤</span>
+            <span id="auth-header-btn-text">Login</span>
+          </button>
+        </div>
+
+        <!-- CTA Button -->
+        <a href="#reservations" class="btn btn-primary btn-sm" style="display: inline-flex;">
+          <span>Book Leaf Table</span>
+        </a>
+
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open Navigation Menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       HERO SECTION
+       ========================================================================== -->
+  <main>
+    <section class="hero-section" id="hero">
+      <div class="container hero-grid">
+        
+        <!-- Left Content -->
+        <div class="hero-content">
+          <div class="hero-badge-row">
+            <span class="badge badge-gold">✨ 74+ Years of Culinary Heritage</span>
+            <span class="badge badge-green">🌿 100% Pure Vegetarian</span>
+          </div>
+
+          <h1 class="hero-title">
+            The Soul of Andhra <span class="highlight-gold">Bhojanam</span>, Served with <span class="highlight-green">Pure Ghee</span> & Boundless Love.
+          </h1>
+
+          <p class="hero-tagline">
+            Welcome to Subbayya Gari Hotel — home to the world-renowned <strong>Butta Bhojanam</strong>. Experience the true warmth of East Godavari tradition: fresh banana leaf meals, steaming Sona Masoori rice, fragrant podis, and age-old heirloom curries.
+          </p>
+
+          <div class="hero-ctas">
+            <a href="#menu" class="btn btn-gold btn-lg">
+              <span>Order Butta Bhojanam 🧺</span>
+            </a>
+            <a href="#unbox" class="btn btn-outline btn-lg">
+              <span>Unbox The Feast 🍃</span>
+            </a>
+          </div>
+
+          <!-- Hero Metrics -->
+          <div class="hero-stats">
+            <div class="stat-item">
+              <span class="stat-num">1950</span>
+              <span class="stat-label">Founded in Kakinada</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-num">20+</span>
+              <span class="stat-label">Items in Butta Feast</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-num">10M+</span>
+              <span class="stat-label">Happy Guests Fed</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Visual Showcase -->
+        <div class="hero-visual">
+          <div class="hero-main-card">
+            <div class="hero-image-wrapper">
+              <img src="https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?auto=format&fit=crop&w=1000&q=80" alt="Subbayya Gari Authentic Butta Bhojanam" />
+              <div class="hero-img-overlay">
+                <div class="badge badge-gold" style="align-self: flex-start; margin-bottom: 0.5rem;">SIGNATURE OFFERING</div>
+                <h3 class="hero-overlay-title">The Godavari Royal Butta Feast</h3>
+                <p class="hero-overlay-desc">Packed in natural handwoven bamboo baskets with fresh banana leaves to lock in warmth and flavor.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Floating Badge 1: Pure Ghee -->
+          <div class="floating-badge badge-top-right">
+            <div class="float-icon-wrap ghee-gold">🧈</div>
+            <div class="float-text">
+              <span class="float-title">Subbayya Gari Ghee</span>
+              <span class="float-subtitle">Unlimited Warm Farm Ghee</span>
+            </div>
+          </div>
+
+          <!-- Floating Badge 2: Banana Leaf Dining -->
+          <div class="floating-badge badge-bottom-left">
+            <div class="float-icon-wrap leaf-green">🌿</div>
+            <div class="float-text">
+              <span class="float-title">Athidhi Devo Bhava</span>
+              <span class="float-subtitle">Unlimited Banana Leaf Dining</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         HERITAGE STRIP TICKER
+         ========================================================================== -->
+    <section class="heritage-strip" aria-label="Heritage Highlights">
+      <div class="container">
+        <div class="strip-items">
+          <div class="strip-item">
+            <span class="strip-icon">🏺</span>
+            <span>Handmade Stone-ground Podis</span>
+          </div>
+          <div class="strip-item">
+            <span class="strip-icon">🍃</span>
+            <span>Traditional Banana Leaf Feast</span>
+          </div>
+          <div class="strip-item">
+            <span class="strip-icon">🥞</span>
+            <span>Hot Nethi Bobbatlu & Kaja</span>
+          </div>
+          <div class="strip-item">
+            <span class="strip-icon">❤️</span>
+            <span>Godavari Athidhi Hospitality</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SIGNATURE INTERACTIVE "UNBOX THE BUTTA BHOJANAM"
+         ========================================================================== -->
+    <section class="section-padding" id="unbox">
+      <div class="container">
+        
+        <div class="section-header">
+          <span class="section-pretitle">The Legend of Andhra Cuisine</span>
+          <h2 class="section-title">Unbox The Iconic Butta Bhojanam</h2>
+          <p class="section-desc">
+            Click on any item on the traditional banana leaf plate below to discover the authentic spices, health benefits, and century-old culinary secrets packed inside our handwoven bamboo basket.
+          </p>
+        </div>
+
+        <div class="butta-experience">
+          <div class="butta-grid">
+            
+            <!-- Left: Interactive Banana Leaf Plate Visual -->
+            <div class="butta-interactive-preview">
+              <div class="butta-basket-visual">
+                <div class="banana-leaf-plate">
+                  
+                  <!-- Hotspot 1: Podis -->
+                  <div class="butta-dish-hotspot" data-item="kandiPodi" title="Kandi Podi & Nalla Karam">
+                    <span class="hotspot-icon">🌶️</span>
+                    <span class="hotspot-label">Kandi Podi</span>
+                  </div>
+
+                  <!-- Hotspot 2: Gutti Vankaya -->
+                  <div class="butta-dish-hotspot" data-item="guttiVankaya" title="Gutti Vankaya">
+                    <span class="hotspot-icon">🍆</span>
+                    <span class="hotspot-label">Vankaya</span>
+                  </div>
+
+                  <!-- Hotspot 3: Gongura -->
+                  <div class="butta-dish-hotspot" data-item="gongura" title="Godavari Gongura">
+                    <span class="hotspot-icon">🍃</span>
+                    <span class="hotspot-label">Gongura</span>
+                  </div>
+
+                  <!-- Hotspot 4: Perugu Gare -->
+                  <div class="butta-dish-hotspot" data-item="peruguGare" title="Perugu Garelu">
+                    <span class="hotspot-icon">🍩</span>
+                    <span class="hotspot-label">Dahi Vada</span>
+                  </div>
+
+                  <!-- Center Hotspot: Steaming Ghee Rice (Default Active) -->
+                  <div class="butta-dish-hotspot center-hotspot active" data-item="gheeRice" title="Sona Masoori Rice & Melted Ghee">
+                    <span class="hotspot-icon">🍚</span>
+                    <span class="hotspot-label" style="font-size: 0.72rem; color: #B45309;">Annam & Ghee</span>
+                  </div>
+
+                  <!-- Hotspot 5: Majjiga Pulusu -->
+                  <div class="butta-dish-hotspot" data-item="majjigaPulusu" title="Majjiga Pulusu & Charu">
+                    <span class="hotspot-icon">🥣</span>
+                    <span class="hotspot-label">Pulusu</span>
+                  </div>
+
+                  <!-- Hotspot 6: Bobbatlu -->
+                  <div class="butta-dish-hotspot" data-item="bobbatlu" title="Nethi Bobbatlu">
+                    <span class="hotspot-icon">🥞</span>
+                    <span class="hotspot-label">Bobbatlu</span>
+                  </div>
+
+                  <!-- Hotspot 7: Eco Butta -->
+                  <div class="butta-dish-hotspot" data-item="bananaLeaf" title="Handwoven Bamboo Butta">
+                    <span class="hotspot-icon">🧺</span>
+                    <span class="hotspot-label">Eco Butta</span>
+                  </div>
+
+                  <!-- Hotspot 8: Extra Delicacies -->
+                  <div class="butta-dish-hotspot" data-item="kandiPodi" title="Special Tadka Pappu">
+                    <span class="hotspot-icon">🍛</span>
+                    <span class="hotspot-label">Pappu</span>
+                  </div>
+
+                </div>
+              </div>
+              <div style="text-align: center; margin-top: 1rem; font-size: 0.85rem; color: var(--color-text-muted);">
+                👆 Tap on any compartment above to inspect ingredients & story
+              </div>
+            </div>
+
+            <!-- Right: Item Detail Card -->
+            <div class="butta-item-detail">
+              <div class="detail-badge-group">
+                <span class="badge badge-gold" id="unbox-item-tag">Foundation of Bhojanam</span>
+                <span class="badge badge-green">Pure Vegetarian</span>
+              </div>
+
+              <div>
+                <h3 class="detail-item-title" id="unbox-item-title">Sona Masoori Rice & Melted Pure Ghee</h3>
+                <span class="detail-item-telugu" id="unbox-item-telugu">వేడి అన్నం & కమ్మని నెయ్యి</span>
+              </div>
+
+              <p class="detail-item-description" id="unbox-item-desc">
+                Steaming hot fragrant aged Sona Masoori rice served as the pure canvas for our home-churned Godavari golden ghee. First morsel with Kandi Podi is pure bliss.
+              </p>
+
+              <div class="detail-highlights">
+                <div class="highlight-box">
+                  <span class="highlight-box-icon">⚡</span>
+                  <div>
+                    <span class="highlight-box-text">Energy Value</span>
+                    <p style="font-size: 0.8rem; color: var(--color-text-muted);" id="unbox-item-calories">340 kcal per serving</p>
+                  </div>
+                </div>
+
+                <div class="highlight-box">
+                  <span class="highlight-box-icon">📜</span>
+                  <div>
+                    <span class="highlight-box-text">East Godavari Heritage</span>
+                    <p style="font-size: 0.8rem; color: var(--color-text-muted);" id="unbox-item-tradition">Served first to bless the palate with sattvic nourishment.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="butta-package-meta">
+                <div class="butta-price-tag">
+                  <span class="price-strike">₹599 Special</span>
+                  <span class="price-current">₹499 (Feeds 3-4 Persons)</span>
+                </div>
+                <button class="btn btn-primary btn-sm" onclick="addToCart('bb-01')">
+                  <span>Add Butta to Plate 🧺</span>
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         OUR MENU & ONLINE ORDERING SECTION
+         ========================================================================== -->
+    <section class="section-padding menu-section" id="menu">
+      <div class="container">
+        
+        <div class="section-header">
+          <span class="section-pretitle">Fresh Daily Preparation</span>
+          <h2 class="section-title">The Godavari Pure Veg Menu</h2>
+          <p class="section-desc">
+            Handcrafted with freshly harvested ingredients, stone-ground podis, and farm-fresh pure ghee. Prepared fresh every morning with traditional Andhra recipes.
+          </p>
+        </div>
+
+        <!-- Menu Filter Controls -->
+        <div class="menu-filter-container">
+          
+          <!-- Search & Dietary Filters Toolbar -->
+          <div class="menu-toolbar">
+            <div class="search-input-wrapper">
+              <span class="search-icon">🔍</span>
+              <input 
+                type="text" 
+                id="menu-search-input" 
+                class="menu-search-input" 
+                placeholder="Search dishes (e.g. Butta Bhojanam, Podi, Gongura, Bobbatlu...)" 
+                aria-label="Search dishes"
+              />
+            </div>
+
+            <div class="filter-tags-row">
+              <button class="diet-filter-pill active" data-filter="all">All Dishes</button>
+              <button class="diet-filter-pill" data-filter="bestseller">⭐ Bestsellers</button>
+              <button class="diet-filter-pill" data-filter="chef-special">👑 Chef Special</button>
+              <button class="diet-filter-pill" data-filter="jain">🌱 Jain Available</button>
+              <button class="diet-filter-pill" data-filter="mild">🟢 Mild Spice</button>
+            </div>
+          </div>
+
+          <!-- Category Tabs Bar -->
+          <div class="menu-categories-scroll" role="tablist">
+            <button class="category-tab active" data-category="all" role="tab">All Menu (90+)</button>
+            <button class="category-tab" data-category="butta" role="tab">🧺 Butta Bhojanam & Thalis</button>
+            <button class="category-tab" data-category="curries" role="tab">🍛 Curries & Vepullu (40+)</button>
+            <button class="category-tab" data-category="appadalu" role="tab">🫓 Godavari Appadalu (₹100)</button>
+            <button class="category-tab" data-category="podis" role="tab">🌶️ Godavari Powders (₹75)</button>
+            <button class="category-tab" data-category="pickles" role="tab">🍃 Pachallu & Pickles (₹155)</button>
+            <button class="category-tab" data-category="sweets" role="tab">🥞 Sweets (Jangri ₹129)</button>
+            <button class="category-tab" data-category="rice" role="tab">🍚 Pulao & Tiffins</button>
+          </div>
+
+          <!-- View Mode Switcher -->
+          <div class="menu-view-switcher">
+            <span class="view-switch-label">View Style:</span>
+            <div class="view-switch-btns">
+              <button class="view-btn active" id="view-toggle-cards" onclick="switchMenuView('cards')">
+                <span>🍱 Card Menu</span>
+              </button>
+              <button class="view-btn" id="view-toggle-board" onclick="switchMenuView('board')">
+                <span>📜 Authentic Rate Board (Pickles & Podis)</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Authentic Rate Board View (Modeled after original hotel price board) -->
+        <div id="heritage-rate-board" class="heritage-rate-board" style="display: none;">
+          
+          <!-- Top Heritage Sweet Banner -->
+          <div class="rate-board-top-item">
+            <div class="rb-top-badge">⭐ SPECIAL HERITAGE SWEET</div>
+            <div class="rb-top-content">
+              <div class="rb-top-left">
+                <span class="rb-top-sno">65</span>
+                <span class="rb-top-title">Jangri 250GR</span>
+                <span class="rb-top-telugu">జాంగ్రీ (250 గ్రా.)</span>
+              </div>
+              <div class="rb-top-right">
+                <span class="rb-top-price">₹129</span>
+                <button class="btn btn-gold btn-sm" onclick="addToCart('sweet-jangri')">
+                  <span>+ Add to Plate</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Rate Board Category Filter Tabs -->
+          <div class="rb-nav-tabs">
+            <button class="rb-tab-btn active" onclick="filterRateBoard('all')">All Price Boards</button>
+            <button class="rb-tab-btn" onclick="filterRateBoard('curries')">🍛 Daily Curries (30)</button>
+            <button class="rb-tab-btn" onclick="filterRateBoard('appadalu')">🫓 Appadalu (4)</button>
+            <button class="rb-tab-btn" onclick="filterRateBoard('meals')">🍽️ Meals & Curries (21)</button>
+            <button class="rb-tab-btn" onclick="filterRateBoard('sweets')">🥞 Sweets (7)</button>
+            <button class="rb-tab-btn" onclick="filterRateBoard('pickles')">🍃 Pickles (14)</button>
+            <button class="rb-tab-btn" onclick="filterRateBoard('powders')">🌶️ Powders (11)</button>
+          </div>
+
+          <div class="rate-board-grid">
+            
+            <!-- Table: Curries (30 Items) -->
+            <div class="rate-board-card" data-rb="curries">
+              <div class="rate-board-header orange-header">
+                <span class="rb-col-sno">Sno</span>
+                <span class="rb-col-name">CURRIES</span>
+                <span class="rb-col-price">PRICE</span>
+              </div>
+              <div class="rate-board-list">
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">1</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">MIRCHI MASALA CURRY</span>
+                    <span class="rb-row-sub">మిర్చి మసాలా కూర</span>
+                  </div>
+                  <span class="rb-row-price">40</span>
+                  <button class="rb-row-add" onclick="addToCart('curry-mirchi-masala')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">2</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">VANKAY BATANY CURRY</span>
+                    <span class="rb-row-sub">వంకాయ బఠానీ కూర</span>
+                  </div>
+                  <span class="rb-row-price">40</span>
+                  <button class="rb-row-add" onclick="addToCart('curry-vankay-batany')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">3</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">CAPSICUM MEALMAKER</span>
+                    <span class="rb-row-sub">క్యాప్సికం మీల్‌మేకర్</span>
+                  </div>
+                  <span class="rb-row-price">40</span>
+                  <button class="rb-row-add" onclick="addToCart('curry-capsicum-mealmaker')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">4</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">TAMOTA CURRY</span>
+                    <span class="rb-row-sub">టమోటా కూర</span>
+                  </div>
+                  <span class="rb-row-price">40</span>
+                  <button class="rb-row-add" onclick="addToCart('curry-tamota')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">5</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">KAKARAKAY FRY</span>
+                    <span class="rb-row-sub">కాకరకాయ వేపుడు</span>
+                  </div>
+                  <span class="rb-row-price">40</span>
+                  <button class="rb-row-add" onclick="addToCart('curry-kakarakay-fry')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">6</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">CABBAGE</span>
+                    <span class="rb-row-sub">క్యాబేజీ కూర</span>
+                  </div>
+                  <span class="rb-row-price">40</span>
+                  <button class="rb-row-add" onclick="addToCart('curry-cabbage')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">7</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">ALU FRY</span>
+                    <span class="rb-row-sub">బంగాళాదుంప వేపుడు</span>
+                  </div>
+                  <span class="rb-row-price">40</span>
+                  <button class="rb-row-add" onclick="addToCart('curry-alu-fry')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">8</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">BENDAKAY PAKODI</span>
+                    <span class="rb-row-sub">బెండకాయ పకోడీ</span>
+                  </div>
+                  <span class="rb-row-price">40</span>
+                  <button class="rb-row-add" onclick="addToCart('curry-bendakay-pakodi')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">9</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">PANASA MUKKALA CURRY</span>
+                    <span class="rb-row-sub">పనస ముక్కల కూర (Jackfruit)</span>
+                  </div>
+                  <span class="rb-row-price">140</span>
+                  <button class="rb-row-add" onclick="addToCart('curry-panasa-mukkala')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">10</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">MASHROOM CURRY</span>
+                    <span class="rb-row-sub">మష్రూమ్ కూర</span>
+                  </div>
+                  <span class="rb-row-price">140</span>
+                  <button class="rb-row-add" onclick="addToCart('curry-mashroom')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">11</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">PANNER CURRY</span>
+                    <span class="rb-row-sub">పన్నీర్ కూర</span>
+                  </div>
+                  <span class="rb-row-price">140</span>
+                  <button class="rb-row-add" onclick="addToCart('curry-panner')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">12</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">CHIKKUDUKAY CURRY</span>
+                    <span class="rb-row-sub">చిక్కుడుకాయ కూర</span>
+                  </div>
+                  <span class="rb-row-price">40</span>
+                  <button class="rb-row-add" onclick="addToCart('curry-chikkudukay')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">13</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">ALU CURRY</span>
+                    <span class="rb-row-sub">ఆలుగడ్డ కూర</span>
+                  </div>
+                  <span class="rb-row-price">40</span>
+                  <button class="rb-row-add" onclick="addToCart('curry-alu-curry')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">14</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">MULLAKADA CURRY</span>
+                    <span class="rb-row-sub">మునగకాయ కూర</span>
+                  </div>
+                  <span class="rb-row-price">40</span>
+                  <button class="rb-row-add" onclick="addToCart('curry-mullakada')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">15</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">DONDAKAY CURRY</span>
+                    <span class="rb-row-sub">దొండకాయ కూర</span>
+                  </div>
+                  <span class="rb-row-price">40</span>
+                  <button class="rb-row-add" onclick="addToCart('curry-dondakay')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">16</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">GOBI CURRY</span>
+                    <span class="rb-row-sub">గోబీ కూర</span>
+                  </div>
+                  <span class="rb-row-price">40</span>
+                  <button class="rb-row-add" onclick="addToCart('curry-gobi')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">17</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">DONDAKAY FRY</span>
+                    <span class="rb-row-sub">దొండకాయ వేపుడు</span>
+                  </div>
+                  <span class="rb-row-price">40</span>
+                  <button class="rb-row-add" onclick="addToCart('curry-dondakay-fry')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">18</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">BENDAKAY CURRY</span>
+                    <span class="rb-row-sub">బెండకాయ కూర</span>
+                  </div>
+                  <span class="rb-row-price">40</span>
+                  <button class="rb-row-add" onclick="addToCart('curry-bendakay')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">19</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">ARATIKAYA CURRY</span>
+                    <span class="rb-row-sub">అరటికాయ కూర</span>
+                  </div>
+                  <span class="rb-row-price">40</span>
+                  <button class="rb-row-add" onclick="addToCart('curry-aratikaya')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">20</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">BHEERAKAYA</span>
+                    <span class="rb-row-sub">బీరకాయ కూర</span>
+                  </div>
+                  <span class="rb-row-price">40</span>
+                  <button class="rb-row-add" onclick="addToCart('curry-bheerakaya')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">21</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">VANKAY PAKODI</span>
+                    <span class="rb-row-sub">వంకాయ పకోడీ</span>
+                  </div>
+                  <span class="rb-row-price">40</span>
+                  <button class="rb-row-add" onclick="addToCart('curry-vankay-pakodi')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">22</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">GOTTI VANKAY</span>
+                    <span class="rb-row-sub">గుత్తి వంకాయ</span>
+                  </div>
+                  <span class="rb-row-price">40</span>
+                  <button class="rb-row-add" onclick="addToCart('curry-gotti-vankay')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">23</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">PUNUGULA CURRY</span>
+                    <span class="rb-row-sub">పునుగుల కూర</span>
+                  </div>
+                  <span class="rb-row-price">40</span>
+                  <button class="rb-row-add" onclick="addToCart('curry-punugula')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">24</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">KANDA CURRY</span>
+                    <span class="rb-row-sub">కంద బచ్చలి కూర</span>
+                  </div>
+                  <span class="rb-row-price">40</span>
+                  <button class="rb-row-add" onclick="addToCart('curry-kanda')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">25</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">DONDAKAY PAKODI</span>
+                    <span class="rb-row-sub">దొండకాయ పకోడీ</span>
+                  </div>
+                  <span class="rb-row-price">40</span>
+                  <button class="rb-row-add" onclick="addToCart('curry-dondakay-pakodi')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">26</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">GONGURA MAKARANI</span>
+                    <span class="rb-row-sub">గోంగూర మకరోని</span>
+                  </div>
+                  <span class="rb-row-price">40</span>
+                  <button class="rb-row-add" onclick="addToCart('curry-gongura-makarani')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">27</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">CURD</span>
+                    <span class="rb-row-sub">గడ్డ పెరుగు</span>
+                  </div>
+                  <span class="rb-row-price">40</span>
+                  <button class="rb-row-add" onclick="addToCart('curry-curd-daily')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">28</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">MAJJIGA PULUSU</span>
+                    <span class="rb-row-sub">మజ్జిగ పులుసు</span>
+                  </div>
+                  <span class="rb-row-price">40</span>
+                  <button class="rb-row-add" onclick="addToCart('curry-majjiga-pulusu-daily')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">29</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">RASAM</span>
+                    <span class="rb-row-sub">మిరియాల చారు</span>
+                  </div>
+                  <span class="rb-row-price">30</span>
+                  <button class="rb-row-add" onclick="addToCart('curry-rasam-daily')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">30</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">SAMBAR</span>
+                    <span class="rb-row-sub">గోదావరి సాంబారు</span>
+                  </div>
+                  <span class="rb-row-price">40</span>
+                  <button class="rb-row-add" onclick="addToCart('curry-sambar-daily')" title="Add to plate">+</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Table: Appadalu (4 Items) -->
+            <div class="rate-board-card" data-rb="appadalu">
+              <div class="rate-board-header orange-header">
+                <span class="rb-col-sno">Sno</span>
+                <span class="rb-col-name">APPADALU</span>
+                <span class="rb-col-price">PRICE</span>
+              </div>
+              <div class="rate-board-list">
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">1</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">PESARA APPADALU</span>
+                    <span class="rb-row-sub">పెసర అప్పడాలు (Moong Dal)</span>
+                  </div>
+                  <span class="rb-row-price">100</span>
+                  <button class="rb-row-add" onclick="addToCart('appadalu-pesara')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">2</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">KARAM APPADALU</span>
+                    <span class="rb-row-sub">కారం అప్పడాలు (Spicy Chilli)</span>
+                  </div>
+                  <span class="rb-row-price">100</span>
+                  <button class="rb-row-add" onclick="addToCart('appadalu-karam')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">3</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">NUVVULA APPADALU</span>
+                    <span class="rb-row-sub">నువ్వుల అప్పడాలు (Sesame)</span>
+                  </div>
+                  <span class="rb-row-price">100</span>
+                  <button class="rb-row-add" onclick="addToCart('appadalu-nuvvula')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">4</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">KANDI APPADALU</span>
+                    <span class="rb-row-sub">కంది అప్పడాలు (Toor Dal)</span>
+                  </div>
+                  <span class="rb-row-price">100</span>
+                  <button class="rb-row-add" onclick="addToCart('appadalu-kandi')" title="Add to plate">+</button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Table 1: Meals and Curries -->
+            <div class="rate-board-card" data-rb="meals">
+              <div class="rate-board-header">
+                <span class="rb-col-sno">Sno</span>
+                <span class="rb-col-name">Meals and Curries</span>
+                <span class="rb-col-price">Price</span>
+              </div>
+              <div class="rate-board-list">
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">1</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Butta Bojanam</span>
+                    <span class="rb-row-sub">బుట్ట భోజనం</span>
+                  </div>
+                  <span class="rb-row-price">515</span>
+                  <button class="rb-row-add" onclick="addToCart('meal-butta')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">2</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Single Meals</span>
+                    <span class="rb-row-sub">సింగిల్ మీల్స్</span>
+                  </div>
+                  <span class="rb-row-price">195</span>
+                  <button class="rb-row-add" onclick="addToCart('meal-single')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">3</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Veg Biriyani Half</span>
+                    <span class="rb-row-sub">వెజ్ బిర్యానీ హాఫ్</span>
+                  </div>
+                  <span class="rb-row-price">155</span>
+                  <button class="rb-row-add" onclick="addToCart('meal-biriyani-half')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">4</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Pulihora Half</span>
+                    <span class="rb-row-sub">చింతపండు పులిహోర హాఫ్</span>
+                  </div>
+                  <span class="rb-row-price">100</span>
+                  <button class="rb-row-add" onclick="addToCart('meal-pulihora-half')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">5</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Gongura Pulihora Half</span>
+                    <span class="rb-row-sub">గోంగూర పులిహోర హాఫ్</span>
+                  </div>
+                  <span class="rb-row-price">100</span>
+                  <button class="rb-row-add" onclick="addToCart('meal-gongura-pulihora-half')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">6</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Special Rice Half</span>
+                    <span class="rb-row-sub">స్పెషల్ రైస్ హాఫ్</span>
+                  </div>
+                  <span class="rb-row-price">100</span>
+                  <button class="rb-row-add" onclick="addToCart('meal-special-rice-half')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">7</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Sambar Rice Half</span>
+                    <span class="rb-row-sub">సాంబార్ రైస్ హాఫ్</span>
+                  </div>
+                  <span class="rb-row-price">100</span>
+                  <button class="rb-row-add" onclick="addToCart('meal-sambar-rice-half')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">8</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Curd Rice Half</span>
+                    <span class="rb-row-sub">పెరుగన్నం హాఫ్</span>
+                  </div>
+                  <span class="rb-row-price">100</span>
+                  <button class="rb-row-add" onclick="addToCart('meal-curd-rice-half')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">9</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Extra Rice</span>
+                    <span class="rb-row-sub">ఎక్స్ట్రా అన్నం</span>
+                  </div>
+                  <span class="rb-row-price">50</span>
+                  <button class="rb-row-add" onclick="addToCart('meal-extra-rice')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">10</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Pappu</span>
+                    <span class="rb-row-sub">ముద్ద పప్పు</span>
+                  </div>
+                  <span class="rb-row-price">50</span>
+                  <button class="rb-row-add" onclick="addToCart('meal-pappu')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">11</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Sambar</span>
+                    <span class="rb-row-sub">సాంబారు</span>
+                  </div>
+                  <span class="rb-row-price">50</span>
+                  <button class="rb-row-add" onclick="addToCart('meal-sambar')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">12</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Rasam</span>
+                    <span class="rb-row-sub">మిరియాల చారు</span>
+                  </div>
+                  <span class="rb-row-price">50</span>
+                  <button class="rb-row-add" onclick="addToCart('meal-rasam')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">13</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Veg Curry</span>
+                    <span class="rb-row-sub">వెజ్ కూర</span>
+                  </div>
+                  <span class="rb-row-price">50</span>
+                  <button class="rb-row-add" onclick="addToCart('meal-veg-curry')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">14</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Veg Fry</span>
+                    <span class="rb-row-sub">వెజ్ వేపుడు</span>
+                  </div>
+                  <span class="rb-row-price">50</span>
+                  <button class="rb-row-add" onclick="addToCart('meal-veg-fry')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">15</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Curd</span>
+                    <span class="rb-row-sub">గడ్డ పెరుగు</span>
+                  </div>
+                  <span class="rb-row-price">50</span>
+                  <button class="rb-row-add" onclick="addToCart('meal-curd')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">16</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Roti Pacchadi</span>
+                    <span class="rb-row-sub">రోటి పచ్చడి</span>
+                  </div>
+                  <span class="rb-row-price">50</span>
+                  <button class="rb-row-add" onclick="addToCart('meal-roti-pacchadi')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">17</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Majjiga Pulusu</span>
+                    <span class="rb-row-sub">మజ్జిగ పులుసు</span>
+                  </div>
+                  <span class="rb-row-price">50</span>
+                  <button class="rb-row-add" onclick="addToCart('meal-majjiga-pulusu')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">18</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Pacchi Pulusu</span>
+                    <span class="rb-row-sub">పచ్చి పులుసు</span>
+                  </div>
+                  <span class="rb-row-price">50</span>
+                  <button class="rb-row-add" onclick="addToCart('meal-pacchi-pulusu')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">19</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Special Veg Curry</span>
+                    <span class="rb-row-sub">స్పెషల్ వెజ్ కూర</span>
+                  </div>
+                  <span class="rb-row-price">50</span>
+                  <button class="rb-row-add" onclick="addToCart('meal-special-veg-curry')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">20</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Dahi Vada 2P</span>
+                    <span class="rb-row-sub">పెరుగు వడ (2 ముక్కలు)</span>
+                  </div>
+                  <span class="rb-row-price">50</span>
+                  <button class="rb-row-add" onclick="addToCart('meal-dahi-vada-2p')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">21</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Dahi Vada 3P</span>
+                    <span class="rb-row-sub">పెరుగు వడ (3 ముక్కలు)</span>
+                  </div>
+                  <span class="rb-row-price">75</span>
+                  <button class="rb-row-add" onclick="addToCart('meal-dahi-vada-3p')" title="Add to plate">+</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Table 2: Sweets -->
+            <div class="rate-board-card" data-rb="sweets">
+              <div class="rate-board-header">
+                <span class="rb-col-sno">Sno</span>
+                <span class="rb-col-name">Sweets</span>
+                <span class="rb-col-price">Price</span>
+              </div>
+              <div class="rate-board-list">
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">1</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Boori 5pcs</span>
+                    <span class="rb-row-sub">బూరెలు (5 ముక్కలు)</span>
+                  </div>
+                  <span class="rb-row-price">90</span>
+                  <button class="rb-row-add" onclick="addToCart('sweet-boori')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">2</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Bobbattu 5pcs</span>
+                    <span class="rb-row-sub">బొబ్బట్లు (5 ముక్కలు)</span>
+                  </div>
+                  <span class="rb-row-price">90</span>
+                  <button class="rb-row-add" onclick="addToCart('sweet-bobbattu')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">3</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Malaipoori 5pcs</span>
+                    <span class="rb-row-sub">మలైపూరి (5 ముక్కలు)</span>
+                  </div>
+                  <span class="rb-row-price">129</span>
+                  <button class="rb-row-add" onclick="addToCart('sweet-malaipoori')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">4</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Kakinada Kaja 250Gr</span>
+                    <span class="rb-row-sub">కాకినాడ గొట్టం కాజా</span>
+                  </div>
+                  <span class="rb-row-price">129</span>
+                  <button class="rb-row-add" onclick="addToCart('sweet-kakinada-kaja')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">5</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Madatha Kaja 250Gr</span>
+                    <span class="rb-row-sub">మడత కాజా</span>
+                  </div>
+                  <span class="rb-row-price">129</span>
+                  <button class="rb-row-add" onclick="addToCart('sweet-madatha-kaja')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">6</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Badhusha 250Gr</span>
+                    <span class="rb-row-sub">బాదుషా</span>
+                  </div>
+                  <span class="rb-row-price">129</span>
+                  <button class="rb-row-add" onclick="addToCart('sweet-badhusha')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">7</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Boondhi Laddu 250Gr</span>
+                    <span class="rb-row-sub">బూందీ లడ్డూ</span>
+                  </div>
+                  <span class="rb-row-price">129</span>
+                  <button class="rb-row-add" onclick="addToCart('sweet-boondhi-laddu')" title="Add to plate">+</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Table 3: Pickles -->
+            <div class="rate-board-card" data-rb="pickles">
+              <div class="rate-board-header">
+                <span class="rb-col-sno">Sno</span>
+                <span class="rb-col-name">Pickles (250g)</span>
+                <span class="rb-col-price">Price</span>
+              </div>
+              <div class="rate-board-list">
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">1</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Mango Pickle 250g</span>
+                    <span class="rb-row-sub">ఆవకాయ / మామిడికాయ</span>
+                  </div>
+                  <span class="rb-row-price">155</span>
+                  <button class="rb-row-add" onclick="addToCart('pickle-mango')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">2</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Gongura Pickle 250g</span>
+                    <span class="rb-row-sub">గోంగూర పచ్చడి</span>
+                  </div>
+                  <span class="rb-row-price">155</span>
+                  <button class="rb-row-add" onclick="addToCart('pickle-gongura')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">3</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Gongura Pandu Mirchi Pickle 250g</span>
+                    <span class="rb-row-sub">గోంగూర పండుమిర్చి</span>
+                  </div>
+                  <span class="rb-row-price">155</span>
+                  <button class="rb-row-add" onclick="addToCart('pickle-gongura-pandu-mirchi')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">4</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Lemon Pickle 250g</span>
+                    <span class="rb-row-sub">నిమ్మకాయ పచ్చడి</span>
+                  </div>
+                  <span class="rb-row-price">155</span>
+                  <button class="rb-row-add" onclick="addToCart('pickle-lemon')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">5</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Allam Pickle 250g</span>
+                    <span class="rb-row-sub">అల్లం పచ్చడి</span>
+                  </div>
+                  <span class="rb-row-price">155</span>
+                  <button class="rb-row-add" onclick="addToCart('pickle-allam')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">6</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Vankaya Pickle 250g</span>
+                    <span class="rb-row-sub">వంకాయ పచ్చడి</span>
+                  </div>
+                  <span class="rb-row-price">155</span>
+                  <button class="rb-row-add" onclick="addToCart('pickle-vankaya')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">7</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Usirikaya Pickle 250g</span>
+                    <span class="rb-row-sub">ఉసిరికాయ పచ్చడి</span>
+                  </div>
+                  <span class="rb-row-price">155</span>
+                  <button class="rb-row-add" onclick="addToCart('pickle-usirikaya')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">8</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Maagaya Pickle 250g</span>
+                    <span class="rb-row-sub">మాగాయ పచ్చడి</span>
+                  </div>
+                  <span class="rb-row-price">155</span>
+                  <button class="rb-row-add" onclick="addToCart('pickle-maagaya')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">9</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Tamota Pickle 250g</span>
+                    <span class="rb-row-sub">టమోటా పచ్చడి</span>
+                  </div>
+                  <span class="rb-row-price">155</span>
+                  <button class="rb-row-add" onclick="addToCart('pickle-tamota')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">10</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Pandu Mirapakai Pickle 250g</span>
+                    <span class="rb-row-sub">పండు మిరపకాయ</span>
+                  </div>
+                  <span class="rb-row-price">155</span>
+                  <button class="rb-row-add" onclick="addToCart('pickle-pandu-mirapakai')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">11</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Kakarakaya Pickle 250g</span>
+                    <span class="rb-row-sub">కాకరకాయ పచ్చడి</span>
+                  </div>
+                  <span class="rb-row-price">155</span>
+                  <button class="rb-row-add" onclick="addToCart('pickle-kakarakaya')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">12</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Bellam Avakaya Pickle 250g</span>
+                    <span class="rb-row-sub">తీపి బెల్లం ఆవకాయ</span>
+                  </div>
+                  <span class="rb-row-price">155</span>
+                  <button class="rb-row-add" onclick="addToCart('pickle-bellam-avakaya')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">13</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Chinthakaya Pickle 250g</span>
+                    <span class="rb-row-sub">చింతకాయ పచ్చడి</span>
+                  </div>
+                  <span class="rb-row-price">155</span>
+                  <button class="rb-row-add" onclick="addToCart('pickle-chinthakaya')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">14</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Califlower Pickle</span>
+                    <span class="rb-row-sub">కాలీఫ్లవర్ పచ్చడి (250g)</span>
+                  </div>
+                  <span class="rb-row-price">155</span>
+                  <button class="rb-row-add" onclick="addToCart('pickle-califlower')" title="Add to plate">+</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Table 4: Powders -->
+            <div class="rate-board-card" data-rb="powders">
+              <div class="rate-board-header">
+                <span class="rb-col-sno">Sno</span>
+                <span class="rb-col-name">Powders (100g)</span>
+                <span class="rb-col-price">Price</span>
+              </div>
+              <div class="rate-board-list">
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">1</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Kandhi podi 100g</span>
+                    <span class="rb-row-sub">కంది పొడి</span>
+                  </div>
+                  <span class="rb-row-price">75</span>
+                  <button class="rb-row-add" onclick="addToCart('podi-kandhi')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">2</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Karivepaku Podi 100g</span>
+                    <span class="rb-row-sub">కరివేపాకు పొడి</span>
+                  </div>
+                  <span class="rb-row-price">75</span>
+                  <button class="rb-row-add" onclick="addToCart('podi-karivepaku')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">3</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Kobbari Karam 100g</span>
+                    <span class="rb-row-sub">కొబ్బరి కారం</span>
+                  </div>
+                  <span class="rb-row-price">75</span>
+                  <button class="rb-row-add" onclick="addToCart('podi-kobbari')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">4</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Nalla Karam 100g</span>
+                    <span class="rb-row-sub">నల్ల కారం</span>
+                  </div>
+                  <span class="rb-row-price">75</span>
+                  <button class="rb-row-add" onclick="addToCart('podi-nalla')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">5</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Palli Karam 100g</span>
+                    <span class="rb-row-sub">పల్లీ కారం / వేరుశెనగ</span>
+                  </div>
+                  <span class="rb-row-price">75</span>
+                  <button class="rb-row-add" onclick="addToCart('podi-palli')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">6</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Ulava Karam 100g</span>
+                    <span class="rb-row-sub">ఉలవ కారం</span>
+                  </div>
+                  <span class="rb-row-price">75</span>
+                  <button class="rb-row-add" onclick="addToCart('podi-ulava')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">7</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Dhaniya Karam 100g</span>
+                    <span class="rb-row-sub">ధనియాల కారం</span>
+                  </div>
+                  <span class="rb-row-price">75</span>
+                  <button class="rb-row-add" onclick="addToCart('podi-dhaniya')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">8</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Idly Karam 100g</span>
+                    <span class="rb-row-sub">ఇడ్లీ కారం పొడి</span>
+                  </div>
+                  <span class="rb-row-price">75</span>
+                  <button class="rb-row-add" onclick="addToCart('podi-idly')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">9</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Vellulli Nalla Karam 100g</span>
+                    <span class="rb-row-sub">వెల్లుల్లి నల్ల కారం</span>
+                  </div>
+                  <span class="rb-row-price">75</span>
+                  <button class="rb-row-add" onclick="addToCart('podi-nalla-garlic')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">10</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Sambar Karam 100g</span>
+                    <span class="rb-row-sub">సాంబార్ కారం పొడి</span>
+                  </div>
+                  <span class="rb-row-price">75</span>
+                  <button class="rb-row-add" onclick="addToCart('podi-sambar')" title="Add to plate">+</button>
+                </div>
+                <div class="rate-board-row">
+                  <span class="rb-row-sno">11</span>
+                  <div class="rb-row-info">
+                    <span class="rb-row-name">Mulagaku Karam 100g</span>
+                    <span class="rb-row-sub">మునగాకు కారం (Moringa)</span>
+                  </div>
+                  <span class="rb-row-price">75</span>
+                  <button class="rb-row-add" onclick="addToCart('podi-mulagaku')" title="Add to plate">+</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="rate-board-note">
+            <span>🌿 Freshly hand-ground every week using cold-pressed sesame oil, pure sea salt, and farm-fresh Guntur spices. Sealed for long shelf life.</span>
+          </div>
+        </div>
+
+        <!-- Menu Grid Container (populated dynamically via app.js) -->
+        <div class="menu-grid" id="menu-items-grid">
+          <!-- Dynamically Injected -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         TABLE & UNLIMITED BANANA LEAF RESERVATIONS
+         ========================================================================== -->
+    <section class="section-padding reservation-section" id="reservations">
+      <div class="container">
+        <div class="reservation-grid">
+          
+          <!-- Left Info Column -->
+          <div class="res-info-side">
+            <span class="badge badge-gold" style="align-self: flex-start;">INSTANT TABLE PASS</span>
+            <h2 class="res-title">Dine In The Royal Godavari Tradition</h2>
+            <p style="color: rgba(255, 255, 255, 0.9); font-size: 1.05rem; line-height: 1.7;">
+              Reserve your spot for our legendary <strong>Unlimited Banana Leaf Dining</strong>. Enjoy seamless seated service where our servers graciously insist you try every curry, podi, and sweet!
+            </p>
+
+            <div class="res-perks">
+              <div class="res-perk-item">
+                <div class="res-perk-icon">🍃</div>
+                <div class="res-perk-text">
+                  <h5>Unlimited Banana Leaf Bhojanam</h5>
+                  <p>Unlimited servings of hot rice, 4 curries, podis, sambar, rasam, curd & payasam.</p>
+                </div>
+              </div>
+
+              <div class="res-perk-item">
+                <div class="res-perk-icon">🧈</div>
+                <div class="res-perk-text">
+                  <h5>Overflowing Pure Ghee Service</h5>
+                  <p>Authentic hospitality where servers ladle warm ghee with genuine love.</p>
+                </div>
+              </div>
+
+              <div class="res-perk-item">
+                <div class="res-perk-icon">❄️</div>
+                <div class="res-perk-text">
+                  <h5>Air-Conditioned Family Dining</h5>
+                  <p>Clean, spacious family halls with dedicated high-chairs and prompt hospitality.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Reservation Form Card -->
+          <div class="res-card">
+            <h3 style="font-family: var(--font-serif); font-size: 1.5rem; margin-bottom: 0.5rem;">Book Your Table</h3>
+            <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1.5rem;">
+              Receive an instant digital table confirmation pass on your screen and SMS.
+            </p>
+
+            <form class="res-form" id="table-reservation-form">
+              
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label class="form-label" for="res-name">Guest Full Name *</label>
+                  <input type="text" id="res-name" class="form-control" placeholder="e.g. Sridhar Sharma" required />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="res-phone">Mobile Number *</label>
+                  <input type="tel" id="res-phone" class="form-control" placeholder="10-digit number" pattern="[0-9]{10}" required />
+                </div>
+              </div>
+
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label class="form-label" for="res-branch">Select Branch *</label>
+                  <select id="res-branch" class="form-control" required>
+                    <!-- Hyderabad & Telangana -->
+                    <option value="KPHB Colony, Hyderabad">KPHB Colony, Hyderabad (MIG 295)</option>
+                    <option value="Kondapur / Hitech City">Kondapur / Hitech City, Hyderabad</option>
+                    <option value="Ameerpet, Hyderabad">Ameerpet, Hyderabad (Metro Pillar 1070)</option>
+                    <option value="Jubilee Hills, Hyderabad">Jubilee Hills, Hyderabad (Road No. 36)</option>
+                    <option value="Malakpet, Hyderabad">Malakpet, Hyderabad (Beside Yashoda Hospital)</option>
+                    <option value="Vanasthalipuram, Hyderabad">Vanasthalipuram, Hyderabad (Sahara Road)</option>
+                    <option value="Suryapet Highway Branch">Suryapet Highway Branch (NH-65)</option>
+                    <!-- Andhra Pradesh -->
+                    <option value="Heritage Flagship, Kakinada">Heritage Flagship, Kakinada (Since 1950)</option>
+                    <option value="Dwaraka Nagar, Visakhapatnam">Dwaraka Nagar, Visakhapatnam</option>
+                    <option value="Gajuwaka, Visakhapatnam">Gajuwaka, Visakhapatnam</option>
+                    <option value="MG Road, Vijayawada">MG Road, Vijayawada (Benz Circle)</option>
+                    <option value="Pushkar Ghat, Rajahmundry">Pushkar Ghat Road, Rajahmundry</option>
+                    <!-- Bengaluru -->
+                    <option value="Marathahalli, Bengaluru">Marathahalli, Bengaluru (Outer Ring Road)</option>
+                    <option value="Koramangala, Bengaluru">Koramangala, Bengaluru (80 Feet Road)</option>
+                    <option value="Brookefield / Whitefield, Bengaluru">Brookefield / Whitefield, Bengaluru</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="res-guests">Number of Guests *</label>
+                  <select id="res-guests" class="form-control" required>
+                    <option value="2">2 Guests (Couple / Friends)</option>
+                    <option value="4" selected>4 Guests (Family Table)</option>
+                    <option value="6">6 Guests (Large Table)</option>
+                    <option value="8">8 Guests (Executive Dining)</option>
+                    <option value="12">10+ Guests (Celebration Party)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label class="form-label" for="res-date">Dining Date *</label>
+                  <input type="date" id="res-date" class="form-control" required />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="res-time">Seating Slot *</label>
+                  <select id="res-time" class="form-control" required>
+                    <option value="Lunch: 12:30 PM">Lunch Slot 1: 12:30 PM</option>
+                    <option value="Lunch: 01:30 PM" selected>Lunch Slot 2: 01:30 PM</option>
+                    <option value="Lunch: 02:30 PM">Lunch Slot 3: 02:30 PM</option>
+                    <option value="Dinner: 07:30 PM">Dinner Slot 1: 07:30 PM</option>
+                    <option value="Dinner: 08:45 PM">Dinner Slot 2: 08:45 PM</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Dining Preference</label>
+                <div class="seating-type-selector">
+                  <div class="seating-option active" data-seating="Traditional Banana Leaf Seating">
+                    🍃 Traditional Banana Leaf
+                  </div>
+                  <div class="seating-option" data-seating="Executive AC Family Hall">
+                    ❄️ Executive AC Table
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="res-notes">Special Requests (Optional)</label>
+                <input type="text" id="res-notes" class="form-control" placeholder="e.g. Jain food (no onion/garlic), High chair for toddler" />
+              </div>
+
+              <button type="submit" class="btn btn-gold btn-lg" style="width: 100%; margin-top: 0.5rem;">
+                <span>Confirm Reservation & Generate Ticket 🎟️</span>
+              </button>
+
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         GODAVARI FEAST CATERING & EVENT CALCULATOR
+         ========================================================================== -->
+    <section class="section-padding catering-section" id="catering">
+      <div class="container">
+        
+        <div class="section-header">
+          <span class="section-pretitle">Weddings • Housewarmings • Corporate Feasts</span>
+          <h2 class="section-title">Instant Catering Cost Calculator</h2>
+          <p class="section-desc">
+            Plan your auspicious event with Subbayya Gari authentic catering. Adjust the guest count slider and customize live counters to calculate your live estimate.
+          </p>
+        </div>
+
+        <div class="catering-card">
+          <div class="catering-grid">
+            
+            <!-- Left Configurator -->
+            <div class="catering-configurator">
+              
+              <!-- Guest Count Slider -->
+              <div class="slider-group">
+                <div class="slider-header">
+                  <label class="form-label" style="font-size: 0.95rem;">Number of Guests</label>
+                  <span class="guest-count-display" id="catering-guests-count">150 Guests</span>
+                </div>
+                <input 
+                  type="range" 
+                  id="catering-guests-slider" 
+                  class="custom-range-slider" 
+                  min="25" 
+                  max="1500" 
+                  step="25" 
+                  value="150" 
+                  aria-label="Catering guest count slider"
+                />
+                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--color-text-subtle);">
+                  <span>25 Guests (Intimate)</span>
+                  <span>500 Guests</span>
+                  <span>1500+ Guests (Royal Wedding)</span>
+                </div>
+              </div>
+
+              <!-- Package Selector -->
+              <label class="form-label" style="margin-bottom: 0.5rem; display: block;">Select Feast Tier</label>
+              <div class="package-picker">
+                
+                <div class="package-card active" data-price="350" data-name="Standard Godavari Bhojanam">
+                  <span class="package-name">Standard Feast</span>
+                  <span class="package-price">₹350 <small style="font-size: 0.7rem;">/plate</small></span>
+                  <span class="package-items-count">16 Traditional Items</span>
+                </div>
+
+                <div class="package-card" data-price="450" data-name="Royal Butta Wedding Feast">
+                  <span class="package-name">Royal Wedding</span>
+                  <span class="package-price">₹450 <small style="font-size: 0.7rem;">/plate</small></span>
+                  <span class="package-items-count">24 Grand Items + Sweet</span>
+                </div>
+
+                <div class="package-card" data-price="550" data-name="Godavari Platinum Mega Banquet">
+                  <span class="package-name">Platinum Banquet</span>
+                  <span class="package-price">₹550 <small style="font-size: 0.7rem;">/plate</small></span>
+                  <span class="package-items-count">32 Items + Live Counters</span>
+                </div>
+
+              </div>
+
+              <!-- Live Add-on Counters -->
+              <label class="form-label" style="margin-bottom: 0.5rem; display: block;">Add Live Interactive Counters</label>
+              <div class="catering-addons-list">
+                <label class="addon-checkbox-row">
+                  <div style="display: flex; align-items: center; gap: 0.6rem;">
+                    <input type="checkbox" class="addon-check" data-cost="40" />
+                    <span>Live Hot Bellam Jalebi Counter 🥞</span>
+                  </div>
+                  <span style="color: var(--color-primary); font-weight: 700;">+₹40/head</span>
+                </label>
+
+                <label class="addon-checkbox-row">
+                  <div style="display: flex; align-items: center; gap: 0.6rem;">
+                    <input type="checkbox" class="addon-check" data-cost="50" />
+                    <span>Atreyapuram Pootharekulu Live Rolling 🍯</span>
+                  </div>
+                  <span style="color: var(--color-primary); font-weight: 700;">+₹50/head</span>
+                </label>
+
+                <label class="addon-checkbox-row">
+                  <div style="display: flex; align-items: center; gap: 0.6rem;">
+                    <input type="checkbox" class="addon-check" data-cost="30" />
+                    <span>Special Masala Majjiga & Welcome Drinks 🥛</span>
+                  </div>
+                  <span style="color: var(--color-primary); font-weight: 700;">+₹30/head</span>
+                </label>
+              </div>
+
+            </div>
+
+            <!-- Right Summary Quote Box -->
+            <div class="catering-quote-box">
+              <div>
+                <h3 class="quote-title">Estimated Catering Quote</h3>
+                
+                <div class="quote-row">
+                  <span>Guest Headcount:</span>
+                  <strong id="quote-guests-num">150 Persons</strong>
+                </div>
+
+                <div class="quote-row">
+                  <span>Selected Feast:</span>
+                  <strong id="quote-package-name">Standard Godavari Bhojanam</strong>
+                </div>
+
+                <div class="quote-row">
+                  <span>Rate per Plate:</span>
+                  <strong id="quote-per-plate">₹350/plate</strong>
+                </div>
+
+                <div class="quote-row">
+                  <span>Banana Leaf & Service:</span>
+                  <strong style="color: var(--color-ghee);">Included Complimentary</strong>
+                </div>
+
+                <div class="quote-total-row">
+                  <div>
+                    <span style="font-size: 0.85rem; color: rgba(255,255,255,0.8);">Total Estimated Budget:</span>
+                    <div class="quote-total-amount" id="quote-grand-total">₹52,500</div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem;">
+                <a id="catering-quote-whatsapp" href="#" target="_blank" class="btn btn-gold" style="width: 100%;">
+                  <span>Inquire on WhatsApp 📱</span>
+                </a>
+                <span style="font-size: 0.75rem; text-align: center; color: rgba(255,255,255,0.7);">
+                  *Final quote may vary based on exact venue location and date availability.
+                </span>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         BRANCH DIRECTORY & GOOGLE MAPS LOCATOR
+         ========================================================================== -->
+    <section class="section-padding branches-section" id="branches">
+      <div class="container">
+        
+        <div class="section-header">
+          <span class="section-pretitle">Visit Our Outlets</span>
+          <h2 class="section-title">Where Are We Located?</h2>
+          <p class="section-desc">
+            Experience our iconic hospitality across Telangana, Andhra Pradesh, and Karnataka. Walk in or call ahead to book private dining.
+          </p>
+        </div>
+
+        <!-- City Switcher -->
+        <div class="branch-tabs" style="display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; align-items: center;">
+          <button class="branch-tab-btn active" data-city="all">All Locations (14)</button>
+          <button class="branch-tab-btn" data-city="Hyderabad">Hyderabad (6)</button>
+          <button class="branch-tab-btn" data-city="Kakinada">Kakinada (1950)</button>
+          <button class="branch-tab-btn" data-city="Visakhapatnam">Visakhapatnam (2)</button>
+          <button class="branch-tab-btn" data-city="Vijayawada">Vijayawada</button>
+          <button class="branch-tab-btn" data-city="Rajahmundry">Rajahmundry</button>
+          <button class="branch-tab-btn" data-city="Suryapet">Suryapet</button>
+          <button class="branch-tab-btn" data-city="Bengaluru">Bengaluru (3)</button>
+          <button class="btn btn-outline-gold btn-sm" onclick="findNearestBranchForDirectory()" style="display: flex; align-items: center; gap: 0.35rem; padding: 0.45rem 0.9rem; font-weight: 700; border-radius: 50px;">
+            <span>📍 Find Nearest Outlet to Me</span>
+          </button>
+        </div>
+
+        <!-- Branch Grid Container -->
+        <div class="branch-cards-grid" id="branches-grid">
+          <!-- Injected via app.js -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         CUSTOMER REVIEWS & WALL OF LOVE
+         ========================================================================== -->
+    <section class="section-padding reviews-section" id="reviews">
+      <div class="container">
+        
+        <div class="section-header">
+          <span class="section-pretitle">Verified Customer Experiences</span>
+          <h2 class="section-title">Loved by Millions of Food Enthusiasts</h2>
+          <p class="section-desc">
+            Here is what food connoisseurs, families, and travelers have to say about dining at Subbayya Gari Hotel.
+          </p>
+        </div>
+
+        <div class="reviews-grid">
+          
+          <div class="review-card">
+            <div class="review-stars">★★★★★</div>
+            <p class="review-quote">
+              "Delicious meal after a long time! All the items served are authentic Andhra taste. Service guys are awesome with great respect and affection — they serve food just like how a mother or parents ask at home!"
+            </p>
+            <div class="reviewer-meta">
+              <div class="reviewer-avatar">VN</div>
+              <div>
+                <h4 class="reviewer-name">Venkata Nagaraju Veeranki</h4>
+                <span class="reviewer-location">Dined at KPHB Branch • Google Verified</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="review-card">
+            <div class="review-stars">★★★★★</div>
+            <p class="review-quote">
+              "They serve Butta Bhojanam which easily feeds 4 people! Clean packaging, warm ghee, and the Gutti Vankaya curry is out of this world. Best vegetarian meals in Hyderabad hands down."
+            </p>
+            <div class="reviewer-meta">
+              <div class="reviewer-avatar">RK</div>
+              <div>
+                <h4 class="reviewer-name">Ranga Kommana</h4>
+                <span class="reviewer-location">Regular Patron • Hyderabad</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="review-card">
+            <div class="review-stars">★★★★★</div>
+            <p class="review-quote">
+              "Authentic Andhra food with unlimited meals on banana leaf. Hospitality is top notch. The staff explains each food item and serves so happily. The Bobbatlu and Pootharekulu made my day!"
+            </p>
+            <div class="reviewer-meta">
+              <div class="reviewer-avatar">MB</div>
+              <div>
+                <h4 class="reviewer-name">Madhuri BC</h4>
+                <span class="reviewer-location">Family Dining Review • Hyderabad</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div style="text-align: center; margin-top: 3rem;">
+          <button class="btn btn-outline" onclick="document.getElementById('review-modal').classList.add('active')">
+            <span>Share Your Dining Experience ✍️</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         CULTURAL HERITAGE & FREQUENTLY ASKED QUESTIONS
+         ========================================================================== -->
+    <section class="section-padding faq-section" id="faq">
+      <div class="container">
+        
+        <div class="section-header">
+          <span class="section-pretitle">Got Questions?</span>
+          <h2 class="section-title">Frequently Asked Questions</h2>
+          <p class="section-desc">
+            Learn more about our ingredients, Jain dining options, parcel service, and dining heritage.
+          </p>
+        </div>
+
+        <div class="faq-list">
+          
+          <div class="faq-item active">
+            <button class="faq-question-btn" type="button">
+              <span>What makes the Subbayya Gari Butta Bhojanam unique?</span>
+              <span class="faq-icon">▼</span>
+            </button>
+            <div class="faq-answer" style="max-height: 200px;">
+              The Butta Bhojanam is our signature bamboo basket meal packed with over 20 authentic Godavari delicacies lined with fresh banana leaf. It includes Sona Masoori hot rice, pure buffalo ghee, Kandi Podi, Gongura pickle, Avakaya, Gutti Vankaya, Majjiga Pulusu, Perugu Garelu, and fresh Nethi Bobbatlu.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question-btn" type="button">
+              <span>Do you offer Jain food without onion and garlic?</span>
+              <span class="faq-icon">▼</span>
+            </button>
+            <div class="faq-answer">
+              Yes! We cater to Jain guests with pure sattvic meals cooked completely without onion, garlic, or root vegetables upon prior request when booking or ordering.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question-btn" type="button">
+              <span>What is the price for Unlimited Banana Leaf Meals?</span>
+              <span class="faq-icon">▼</span>
+            </button>
+            <div class="faq-answer">
+              Our Unlimited Banana Leaf Bhojanam for dine-in guests is priced at an affordable ₹260 per plate, served in air-conditioned halls with unlimited warm pure ghee and generous refills.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question-btn" type="button">
+              <span>Can I order parcels or Butta Bhojanam for home delivery?</span>
+              <span class="faq-icon">▼</span>
+            </button>
+            <div class="faq-answer">
+              Yes, you can order directly through this website, via WhatsApp order generator, or pick up takeaways directly from any of our branches.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question-btn" type="button">
+              <span>Where did Subbayya Gari Hotel start?</span>
+              <span class="faq-icon">▼</span>
+            </button>
+            <div class="faq-answer">
+              Subbayya Gari Hotel originated in 1950 in Kakinada, East Godavari district of Andhra Pradesh, established by Sri Subbayya garu with a noble mission to serve travelers wholesome, home-style food with pure ghee.
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         MODULE 1: GODAVARI PARIVAAR LOYALTY PORTAL
+         ========================================================================== -->
+    <section class="section-padding" id="loyalty-section" style="display: none; background: var(--color-surface-muted);">
+      <div class="container">
+        
+        <div class="section-header">
+          <span class="section-pretitle">Godavari Parivaar Club</span>
+          <h2 class="section-title">Your Pure Ghee Loyalty Pass</h2>
+          <p class="section-desc">
+            Earn 10 Ghee Coins for every ₹100 spent across Jubilee Hills, KPHB, and Kakinada branches. Redeem for authentic delicacies and VIP table privileges.
+          </p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem; align-items: center; margin-bottom: 3.5rem;">
+          
+          <!-- Digital Gold Membership Card -->
+          <div class="loyalty-hero-card">
+            <div class="loyalty-card-visual">
+              <div>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                  <span style="font-size: 1.5rem;">సు</span>
+                  <div>
+                    <h4 style="font-family: var(--font-brand); font-size: 1.1rem; line-height: 1; color: #FFF;">SUBBAYYA PARIVAAR</h4>
+                    <span style="font-size: 0.65rem; color: #FDE68A; letter-spacing: 0.1em;">ROYAL PATRON PASS</span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div style="font-size: 0.75rem; color: rgba(255,255,255,0.8); text-transform: uppercase;">Member ID</div>
+                <div style="font-family: var(--font-brand); font-size: 1.25rem; letter-spacing: 0.15em; color: #FFF;" id="loyalty-member-id">SGH-GOLD-7729</div>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                <div>
+                  <div style="font-size: 0.72rem; color: rgba(255,255,255,0.8);">Cardholder</div>
+                  <strong style="font-size: 1rem; color: #FFF;" id="loyalty-guest-name">Srikanth Varma</strong>
+                </div>
+                <div style="font-size: 2.2rem; line-height: 1;">🪙</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ghee Coins Wallet Balance Card -->
+          <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-xl); padding: 2.5rem; box-shadow: var(--shadow-lg); display: flex; flex-direction: column; gap: 1.25rem;">
+            <div class="badge badge-gold" style="align-self: flex-start;">ACTIVE COIN BALANCE</div>
+            <div>
+              <div class="wallet-coins-badge" id="loyalty-coins-balance">480</div>
+              <span style="font-size: 0.9rem; color: var(--color-text-muted);">Ghee Coins (Worth ₹480 in Free Feasts)</span>
+            </div>
+            <p style="font-size: 0.9rem; color: var(--color-text-muted); line-height: 1.6;">
+              You are just <strong>120 Coins</strong> away from unlocking the <em>Royal Platinum Tier</em>!
+            </p>
+            <div style="background: var(--color-surface-muted); height: 10px; border-radius: 5px; overflow: hidden;">
+              <div style="width: 80%; height: 100%; background: linear-gradient(90deg, #F59E0B, #16A34A);"></div>
+            </div>
+            <div style="display: flex; gap: 0.75rem;">
+              <button class="btn btn-gold btn-sm" onclick="showToast('🎉 QR Code refreshed! Present at billing counter.')">
+                <span>Show QR at Cashier 📱</span>
+              </button>
+              <button class="btn btn-outline btn-sm" onclick="showToast('💡 Dine at Jubilee Hills or KPHB to earn 10 coins per ₹100!')">
+                <span>Earn Rules ℹ️</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Redeemable Rewards Catalog -->
+        <h3 style="font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 1.5rem; text-align: center;">Redeem Your Ghee Coins</h3>
+        <div class="rewards-grid">
+          
+          <div class="reward-card">
+            <div>
+              <span style="font-size: 2rem;">🥞</span>
+              <h4 style="font-family: var(--font-serif); font-size: 1.2rem; margin-top: 0.5rem;">Hot Nethi Bobbatlu (Box of 2)</h4>
+              <p style="font-size: 0.85rem; color: var(--color-text-muted);">Cardamom puran poli roasted in fresh warm pure ghee.</p>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--color-border); padding-top: 1rem;">
+              <strong style="color: var(--color-gold); font-size: 1.1rem;">120 Coins</strong>
+              <button class="btn btn-primary btn-sm" onclick="redeemReward('Hot Nethi Bobbatlu', 120)">Redeem Now</button>
+            </div>
+          </div>
+
+          <div class="reward-card">
+            <div>
+              <span style="font-size: 2rem;">🌶️</span>
+              <h4 style="font-family: var(--font-serif); font-size: 1.2rem; margin-top: 0.5rem;">Kakinada Kandi Podi Jar (250g)</h4>
+              <p style="font-size: 0.85rem; color: var(--color-text-muted);">Heritage stone-ground roasted lentil gunpowder jar.</p>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--color-border); padding-top: 1rem;">
+              <strong style="color: var(--color-gold); font-size: 1.1rem;">200 Coins</strong>
+              <button class="btn btn-primary btn-sm" onclick="redeemReward('Kandi Podi Jar', 200)">Redeem Now</button>
+            </div>
+          </div>
+
+          <div class="reward-card">
+            <div>
+              <span style="font-size: 2rem;">🧺</span>
+              <h4 style="font-family: var(--font-serif); font-size: 1.2rem; margin-top: 0.5rem;">Royal Butta Bhojanam Feast</h4>
+              <p style="font-size: 0.85rem; color: var(--color-text-muted);">Full 20-item bamboo basket meal for 3-4 persons.</p>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--color-border); padding-top: 1rem;">
+              <strong style="color: var(--color-gold); font-size: 1.1rem;">400 Coins</strong>
+              <button class="btn btn-primary btn-sm" onclick="redeemReward('Royal Butta Bhojanam', 400)">Redeem Now</button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         MODULE 2: CONTACTLESS DINE-IN TABLE QR MENU & CAPTAIN SERVICE
+         ========================================================================== -->
+    <section class="section-padding" id="table-qr-section" style="display: none; background: var(--color-bg);">
+      <div class="container">
+        
+        <div class="section-header">
+          <span class="section-pretitle">Smart Dine-in Experience</span>
+          <h2 class="section-title">Table QR Menu & Refill Bell</h2>
+          <p class="section-desc">
+            Seated at Subbayya Gari Hotel? Order directly to your banana leaf, ring for warm ghee refills, check running bill, and leave instant feedback.
+          </p>
+        </div>
+
+        <div class="table-qr-container">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem;">
+            
+            <!-- Table Status & Captain Buzzer -->
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+              
+              <!-- Table Selector -->
+              <div style="background: var(--color-surface-muted); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--color-border);">
+                <label class="form-label" style="display: block; margin-bottom: 0.5rem;">Select Your Table & Branch</label>
+                <div style="display: flex; gap: 0.75rem;">
+                  <select id="dinein-branch-select" class="form-control" style="flex: 1;">
+                    <option value="Jubilee Hills">Jubilee Hills, Hyderabad (500033)</option>
+                    <option value="KPHB Colony">KPHB Colony, Hyderabad</option>
+                    <option value="Kakinada">Heritage Branch, Kakinada</option>
+                  </select>
+                  <select id="dinein-table-select" class="form-control" style="width: 120px;">
+                    <option value="Table 7">Table #7</option>
+                    <option value="Table 1">Table #1</option>
+                    <option value="Table 4">Table #4</option>
+                    <option value="Table 12">Table #12</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- BIG CAPTAIN BUZZER: Refill Ghee & Podi -->
+              <div style="text-align: center; background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%); border: 2px solid #F59E0B; border-radius: var(--radius-lg); padding: 2rem;">
+                <span style="font-size: 2.5rem; display: block; margin-bottom: 0.5rem;">🧈</span>
+                <h3 style="font-family: var(--font-serif); font-size: 1.4rem; color: #92400E; margin-bottom: 0.5rem;">Want More Warm Ghee or Podi?</h3>
+                <p style="font-size: 0.85rem; color: #78350F; margin-bottom: 1.25rem;">Tap below — our server will immediately visit your banana leaf with hot melting farm ghee!</p>
+                <button class="captain-buzzer-btn" onclick="ringGheeRefillBuzzer()">
+                  <span>🔔 Ring For Warm Ghee Refill!</span>
+                </button>
+              </div>
+
+              <!-- Instant Post-Meal Feedback Form -->
+              <div style="background: var(--color-surface-muted); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 1.5rem;">
+                <h4 style="font-family: var(--font-serif); font-size: 1.2rem; margin-bottom: 0.5rem;">Instant Table Feedback</h4>
+                <p style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 1rem;">Earn +50 Ghee Coins instantly upon submitting your thoughts!</p>
+                
+                <form id="table-feedback-form" onsubmit="submitTableFeedback(event)" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                  <div>
+                    <label style="font-size: 0.8rem; font-weight: 700;">Food Taste & Ghee Aroma:</label>
+                    <div style="font-size: 1.4rem; cursor: pointer; color: #F59E0B;" id="star-rating-row">
+                      ★★★★★
+                    </div>
+                  </div>
+
+                  <div>
+                    <label style="font-size: 0.8rem; font-weight: 700;">Net Promoter Score (1 to 10):</label>
+                    <input type="range" min="1" max="10" value="10" class="custom-range-slider" id="nps-slider" oninput="document.getElementById('nps-val').textContent = this.value" />
+                    <div style="font-size: 0.75rem; display: flex; justify-content: space-between; color: var(--color-text-subtle);">
+                      <span>1 (Unlikely)</span>
+                      <strong id="nps-val" style="color: var(--color-primary); font-size: 0.9rem;">10</strong>
+                      <span>10 (Definitely Recommend!)</span>
+                    </div>
+                  </div>
+
+                  <input type="text" id="feedback-comment" class="form-control" placeholder="Any comment (e.g. Loved Gutti Vankaya & hospitality!)" />
+
+                  <button type="submit" class="btn btn-primary btn-sm" style="width: 100%;">
+                    <span>Submit & Claim 50 Coins 🪙</span>
+                  </button>
+                </form>
+              </div>
+
+            </div>
+
+            <!-- Running Table Bill -->
+            <div>
+              <div class="running-bill-card">
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(217, 119, 6, 0.3); padding-bottom: 0.5rem;">
+                  <div>
+                    <strong style="font-size: 1.1rem; color: var(--color-primary);" id="bill-table-number">Table #7</strong>
+                    <div style="font-size: 0.75rem; color: var(--color-text-muted);">Jubilee Hills Flagship (Road No. 36)</div>
+                  </div>
+                  <span class="badge badge-green">Dining Live</span>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.88rem;" id="table-bill-items">
+                  <div style="display: flex; justify-content: space-between;">
+                    <span>2x Unlimited Banana Leaf Bhojanam</span>
+                    <strong>₹520</strong>
+                  </div>
+                  <div style="display: flex; justify-content: space-between;">
+                    <span>1x Extra Gutti Vankaya Kura</span>
+                    <strong>₹180</strong>
+                  </div>
+                  <div style="display: flex; justify-content: space-between;">
+                    <span>2x Hot Nethi Bobbatlu</span>
+                    <strong>₹80</strong>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; color: #16A34A;">
+                    <span>Unlimited Farm Pure Ghee Ladle</span>
+                    <strong>FREE (Complimentary)</strong>
+                  </div>
+                </div>
+
+                <div style="border-top: 2px dashed var(--color-gold); padding-top: 0.75rem; display: flex; justify-content: space-between; font-size: 1.15rem; font-weight: 800;">
+                  <span>Running Total:</span>
+                  <span style="color: var(--color-primary);" id="table-bill-total">₹780</span>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem;">
+                  <button class="btn btn-gold btn-sm" onclick="showToast('💳 Bill requested! Your captain is bringing the wireless POS card machine.')">
+                    <span>Request Bill / Pay at Table 💳</span>
+                  </button>
+                  <button class="btn btn-outline btn-sm" onclick="document.getElementById('menu').scrollIntoView()">
+                    <span>Add More Dishes to Table +</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         MODULE 3: RESTAURANT CRM & CUSTOMER ANALYTICS DASHBOARD
+         ========================================================================== -->
+    <section class="section-padding" id="crm-analytics-section" style="display: none; background: var(--color-surface-muted);">
+      <div class="container">
+        
+        <div class="section-header">
+          <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+            <span class="badge badge-gold">STAFF & MANAGER OPERATIONS</span>
+            <span class="badge badge-green">LIVE REAL-TIME SYNC</span>
+          </div>
+          <h2 class="section-title">Operations & Customer Analytics</h2>
+          <p class="section-desc">
+            Monitor restaurant performance, customer lifetime value, live kitchen orders, and guest feedback across all branches.
+          </p>
+        </div>
+
+        <!-- Branch Analytics Filter Switcher -->
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
+          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+            <span style="font-weight: 700; font-size: 0.85rem;">Branch Analytics:</span>
+            <button class="diet-filter-pill active" onclick="filterCrmBranch('all', this)">All Outlets</button>
+            <button class="diet-filter-pill" onclick="filterCrmBranch('Jubilee Hills', this)">Jubilee Hills (500033)</button>
+            <button class="diet-filter-pill" onclick="filterCrmBranch('KPHB Colony', this)">KPHB Colony</button>
+            <button class="diet-filter-pill" onclick="filterCrmBranch('Kakinada', this)">Kakinada Heritage</button>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="showToast('📊 Operations Report generated and downloaded!')">
+            <span>Export Analytics (CSV/PDF) 📥</span>
+          </button>
+        </div>
+
+        <!-- High-level KPI Cards -->
+        <div class="dashboard-kpi-grid">
+          
+          <div class="kpi-card">
+            <div class="kpi-card-header">
+              <span class="kpi-card-title">Today's Revenue</span>
+              <span>💰</span>
+            </div>
+            <div class="kpi-card-value" id="kpi-revenue">₹1,48,650</div>
+            <span class="kpi-trend positive">▲ +14% vs yesterday</span>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-card-header">
+              <span class="kpi-card-title">Active Tables Occupancy</span>
+              <span>🍽️</span>
+            </div>
+            <div class="kpi-card-value" id="kpi-occupancy">42 / 50 (84%)</div>
+            <span class="kpi-trend positive">▲ Peak Lunch Rush</span>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-card-header">
+              <span class="kpi-card-title">Loyalty Club Members</span>
+              <span>👑</span>
+            </div>
+            <div class="kpi-card-value">14,290</div>
+            <span class="kpi-trend positive">▲ +48 new today</span>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-card-header">
+              <span class="kpi-card-title">Guest CSAT Satisfaction</span>
+              <span>⭐</span>
+            </div>
+            <div class="kpi-card-value" id="kpi-csat">4.92 / 5.0</div>
+            <span class="kpi-trend positive">▲ 98% Positive Feedback</span>
+          </div>
+
+        </div>
+
+        <!-- Live Kitchen & Table Dispatch Board -->
+        <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-xl); padding: 2rem; box-shadow: var(--shadow-sm); margin-bottom: 2.5rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+            <div>
+              <h3 style="font-family: var(--font-serif); font-size: 1.3rem;">Live Table & Kitchen Orders Dispatch</h3>
+              <p style="font-size: 0.8rem; color: var(--color-text-muted);">Real-time orders being prepared and served at tables.</p>
+            </div>
+            <span class="badge badge-gold">Live Auto-Update</span>
+          </div>
+
+          <div class="order-dispatch-grid" id="crm-orders-grid">
+            <!-- Injected dynamically via app.js -->
+          </div>
+        </div>
+
+        <!-- Customer CRM Directory -->
+        <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-xl); padding: 2rem; box-shadow: var(--shadow-sm);">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
+            <div>
+              <h3 style="font-family: var(--font-serif); font-size: 1.3rem;">Guest CRM & VIP Patron Directory</h3>
+              <p style="font-size: 0.8rem; color: var(--color-text-muted);">Track customer visit history, preferences, and dispatch WhatsApp greetings.</p>
+            </div>
+            
+            <div style="display: flex; gap: 0.5rem;">
+              <input type="text" id="crm-search-input" class="form-control" style="font-size: 0.85rem; padding: 0.45rem 0.85rem; width: 220px;" placeholder="Search Guest Name / Phone..." oninput="searchCrmGuests(this.value)" />
+            </div>
+          </div>
+
+          <div class="crm-table-container">
+            <table class="crm-table">
+              <thead>
+                <tr>
+                  <th>Guest Name</th>
+                  <th>Mobile Phone</th>
+                  <th>Primary Branch</th>
+                  <th>Visits</th>
+                  <th>Total Spent</th>
+                  <th>Dietary / Favorite</th>
+                  <th>Loyalty Tier</th>
+                  <th>CRM Action</th>
+                </tr>
+              </thead>
+              <tbody id="crm-table-body">
+                <!-- Injected dynamically via app.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       CART SLIDEOVER DRAWER
+       ========================================================================== -->
+  <div class="cart-drawer-overlay" id="cart-overlay" onclick="toggleCart(false)"></div>
+  <aside class="cart-drawer" id="cart-drawer" aria-label="Order Cart Drawer">
+    
+    <div class="cart-header">
+      <div class="cart-header-title-wrap">
+        <span class="cart-header-icon">🧺</span>
+        <div>
+          <h3 class="cart-title">Your Godavari Plate</h3>
+          <span class="cart-header-subtitle">Authentic Pure Veg Bhojanam</span>
+        </div>
+      </div>
+      <button class="cart-close-btn" onclick="toggleCart(false)" aria-label="Close Cart">✕</button>
+    </div>
+
+    <!-- Scrollable Drawer Body (Contains all sections smoothly scrollable) -->
+    <div class="cart-drawer-body" id="cart-drawer-body">
+      
+      <!-- Segmented Order Mode Switcher -->
+      <div class="order-mode-switcher-card">
+        <div class="order-mode-segment-wrap">
+          <button type="button" class="order-mode-pill active" id="pill-mode-takeaway" onclick="setOrderMode('takeaway')">
+            <span class="pill-icon">🥡</span>
+            <div class="pill-text-col">
+              <span class="pill-main">Restaurant Pickup</span>
+              <span class="pill-sub">FREE (Self Takeaway)</span>
+            </div>
+          </button>
+          <button type="button" class="order-mode-pill" id="pill-mode-delivery" onclick="setOrderMode('delivery')">
+            <span class="pill-icon">🛵</span>
+            <div class="pill-text-col">
+              <span class="pill-main">Home Delivery</span>
+              <span class="pill-sub">₹30 (≤ 2km) + ₹10/km</span>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Restaurant Pickup Details Card -->
+      <div id="cart-pickup-box" class="cart-section-card pickup-accent-card">
+        <div class="cart-card-header">
+          <div class="cart-card-title-row">
+            <span class="cart-section-icon">🏢</span>
+            <div>
+              <div class="cart-section-label">Pickup Restaurant Outlet</div>
+              <div class="cart-highlight-text" id="pickup-branch-display">KPHB Colony, Hyderabad</div>
+            </div>
+          </div>
+        </div>
+        <select id="pickup-branch-select" class="form-control cart-select" onchange="changePickupBranch(this.value)">
+          <!-- Populated by JavaScript -->
+        </select>
+        <div class="cart-outlet-meta-row">
+          <div class="kitchen-time-pill">
+            <span>⏱️ Kitchen Prep:</span>
+            <strong id="pickup-prep-time">Ready in 15 - 20 Mins</strong>
+          </div>
+          <a id="pickup-map-direction-link" href="https://maps.google.com/?q=Subbayya+Gari+Hotel+KPHB+Hyderabad" target="_blank" class="cart-map-link">
+            🧭 Outlet Map ↗
+          </a>
+        </div>
+      </div>
+
+      <!-- Delivery Distance & Nearest Branch Calculator (2km <= 30rs) -->
+      <div id="delivery-distance-box" class="cart-section-card delivery-accent-card" style="display: none;">
+        <div class="cart-card-header">
+          <div class="cart-card-title-row">
+            <span class="cart-section-icon">🏢</span>
+            <div>
+              <div class="cart-section-label">Serving Kitchen Branch</div>
+              <div class="cart-highlight-text" id="nearest-branch-display">Locating nearest branch...</div>
+            </div>
+          </div>
+        </div>
+        <select id="delivery-branch-select" class="form-control cart-select" onchange="changeDeliveryBranch(this.value)">
+          <!-- Populated by JavaScript -->
+        </select>
+        <div class="delivery-distance-control-wrap">
+          <div class="delivery-dist-label">
+            <span>📍 Delivery Distance:</span>
+            <div><strong id="delivery-distance-val">2</strong> <span style="font-size: 0.75rem; color: var(--color-text-muted);">km (₹30 ≤2km)</span></div>
+          </div>
+          <input 
+            type="range" 
+            id="delivery-distance-range" 
+            min="1" 
+            max="30" 
+            value="2" 
+            step="1"
+            class="delivery-range-slider"
+            oninput="updateDeliveryDistance(this.value)"
+          />
+          <span id="delivery-fee-badge" class="delivery-badge-pill">₹30</span>
+        </div>
+      </div>
+
+      <!-- Section: Cart Line Items -->
+      <div class="cart-section-container">
+        <div class="cart-section-heading">
+          <span>🌿 Selected Dishes</span>
+          <span id="cart-item-count-heading" class="cart-count-pill">0 Items</span>
+        </div>
+        <div class="cart-items-container" id="cart-items-container">
+          <!-- Injected via app.js -->
+        </div>
+      </div>
+
+      <!-- Section: Coupon / Promo Code -->
+      <div class="cart-coupon-box">
+        <input 
+          type="text" 
+          id="promo-code-input" 
+          placeholder="ENTER COUPON (TRY BUTTA10)" 
+          class="form-control coupon-input" 
+        />
+        <button type="button" class="btn btn-gold btn-sm coupon-apply-btn" onclick="applyPromoCode()">Apply</button>
+      </div>
+
+      <!-- Section: Customer Details & Mode Options -->
+      <div class="cart-section-card customer-details-card">
+        <div class="cart-section-heading" style="margin-bottom: 0.75rem;">
+          <span>👤 Customer & Order Details</span>
+        </div>
+
+        <div class="cart-form-group">
+          <label class="cart-input-label" for="order-customer-name">Full Name <span class="required-star">*</span></label>
+          <input type="text" id="order-customer-name" class="form-control" placeholder="Enter your full name" />
+        </div>
+
+        <div class="cart-form-group">
+          <label class="cart-input-label" for="order-customer-phone">WhatsApp Mobile Number <span class="required-star">*</span></label>
+          <input type="tel" id="order-customer-phone" class="form-control" placeholder="e.g. 9876543210" />
+        </div>
+
+        <!-- Pickup Specific Options -->
+        <div id="cart-pickup-details" class="mode-subdetails-box">
+          <div class="cart-form-group">
+            <label class="cart-input-label" for="pickup-time-slot">⏰ Pickup Ready Time</label>
+            <select id="pickup-time-slot" class="form-control">
+              <option value="ASAP (15-20 Mins)">⚡ ASAP (Ready in 15-20 Mins)</option>
+              <option value="In 30 Mins">🕐 In 30 Minutes</option>
+              <option value="In 45 Mins">🕐 In 45 Minutes</option>
+              <option value="In 1 Hour">🕐 In 1 Hour</option>
+              <option value="Lunch: 1:00 PM">☀️ Lunch: 1:00 PM</option>
+              <option value="Lunch: 1:30 PM">☀️ Lunch: 1:30 PM</option>
+              <option value="Lunch: 2:00 PM">☀️ Lunch: 2:00 PM</option>
+              <option value="Dinner: 7:30 PM">🌙 Dinner: 7:30 PM</option>
+              <option value="Dinner: 8:00 PM">🌙 Dinner: 8:00 PM</option>
+              <option value="Dinner: 8:30 PM">🌙 Dinner: 8:30 PM</option>
+            </select>
+          </div>
+          <div class="cart-form-group">
+            <label class="cart-input-label" for="pickup-vehicle-note">🚗 Curbside Handover Note (Optional)</label>
+            <input type="text" id="pickup-vehicle-note" class="form-control" placeholder="Vehicle No. / Model (e.g. White Swift TS09...)" />
+          </div>
+        </div>
+
+        <!-- Delivery Specific Options -->
+        <div id="cart-delivery-details" class="mode-subdetails-box" style="display: none;">
+          <div class="delivery-gps-header-row">
+            <label class="cart-input-label" style="margin: 0;">🏠 Delivery Address & GPS Pin</label>
+            <button type="button" id="btn-get-location" class="btn-gps-action" onclick="captureCustomerLocation()">
+              <span>📍 Use My GPS</span>
+            </button>
+          </div>
+          <textarea id="order-delivery-address" class="form-control" rows="2" placeholder="Flat / House No., Building, Street Name *"></textarea>
+          <input type="text" id="order-delivery-landmark" class="form-control" placeholder="Nearby Landmark (e.g. Near Metro Pillar, SBI Bank)" />
+          
+          <div id="gps-status-badge" class="gps-linked-badge" style="display: none;">
+            <span id="gps-status-text">📍 GPS Attached</span>
+            <a id="gps-map-preview" href="#" target="_blank" class="gps-preview-link">Preview Map ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bill Breakdown Section -->
+      <div class="cart-section-card bill-breakdown-card">
+        <div class="cart-section-heading" style="margin-bottom: 0.6rem;">
+          <span>🧾 Bill Breakdown</span>
+        </div>
+        <div class="cart-summary-line">
+          <span>Item Total:</span>
+          <span id="cart-subtotal" style="font-weight: 700;">₹0</span>
+        </div>
+        <div class="cart-summary-line">
+          <span>Banana Leaf & Bamboo Pack:</span>
+          <span id="cart-packaging" style="font-weight: 700;">₹30</span>
+        </div>
+        <div class="cart-summary-line">
+          <span>Delivery Fee:</span>
+          <span id="cart-delivery" style="font-weight: 700; color: #16A34A;">FREE (Pickup)</span>
+        </div>
+        <div class="cart-summary-line discount-line" id="cart-discount-row" style="display: none; color: #16A34A; font-weight: 700;">
+          <span>Godavari Blessing Discount:</span>
+          <span id="cart-discount-val">-₹0</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Fixed Bottom Sticky Checkout Action Bar -->
+    <div class="cart-sticky-checkout-bar" id="cart-footer-section">
+      <div class="cart-sticky-pricing-row">
+        <div class="cart-sticky-total-info">
+          <span class="cart-sticky-total-label">Grand Total:</span>
+          <span class="cart-sticky-total-val" id="cart-grand-total">₹0</span>
+        </div>
+        <div class="cart-veg-secure-badge">
+          <span>🌱 100% Pure Veg</span>
+        </div>
+      </div>
+      <button class="btn btn-gold btn-lg cart-whatsapp-checkout-btn" onclick="proceedToCheckout()">
+        <span style="font-size: 1.2rem;">💬</span>
+        <span>Send Order via WhatsApp 🚀</span>
+      </button>
+    </div>
+
+  </aside>
+
+  <!-- ==========================================================================
+       MODAL: RESERVATION PASS / CONFIRMATION TICKET
+       ========================================================================== -->
+  <div class="modal-overlay" id="reservation-pass-modal">
+    <div class="modal-card">
+      <button class="modal-close-btn" onclick="document.getElementById('reservation-pass-modal').classList.remove('active')">✕</button>
+      
+      <div style="text-align: center;">
+        <span style="font-size: 2.8rem;">🎉</span>
+        <h3 style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--color-primary); margin-top: 0.5rem;">Table Reserved Successfully!</h3>
+        <p style="font-size: 0.85rem; color: var(--color-text-muted);">Please present this ticket pass at the reception desk.</p>
+      </div>
+
+      <div class="ticket-container">
+        <div class="ticket-header">
+          <span class="ticket-field-label">Booking Reference</span>
+          <div class="ticket-id" id="pass-booking-ref">TKT-849201</div>
+        </div>
+
+        <div class="ticket-grid">
+          <div>
+            <span class="ticket-field-label">Guest Name</span>
+            <div class="ticket-field-val" id="pass-guest-name">Sridhar Sharma</div>
+          </div>
+          <div>
+            <span class="ticket-field-label">Branch</span>
+            <div class="ticket-field-val" id="pass-branch">KPHB Colony, Hyderabad</div>
+          </div>
+          <div>
+            <span class="ticket-field-label">Date & Time</span>
+            <div class="ticket-field-val" id="pass-date-time">Today at 1:30 PM</div>
+          </div>
+          <div>
+            <span class="ticket-field-label">Guests / Seating</span>
+            <div class="ticket-field-val" id="pass-guests-count">4 Guests (Banana Leaf)</div>
+          </div>
+        </div>
+
+        <div style="font-size: 0.8rem; border-top: 1px dashed rgba(217, 119, 6, 0.3); padding-top: 0.5rem;">
+          <span class="ticket-field-label">Special Request:</span>
+          <div id="pass-notes" style="font-weight: 600;">Jain food (no onion/garlic)</div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" onclick="window.print()" style="width: 100%; margin-top: 1.25rem;">
+        <span>Print or Save Ticket 🖨️</span>
+      </button>
+  <!-- ==========================================================================
+       MODAL: EXACT DELIVERY LOCATION & LIVE GPS PIN
+       ========================================================================== -->
+  <div class="modal-overlay" id="delivery-location-modal">
+    <div class="modal-card" style="max-width: 500px;">
+      <button class="modal-close-btn" onclick="closeDeliveryLocationModal()">✕</button>
+      
+      <div style="text-align: center; margin-bottom: 1.25rem;">
+        <span style="font-size: 2.5rem;">📍</span>
+        <h3 style="font-family: var(--font-serif); font-size: 1.35rem; color: var(--color-primary); margin-top: 0.35rem;">Set Exact Delivery Location</h3>
+        <p style="font-size: 0.85rem; color: var(--color-text-muted);">Delivery charges: <strong>₹30 flat for up to 2 km</strong>, then +₹10/km from your nearest Subbayya Gari kitchen.</p>
+      </div>
+
+      <!-- Quick Auto-GPS Detect Hero Action -->
+      <div style="background: linear-gradient(135deg, rgba(15, 90, 39, 0.08) 0%, rgba(217, 119, 6, 0.08) 100%); border: 2px dashed var(--color-primary); border-radius: var(--radius-lg); padding: 1.2rem; text-align: center; margin-bottom: 1.25rem; display: flex; flex-direction: column; align-items: center; gap: 0.6rem;">
+        <div style="font-weight: 800; font-size: 0.95rem; color: var(--color-primary);">🎯 One-Tap Exact Location Pin</div>
+        <p style="font-size: 0.8rem; color: var(--color-text-muted); margin: 0;">Auto-fetches GPS coordinates to match the closest serving kitchen & calculate ₹30 (≤2km) + ₹10/km fee instantly.</p>
+        <button type="button" id="modal-btn-gps" class="btn btn-primary" onclick="captureCustomerLocationFromModal()" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.65rem 1.25rem; font-weight: 700; font-size: 0.9rem; box-shadow: 0 4px 12px rgba(15, 90, 39, 0.25);">
+          <span>📍 Detect My Live GPS Location</span>
+        </button>
+        <div id="modal-gps-result" style="display: none; font-size: 0.8rem; font-weight: 700; color: #16A34A; background: #EBF8EE; padding: 0.4rem 0.8rem; border-radius: var(--radius-sm); border: 1px solid #B8E5C4;">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Delivery Address Form -->
+      <form id="delivery-location-form" onsubmit="saveDeliveryLocationModal(event)" style="display: flex; flex-direction: column; gap: 0.85rem;">
+        <div class="cart-form-group">
+          <label class="cart-input-label" for="modal-addr-flat">Flat / House / Door No. & Apartment Name <span class="required-star">*</span></label>
+          <input type="text" id="modal-addr-flat" class="form-control" placeholder="e.g. Flat 402, Godavari Grandeur Apts" required />
+        </div>
+
+        <div class="cart-form-group">
+          <label class="cart-input-label" for="modal-addr-street">Street, Colony or Road Name <span class="required-star">*</span></label>
+          <input type="text" id="modal-addr-street" class="form-control" placeholder="e.g. 5th Cross, Near Peddamma Temple Rd" required />
+        </div>
+
+        <div class="cart-form-group">
+          <label class="cart-input-label" for="modal-addr-landmark">Nearby Landmark</label>
+          <input type="text" id="modal-addr-landmark" class="form-control" placeholder="e.g. Opp Metro Pillar 1070, Behind Axis Bank" />
+        </div>
+
+        <div class="cart-form-group">
+          <label class="cart-input-label" for="modal-addr-city">City / Region <span class="required-star">*</span></label>
+          <select id="modal-addr-city" class="form-control" onchange="onModalCitySelect(this.value)">
+            <option value="Hyderabad">Hyderabad & Telangana</option>
+            <option value="Kakinada">Kakinada (Original Flagship)</option>
+            <option value="Visakhapatnam">Visakhapatnam / Vizag</option>
+            <option value="Vijayawada">Vijayawada</option>
+            <option value="Rajahmundry">Rajahmundry</option>
+            <option value="Suryapet">Suryapet</option>
+            <option value="Bengaluru">Bengaluru / Karnataka</option>
+          </select>
+        </div>
+
+        <!-- Calculated Live Kitchen Fee Banner -->
+        <div id="modal-calc-banner" style="background: var(--color-surface-muted); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 0.75rem 1rem; display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem;">
+          <div>
+            <div style="font-size: 0.72rem; color: var(--color-text-muted); font-weight: 700; text-transform: uppercase;">Nearest Serving Outlet</div>
+            <div style="font-weight: 800; color: var(--color-primary);" id="modal-serving-branch-name">KPHB Colony, Hyderabad</div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 0.72rem; color: var(--color-text-muted); font-weight: 700; text-transform: uppercase;">Delivery Fee (₹10/km)</div>
+            <div style="font-weight: 800; color: var(--color-gold); font-size: 1rem;" id="modal-delivery-fee-val">₹30 (3 km)</div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-gold btn-lg" style="width: 100%; font-weight: 800; margin-top: 0.5rem;">
+          <span>Confirm & Set Delivery Location 🚀</span>
+        </button>
+      </form>
+
+    </div>
+  </div>
+  <div class="modal-overlay" id="order-confirmation-modal">
+    <div class="modal-card">
+      <button class="modal-close-btn" onclick="document.getElementById('order-confirmation-modal').classList.remove('active')">✕</button>
+
+      <div style="text-align: center;">
+        <span style="font-size: 3rem;">📦</span>
+        <h3 style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--color-primary); margin-top: 0.5rem;">Order Transmitted to Kitchen!</h3>
+        <p style="font-size: 0.85rem; color: var(--color-text-muted);">Our chefs are heating the ghee and packing your hot banana leaf feast.</p>
+      </div>
+
+      <div class="ticket-container" style="background: var(--color-surface-muted);">
+        <div class="ticket-header">
+          <span class="ticket-field-label">Order Token</span>
+          <div class="ticket-id" id="conf-order-id">SGH-993821</div>
+        </div>
+        <div class="ticket-grid">
+          <div>
+            <span class="ticket-field-label">Customer</span>
+            <div class="ticket-field-val" id="conf-customer-name">Guest</div>
+          </div>
+          <div>
+            <span class="ticket-field-label">Outlet</span>
+            <div class="ticket-field-val" id="conf-branch">KPHB</div>
+          </div>
+          <div>
+            <span class="ticket-field-label">Order Type</span>
+            <div class="ticket-field-val" id="conf-order-type">Store Takeaway</div>
+          </div>
+          <div>
+            <span class="ticket-field-label">Items</span>
+            <div class="ticket-field-val" id="conf-total-items">3 Items</div>
+          </div>
+        </div>
+        <div id="conf-delivery-row" style="display: none; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px dashed var(--color-border); font-size: 0.82rem;">
+          <span class="ticket-field-label">Delivery Destination & Pin</span>
+          <div class="ticket-field-val" id="conf-delivery-loc" style="margin-top: 0.2rem; font-weight: 600; color: var(--color-text);"></div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.25rem;">
+        <a id="conf-whatsapp-btn" href="#" target="_blank" class="btn btn-gold" style="width: 100%;">
+          <span>Track on WhatsApp 📱</span>
+        </a>
+        <button class="btn btn-outline" onclick="document.getElementById('order-confirmation-modal').classList.remove('active')">
+          <span>Back to Home</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL: CUSTOMER REVIEW SUBMIT
+       ========================================================================== -->
+  <div class="modal-overlay" id="review-modal">
+    <div class="modal-card">
+      <button class="modal-close-btn" onclick="document.getElementById('review-modal').classList.remove('active')">✕</button>
+
+      <h3 style="font-family: var(--font-serif); font-size: 1.4rem; margin-bottom: 0.5rem;">Review Subbayya Gari Hotel</h3>
+      <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1.25rem;">Share your thoughts on our food, hospitality, and pure ghee experience!</p>
+
+      <form id="review-form" onsubmit="submitCustomerReview(event)" style="display: flex; flex-direction: column; gap: 1rem;">
+        <div class="form-group">
+          <label class="form-label" for="rev-name">Your Name *</label>
+          <input type="text" id="rev-name" class="form-control" placeholder="e.g. Ramesh Reddy" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="rev-branch">Branch Visited *</label>
+          <select id="rev-branch" class="form-control" required>
+            <option>KPHB Colony, Hyderabad (MIG 295)</option>
+            <option>Kondapur / Hitech City, Hyderabad</option>
+            <option>Ameerpet, Hyderabad (Metro Pillar 1070)</option>
+            <option>Jubilee Hills, Hyderabad (Road No. 36)</option>
+            <option>Malakpet, Hyderabad</option>
+            <option>Vanasthalipuram, Hyderabad</option>
+            <option>Suryapet Highway Branch</option>
+            <option>Heritage Flagship, Kakinada (Since 1950)</option>
+            <option>Dwaraka Nagar, Visakhapatnam</option>
+            <option>Gajuwaka, Visakhapatnam</option>
+            <option>MG Road, Vijayawada</option>
+            <option>Pushkar Ghat Road, Rajahmundry</option>
+            <option>Marathahalli, Bengaluru</option>
+            <option>Koramangala, Bengaluru</option>
+            <option>Brookefield / Whitefield, Bengaluru</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Rating</label>
+          <select class="form-control">
+            <option>⭐⭐⭐⭐⭐ (5 Stars - Heavenly Bhojanam)</option>
+            <option>⭐⭐⭐⭐ (4 Stars - Very Good)</option>
+            <option>⭐⭐⭐ (3 Stars - Average)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="rev-text">Your Review *</label>
+          <textarea id="rev-text" class="form-control" rows="3" placeholder="Tell us about the curries, podis, or staff service..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">
+          <span>Publish Review ✍️</span>
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL: CUSTOMER AUTHENTICATION (LOGIN & REGISTRATION)
+       ========================================================================== -->
+  <div class="modal-overlay" id="auth-modal">
+    <div class="modal-card" style="max-width: 480px; padding: 1.75rem;">
+      <button class="modal-close-btn" onclick="closeAuthModal()" aria-label="Close Login Modal">✕</button>
+
+      <!-- Auth Modal Header -->
+      <div style="text-align: center; margin-bottom: 1.25rem;">
+        <div class="logo-emblem" style="width: 44px; height: 44px; margin: 0 auto 0.5rem; font-size: 1.3rem;">
+          <span>సు</span>
+        </div>
+        <h3 style="font-family: var(--font-serif); font-size: 1.45rem; color: var(--color-primary); margin-bottom: 0.25rem;">
+          Subbayya Gari Guest Portal
+        </h3>
+        <p style="font-size: 0.8rem; color: var(--color-text-muted);">
+          Sign in to earn <strong>Ghee Coins</strong>, track live orders, and save delivery addresses.
+        </p>
+      </div>
+
+      <!-- Auth Switcher Tabs -->
+      <div style="display: flex; background: var(--color-surface-muted); padding: 0.25rem; border-radius: var(--radius-md); gap: 0.25rem; margin-bottom: 1.25rem;">
+        <button type="button" class="auth-tab-btn active" id="auth-tab-otp" onclick="switchAuthTab('otp')" style="flex: 1; padding: 0.5rem; border: none; border-radius: var(--radius-sm); font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: all 0.2s; background: var(--color-surface); color: var(--color-primary); box-shadow: var(--shadow-xs);">
+          📱 Mobile OTP
+        </button>
+        <button type="button" class="auth-tab-btn" id="auth-tab-email" onclick="switchAuthTab('email')" style="flex: 1; padding: 0.5rem; border: none; border-radius: var(--radius-sm); font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: all 0.2s; background: transparent; color: var(--color-text-muted);">
+          📧 Email Login
+        </button>
+        <button type="button" class="auth-tab-btn" id="auth-tab-signup" onclick="switchAuthTab('signup')" style="flex: 1; padding: 0.5rem; border: none; border-radius: var(--radius-sm); font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: all 0.2s; background: transparent; color: var(--color-text-muted);">
+          ✨ Sign Up
+        </button>
+      </div>
+
+      <!-- TAB 1: Mobile OTP Form -->
+      <form id="auth-form-otp" onsubmit="handleOtpSubmit(event)" style="display: flex; flex-direction: column; gap: 0.85rem;">
+        <div class="form-group">
+          <label class="form-label" for="auth-otp-phone" style="font-size: 0.82rem;">Mobile Number *</label>
+          <div style="display: flex; gap: 0.5rem;">
+            <span style="display: flex; align-items: center; padding: 0.5rem 0.75rem; background: var(--color-surface-muted); border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-weight: 700; font-size: 0.85rem;">🇮🇳 +91</span>
+            <input type="tel" id="auth-otp-phone" class="form-control" placeholder="98765 43210" maxlength="10" required style="font-size: 0.9rem;" />
+          </div>
+        </div>
+
+        <!-- Step 1 Send OTP Button -->
+        <div id="auth-otp-send-step">
+          <button type="button" class="btn btn-gold" onclick="sendLoginOtp()" style="width: 100%;">
+            <span>Send 4-Digit OTP 🚀</span>
+          </button>
+        </div>
+
+        <!-- Step 2 Enter OTP Section (Hidden initially) -->
+        <div id="auth-otp-verify-step" style="display: none; flex-direction: column; gap: 0.75rem; padding: 0.85rem; background: rgba(15, 90, 39, 0.05); border: 1px dashed var(--color-primary-light); border-radius: var(--radius-sm);">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.8rem; font-weight: 700; color: var(--color-primary);">Enter Verification Code:</span>
+            <span style="font-size: 0.72rem; color: #16A34A; font-weight: 700;">Demo OTP: 7450</span>
+          </div>
+          <input type="text" id="auth-otp-code" class="form-control" placeholder="Enter 4-Digit OTP (e.g. 7450)" maxlength="4" style="text-align: center; font-size: 1.2rem; font-weight: 800; letter-spacing: 0.25em;" />
+          <button type="submit" class="btn btn-primary" style="width: 100%;">
+            <span>Verify & Enter Feast 🍽️</span>
+          </button>
+          <div style="text-align: center; font-size: 0.75rem; color: var(--color-text-muted);">
+            Didn't receive? <a href="javascript:void(0)" onclick="sendLoginOtp()" style="color: var(--color-gold); font-weight: 700;">Resend OTP</a>
+          </div>
+        </div>
+      </form>
+
+      <!-- TAB 2: Email & Password Form -->
+      <form id="auth-form-email" onsubmit="handleEmailLogin(event)" style="display: none; flex-direction: column; gap: 0.85rem;">
+        <div class="form-group">
+          <label class="form-label" for="auth-login-email" style="font-size: 0.82rem;">Email Address *</label>
+          <input type="email" id="auth-login-email" class="form-control" placeholder="you@example.com" required />
+        </div>
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+            <label class="form-label" for="auth-login-password" style="font-size: 0.82rem; margin: 0;">Password *</label>
+            <a href="javascript:void(0)" onclick="showToast('🔑 Password reset link sent to your registered email!')" style="font-size: 0.72rem; color: var(--color-gold);">Forgot?</a>
+          </div>
+          <input type="password" id="auth-login-password" class="form-control" placeholder="••••••••" required />
+        </div>
+        <button type="submit" class="btn btn-gold" style="width: 100%;">
+          <span>Sign In to Account 🔐</span>
+        </button>
+      </form>
+
+      <!-- TAB 3: New Customer Registration Form -->
+      <form id="auth-form-signup" onsubmit="handleSignup(event)" style="display: none; flex-direction: column; gap: 0.8rem;">
+        <div class="form-group">
+          <label class="form-label" for="auth-reg-name" style="font-size: 0.82rem;">Full Name *</label>
+          <input type="text" id="auth-reg-name" class="form-control" placeholder="e.g. Anand Varma" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="auth-reg-phone" style="font-size: 0.82rem;">WhatsApp Mobile *</label>
+          <input type="tel" id="auth-reg-phone" class="form-control" placeholder="9876543210" maxlength="10" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="auth-reg-email" style="font-size: 0.82rem;">Email Address</label>
+          <input type="email" id="auth-reg-email" class="form-control" placeholder="anand@example.com" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="auth-reg-address" style="font-size: 0.82rem;">Default Delivery Address</label>
+          <input type="text" id="auth-reg-address" class="form-control" placeholder="Flat No., Landmark, Area" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="auth-reg-password" style="font-size: 0.82rem;">Create Password *</label>
+          <input type="password" id="auth-reg-password" class="form-control" placeholder="At least 6 characters" required />
+        </div>
+        <div style="background: rgba(217, 119, 6, 0.08); padding: 0.5rem; border-radius: var(--radius-sm); border: 1px dashed var(--color-gold); font-size: 0.75rem; color: var(--color-gold); font-weight: 700; text-align: center;">
+          🎁 Welcome Gift: +50 Free Ghee Coins (₹50 Value) credited on signup!
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">
+          <span>Register & Claim 50 Coins 🪙</span>
+        </button>
+      </form>
+
+      <!-- Fast Social Login Separator -->
+      <div style="position: relative; text-align: center; margin: 1.25rem 0 0.85rem;">
+        <hr style="border: none; border-top: 1px solid var(--color-border);" />
+        <span style="position: absolute; top: -9px; left: 50%; transform: translateX(-50%); background: var(--color-surface); padding: 0 0.5rem; font-size: 0.72rem; color: var(--color-text-muted); font-weight: 700;">OR QUICK LOGIN</span>
+      </div>
+
+      <div style="display: flex; gap: 0.5rem;">
+        <button type="button" class="btn btn-outline btn-sm" onclick="quickSocialLogin('Google')" style="flex: 1; font-size: 0.78rem;">
+          <span>🌐 Google</span>
+        </button>
+        <button type="button" class="btn btn-outline btn-sm" onclick="quickSocialLogin('WhatsApp')" style="flex: 1; font-size: 0.78rem; color: #16A34A; border-color: #16A34A;">
+          <span>💬 WhatsApp</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL: CUSTOMER PROFILE & DASHBOARD
+       ========================================================================== -->
+  <div class="modal-overlay" id="profile-modal">
+    <div class="modal-card" style="max-width: 480px; padding: 1.75rem;">
+      <button class="modal-close-btn" onclick="closeProfileModal()" aria-label="Close Profile Modal">✕</button>
+
+      <div style="display: flex; align-items: center; gap: 1rem; border-bottom: 1px solid var(--color-border); padding-bottom: 1rem; margin-bottom: 1rem;">
+        <div style="width: 52px; height: 52px; border-radius: 50%; background: var(--color-primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800;">
+          <span id="prof-avatar-letter">S</span>
+        </div>
+        <div>
+          <div style="display: flex; align-items: center; gap: 0.4rem;">
+            <h3 style="font-size: 1.15rem; font-weight: 700; margin: 0;" id="prof-user-name">Guest User</h3>
+            <span class="badge badge-gold" style="font-size: 0.65rem;">👑 VIP Member</span>
+          </div>
+          <div style="font-size: 0.78rem; color: var(--color-text-muted);" id="prof-user-phone">+91 9876543210</div>
+          <div style="font-size: 0.72rem; color: var(--color-text-muted);" id="prof-user-email">guest@subbayyagari.in</div>
+        </div>
+      </div>
+
+      <!-- Loyalty Coins Card -->
+      <div style="background: linear-gradient(135deg, rgba(217, 119, 6, 0.12), rgba(15, 90, 39, 0.08)); border: 1px solid var(--color-gold); border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <div style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700; color: var(--color-gold);">Godavari Ghee Balance</div>
+          <div style="font-size: 1.4rem; font-weight: 800; color: var(--color-primary);" id="prof-coins-count">50 🪙</div>
+          <div style="font-size: 0.7rem; color: var(--color-text-muted);">Worth ₹50 on any Butta Feast</div>
+        </div>
+        <button class="btn btn-gold btn-sm" onclick="closeProfileModal(); toggleCart(true);">
+          <span>Redeem 🛍️</span>
+        </button>
+      </div>
+
+      <!-- Saved Delivery Address -->
+      <div style="margin-bottom: 1rem;">
+        <span style="font-size: 0.78rem; font-weight: 700; color: var(--color-primary); text-transform: uppercase;">🏠 Saved Delivery Address</span>
+        <div style="background: var(--color-surface-muted); padding: 0.75rem; border-radius: var(--radius-sm); border: 1px solid var(--color-border); margin-top: 0.35rem; font-size: 0.82rem;" id="prof-saved-address">
+          Road No. 4, KPHB Colony, Kukatpally, Hyderabad
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+        <button class="btn btn-outline btn-sm" onclick="closeProfileModal(); toggleCart(true);" style="width: 100%;">
+          <span>🧺 View Plate / Cart</span>
+        </button>
+        <button class="btn btn-outline btn-sm" onclick="handleUserLogout()" style="width: 100%; color: var(--color-spice); border-color: var(--color-spice);">
+          <span>🚪 Sign Out / Logout</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       TOAST CONTAINER
+       ========================================================================== -->
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <!-- ==========================================================================
+       FOOTER
+       ========================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      
+      <div class="footer-grid">
+        
+        <!-- Brand Summary -->
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <div class="logo-emblem" style="width: 40px; height: 40px; font-size: 1.1rem;">
+              <span>సు</span>
+            </div>
+            <div>
+              <span class="footer-title">SUBBAYYA GARI HOTEL</span>
+              <div style="font-size: 0.72rem; color: var(--color-ghee); letter-spacing: 0.1em;">ESTABLISHED 1950 • KAKINADA</div>
+            </div>
+          </div>
+          <p class="footer-tagline">
+            Serving traditional Andhra vegetarian culinary excellence with genuine love, pure ghee, and cultural pride for over 7 decades.
+          </p>
+          <div class="social-links-row">
+            <a href="https://www.facebook.com/KakinadaSubbayyaGariHotel" target="_blank" class="social-btn" aria-label="Facebook">f</a>
+            <a href="https://www.instagram.com/subbayyagarihotel_kphb/" target="_blank" class="social-btn" aria-label="Instagram">ig</a>
+            <a href="https://twitter.com/subbayyahotel" target="_blank" class="social-btn" aria-label="Twitter">tw</a>
+            <a href="https://api.whatsapp.com/send?phone=919010888842" target="_blank" class="social-btn" aria-label="WhatsApp">wa</a>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <ul class="footer-links">
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#unbox">Unbox Butta Bhojanam</a></li>
+            <li><a href="#menu">Pure Veg Menu</a></li>
+            <li><a href="#reservations">Table Reservation</a></li>
+            <li><a href="#catering">Catering Calculator</a></li>
+            <li><a href="#branches">Find Our Outlets</a></li>
+          </ul>
+        </div>
+
+        <!-- Authentic Delicacies -->
+        <div class="footer-col">
+          <h4>Signature Dishes</h4>
+          <ul class="footer-links">
+            <li><a href="#menu">Royal Butta Bhojanam</a></li>
+            <li><a href="#menu">Gutti Vankaya Kura</a></li>
+            <li><a href="#menu">Kakinada Kandi Podi</a></li>
+            <li><a href="#menu">Gongura & Avakaya</a></li>
+            <li><a href="#menu">Nethi Bobbatlu</a></li>
+            <li><a href="#menu">Atreyapuram Pootharekulu</a></li>
+          </ul>
+        </div>
+
+        <!-- Headquarter & Contact -->
+        <div class="footer-col">
+          <h4>Contact & Helplines</h4>
+          <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.88rem; color: #CBD5E1;">
+            <div>
+              <strong style="color: #FFF;">Jubilee Hills Flagship:</strong><br />
+              Road No. 36, Near Peddamma Temple, Jubilee Hills, Hyderabad, Telangana – 500033
+            </div>
+            <div>
+              <strong style="color: #FFF;">KPHB Central:</strong><br />
+              MIG 295, Sridevi Residency, Rd No:4, KPHB Colony, Hyderabad - 500072
+            </div>
+            <div>
+              <strong style="color: #FFF;">Heritage Head Office:</strong><br />
+              Subbayya Hotel Rd, Ramaraopeta, Kakinada - 533004
+            </div>
+            <div>
+              <strong style="color: #FFF;">Direct Helpline:</strong><br />
+              <a href="tel:+919010888842" style="color: var(--color-ghee); font-weight: 700;">+91 9010 888 842 / 088975 64242</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom Credits -->
+      <div class="footer-bottom">
+        <div>
+          © 2026 Subbayya Gari Hotel. All Rights Reserved. Pure Vegetarian Culinary Heritage.
+        </div>
+        <div style="display: flex; gap: 1.5rem;">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms & Conditions</a>
+          <a href="#">FSSAI Certified</a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       MOBILE OFF-CANVAS SLIDING DRAWER MENU
+       ========================================================================== -->
+  <div class="mobile-drawer-overlay" id="mobile-drawer-overlay" onclick="toggleMobileDrawer(false)"></div>
+  <aside class="mobile-drawer" id="mobile-drawer" aria-label="Mobile Navigation Drawer">
+    <div class="mobile-drawer-header">
+      <div style="display: flex; align-items: center; gap: 0.6rem;">
+        <div class="logo-emblem" style="width: 38px; height: 38px; font-size: 1.1rem;">
+          <span>సు</span>
+        </div>
+        <div style="display: flex; flex-direction: column;">
+          <strong style="font-family: var(--font-brand); font-size: 1.05rem; color: var(--color-primary); line-height: 1;">SUBBAYYA GARI</strong>
+          <span style="font-size: 0.65rem; color: var(--color-gold); font-weight: 700;">ESTD 1950 • KAKINADA</span>
+        </div>
+      </div>
+      <button class="cart-close-btn" onclick="toggleMobileDrawer(false)" aria-label="Close Menu">✕</button>
+    </div>
+
+    <ul class="mobile-drawer-links">
+      <li id="mobile-drawer-auth-item">
+        <a href="javascript:void(0)" class="mobile-drawer-link" onclick="openAuthModal('login'); toggleMobileDrawer(false);" style="background: rgba(217, 119, 6, 0.1); color: var(--color-gold); font-weight: 700; border-radius: var(--radius-md);">
+          <span id="mobile-auth-icon">👤</span> 
+          <span id="mobile-auth-text">Login / Guest Sign In</span>
+        </a>
+      </li>
+      <li><a href="#hero" class="mobile-drawer-link" onclick="toggleMobileDrawer(false)"><span>🏠</span> Home</a></li>
+      <li><a href="#unbox" class="mobile-drawer-link" onclick="toggleMobileDrawer(false)"><span>🧺</span> Butta Bhojanam Unbox</a></li>
+      <li><a href="#menu" class="mobile-drawer-link" onclick="toggleMobileDrawer(false)"><span>🍛</span> Authentic Veg Menu</a></li>
+      <li><a href="#reservations" class="mobile-drawer-link" onclick="toggleMobileDrawer(false)"><span>🎟️</span> Reserve Banana Leaf Table</a></li>
+      <li><a href="#catering" class="mobile-drawer-link" onclick="toggleMobileDrawer(false)"><span>📊</span> Catering Cost Calculator</a></li>
+      <li><a href="#branches" class="mobile-drawer-link" onclick="toggleMobileDrawer(false)"><span>📍</span> Branches & Outlets</a></li>
+      <li><a href="#reviews" class="mobile-drawer-link" onclick="toggleMobileDrawer(false)"><span>⭐</span> Customer Reviews</a></li>
+      <li><a href="#faq" class="mobile-drawer-link" onclick="toggleMobileDrawer(false)"><span>❓</span> FAQs & Heritage</a></li>
+    </ul>
+
+    <div style="margin-top: auto; display: flex; flex-direction: column; gap: 0.75rem;">
+      <a href="tel:+919010888842" class="btn btn-gold btn-sm" style="width: 100%;">
+        <span>📞 Call Helpline: 9010 888 842</span>
+      </a>
+      <a href="https://api.whatsapp.com/send?phone=919010888842&text=Hi%20Subbayya%20Gari%20Hotel," target="_blank" class="btn btn-outline btn-sm" style="width: 100%;">
+        <span>💬 Chat on WhatsApp</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- ==========================================================================
+       MOBILE FLOATING CART BANNER (Like Swiggy / Zomato)
+       ========================================================================== -->
+  <div class="mobile-floating-cart-bar" id="mobile-floating-cart-bar" onclick="toggleCart(true)">
+    <div class="float-cart-left">
+      <span class="float-cart-badge" id="float-cart-badge">0 ITEMS</span>
+      <span class="float-cart-total" id="float-cart-total">₹0</span>
+    </div>
+    <div class="float-cart-right">
+      <span>View Plate</span>
+      <span>→</span>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MOBILE APP-LIKE BOTTOM NAVIGATION DOCK
+       ========================================================================== -->
+  <nav class="mobile-bottom-dock" aria-label="Mobile Navigation Dock">
+    <a href="javascript:void(0)" class="dock-item active" onclick="switchAppMode('guest')">
+      <span class="dock-icon">🍽️</span>
+      <span>Feast</span>
+    </a>
+    <a href="javascript:void(0)" class="dock-item" onclick="switchAppMode('loyalty')">
+      <span class="dock-icon">👑</span>
+      <span>Loyalty</span>
+    </a>
+    <a href="javascript:void(0)" class="dock-item" onclick="switchAppMode('table-qr')">
+      <span class="dock-icon">📱</span>
+      <span>Table QR</span>
+    </a>
+    <a href="javascript:void(0)" class="dock-item" onclick="switchAppMode('crm')">
+      <span class="dock-icon">📊</span>
+      <span>CRM</span>
+    </a>
+    <a href="javascript:void(0)" class="dock-item" onclick="toggleCart(true)">
+      <span class="dock-icon">🛒</span>
+      <span>Plate</span>
+      <span class="dock-badge" id="dock-cart-badge" style="display: none;">0</span>
+    </a>
+  </nav>
+
+  <!-- Scripts -->
+  <script src="app.js"></script>
+</body>
+</html>
