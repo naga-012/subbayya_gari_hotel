@@ -2822,17 +2822,17 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="auth-otp-target" style="font-size: 0.82rem;">Email Address or Mobile Number *</label>
-          <input type="text" id="auth-otp-target" class="form-control" placeholder="Enter your email (e.g. guest@gmail.com) or 10-digit mobile" required style="font-size: 0.9rem;" onkeydown="if(event.key==='Enter'){event.preventDefault();sendLoginOtp();}" />
-          <div style="font-size: 0.72rem; color: var(--color-text-muted); margin-top: 3px;">
-            A 4-digit verification OTP will be sent directly from <strong>myakalanagarjun09@gmail.com</strong>.
+          <label class="form-label" for="auth-otp-target" style="font-size: 0.84rem; font-weight: 700;">Enter Your Email / Gmail Address *</label>
+          <input type="email" id="auth-otp-target" class="form-control" placeholder="e.g. yourname@gmail.com" required style="font-size: 0.92rem; padding: 0.65rem 0.85rem;" onkeydown="if(event.key==='Enter'){event.preventDefault();sendLoginOtp();}" />
+          <div style="font-size: 0.74rem; color: var(--color-text-muted); margin-top: 4px;">
+            Enter your email address. A 4-digit verification code will be sent directly to your Gmail inbox.
           </div>
         </div>
 
         <!-- Step 1 Send OTP Button -->
         <div id="auth-otp-send-step">
           <button type="button" id="btn-send-otp" class="btn btn-gold" onclick="sendLoginOtp()" style="width: 100%;">
-            <span>Send OTP from myakalanagarjun09@gmail.com 🚀</span>
+            <span>Send OTP to My Gmail ✉️</span>
           </button>
         </div>
 

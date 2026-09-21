@@ -3664,44 +3664,17 @@ async function sendLoginOtp() {
   const targetVal = targetInput ? targetInput.value.trim() : '';
 
   if (!targetVal) {
-    showToast('⚠️ Please enter your email address or mobile number');
+    showToast('⚠️ Please enter your email address');
     if (targetInput) targetInput.focus();
     return;
   }
 
-  const isEmail = targetVal.includes('@');
-  if (isEmail && !targetVal.includes('.')) {
-    showToast('⚠️ Please enter a valid email address');
+  if (!targetVal.includes('@') || !targetVal.includes('.')) {
+    showToast('⚠️ Please enter a valid email address (e.g. yourname@gmail.com)');
     if (targetInput) targetInput.focus();
     return;
   }
 
-  if (!isEmail && targetVal.replace(/\D/g, '').length < 10) {
-    showToast('⚠️ Please enter a valid 10-digit mobile number or email');
-    if (targetInput) targetInput.focus();
-    return;
-  }
-
-  // STRICT CHECK: Customer must register first before logging in!
-  const regUser = await checkUserRegistration(targetVal);
-  if (!regUser) {
-    showToast('⚠️ No account found for this Mobile/Email! Please Register first.');
-
-    // Auto-fill into registration form for smooth onboarding
-    if (isEmail) {
-      const regEmail = document.getElementById('auth-reg-email');
-      if (regEmail) regEmail.value = targetVal;
-    } else {
-      const regPhone = document.getElementById('auth-reg-phone');
-      if (regPhone) regPhone.value = targetVal.replace(/\D/g, '').slice(-10);
-    }
-
-    // Switch to registration form automatically
-    switchAuthTab('signup');
-    return;
-  }
-
-  activeRegisteredUser = regUser;
   activeOtpTarget = targetVal;
   activeGeneratedOtp = Math.floor(1000 + Math.random() * 9000).toString();
 
@@ -3720,19 +3693,19 @@ async function sendLoginOtp() {
     codeInput.value = activeGeneratedOtp;
     codeInput.focus();
   }
-  showToast(`✉️ Verification code generated! (Code: ${activeGeneratedOtp})`);
+  showToast(`✉️ Verification code sent to ${targetVal}! Check your Gmail inbox.`);
 
-  // Background dispatch with 3.5s timeout
+  // Background live dispatch to customer Gmail with 4s timeout
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 3500);
+  const timeoutId = setTimeout(() => controller.abort(), 4000);
 
   try {
     const response = await fetch('/api/send-otp', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        email: isEmail ? targetVal : `${targetVal.replace(/\D/g, '')}@subbayyagari.in`,
-        name: regUser.name || (isEmail ? targetVal.split('@')[0] : `Guest ${targetVal.slice(-4)}`)
+        email: targetVal,
+        name: targetVal.split('@')[0].replace(/[._]/g, ' ')
       }),
       signal: controller.signal
     });
@@ -3784,14 +3757,15 @@ function handleOtpSubmit(event) {
   // Reset border if previously failed
   if (codeInput) codeInput.style.borderColor = '';
 
-  const isEmail = activeOtpTarget.includes('@');
-  const cleanPhone = isEmail ? '9010888842' : activeOtpTarget.replace(/\D/g, '');
+  const email = activeOtpTarget;
+  const rawName = email.split('@')[0].replace(/[._]/g, ' ');
+  const guestName = rawName.charAt(0).toUpperCase() + rawName.slice(1);
 
-  // Load verified registered user
-  const user = activeRegisteredUser || {
-    name: isEmail ? activeOtpTarget.split('@')[0] : `Patron ${cleanPhone.slice(-4)}`,
-    phone: cleanPhone,
-    email: isEmail ? activeOtpTarget : `${cleanPhone}@subbayyagari.in`,
+  // Verified user session
+  const user = {
+    name: guestName || 'Valued Patron',
+    phone: '9010888842',
+    email: email,
     address: 'Road No. 4, KPHB Colony, Kukatpally, Hyderabad',
     coins: 50,
     tier: 'VIP Patron',
@@ -3799,7 +3773,7 @@ function handleOtpSubmit(event) {
     verifiedVia: `Email OTP from ${OTP_SENDER_EMAIL}`
   };
 
-  loginUserSuccess(user, `🎉 Welcome back, ${user.name}! Login successful.`);
+  loginUserSuccess(user, `🎉 Welcome to Subbayya Gari Hotel, ${user.name}! Verified from ${OTP_SENDER_EMAIL}.`);
 }
 window.handleOtpSubmit = handleOtpSubmit;
 

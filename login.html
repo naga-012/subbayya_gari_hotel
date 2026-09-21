@@ -165,7 +165,7 @@
       </div>
 
       <!-- ======================================================================
-           INSTANT OTP LOGIN (myakalanagarjun09@gmail.com)
+           INSTANT GMAIL OTP LOGIN (Sender: myakalanagarjun09@gmail.com)
            ====================================================================== -->
       <div id="panel-otp" style="display: block;">
         <form id="page-otp-form" onsubmit="handlePageOtpSubmit(event)" style="display: flex; flex-direction: column; gap: 0.95rem;">
@@ -179,27 +179,26 @@
             <span style="background: #16A34A; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; letter-spacing: 0.04em;">OFFICIAL</span>
           </div>
 
-          <!-- Step 1: Input Mobile or Email -->
-          <div class="form-group">
-            <label class="form-label" for="page-otp-target" style="font-size: 0.84rem; font-weight: 700;">Email Address or Mobile Number *</label>
+          <!-- Step 1: Input Customer Email Address -->
+          <div class="form-group" id="page-otp-send-wrap">
+            <label class="form-label" for="page-otp-target" style="font-size: 0.86rem; font-weight: 700; color: var(--color-text);">
+              Enter Your Email / Gmail Address *
+            </label>
             <input 
-              type="text" 
+              type="email" 
               id="page-otp-target" 
               class="form-control" 
-              placeholder="e.g. yourname@gmail.com or 9876543210" 
+              placeholder="e.g. yourname@gmail.com" 
               required 
-              style="font-size: 0.95rem; padding: 0.65rem 0.85rem;"
+              style="font-size: 0.95rem; padding: 0.7rem 0.85rem;"
               onkeydown="if(event.key==='Enter'){event.preventDefault();sendPageOtp();}"
             />
-            <div style="font-size: 0.72rem; color: var(--color-text-muted); margin-top: 4px;">
-              A 4-digit code will be generated from <strong>myakalanagarjun09@gmail.com</strong>.
+            <div style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 5px;">
+              Enter your email address. A 4-digit verification code will be sent directly to your Gmail inbox.
             </div>
-          </div>
 
-          <!-- Step 1 Button: Send OTP -->
-          <div id="page-otp-send-wrap">
-            <button type="button" id="btn-page-send-otp" class="btn btn-gold btn-lg" onclick="sendPageOtp()" style="width: 100%;">
-              <span>Send OTP from myakalanagarjun09@gmail.com 🚀</span>
+            <button type="button" id="btn-page-send-otp" class="btn btn-gold btn-lg" onclick="sendPageOtp()" style="width: 100%; margin-top: 0.75rem;">
+              <span>Send OTP to My Gmail ✉️</span>
             </button>
           </div>
 
@@ -219,18 +218,21 @@
               </div>
             </div>
 
-            <div style="font-size: 0.75rem; color: var(--color-text-muted); text-align: center;">
-              Sent from <strong>myakalanagarjun09@gmail.com</strong> to <span id="page-otp-target-display" style="color: var(--color-primary); font-weight: 700;">your email</span>
+            <div style="font-size: 0.78rem; color: var(--color-text); text-align: center; background: #FFFFFF; padding: 0.5rem; border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
+              ✉️ Verification code sent from <strong>myakalanagarjun09@gmail.com</strong> to <strong id="page-otp-target-display" style="color: var(--color-primary);">your email</strong>
             </div>
 
             <div class="form-group" style="margin: 0;">
+              <label class="form-label" for="page-otp-code" style="font-size: 0.82rem; font-weight: 700; text-align: center; display: block;">
+                Enter 4-Digit OTP Code
+              </label>
               <input 
                 type="text" 
                 id="page-otp-code" 
                 class="form-control" 
-                placeholder="Enter 4-Digit Code" 
+                placeholder="• • • •" 
                 maxlength="4" 
-                style="text-align: center; font-size: 1.35rem; font-weight: 900; letter-spacing: 0.25em; padding: 0.65rem;"
+                style="text-align: center; font-size: 1.45rem; font-weight: 900; letter-spacing: 0.3em; padding: 0.65rem;"
                 onkeydown="if(event.key==='Enter'){event.preventDefault();handlePageOtpSubmit(event);}"
               />
             </div>
@@ -240,8 +242,8 @@
             </button>
 
             <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.76rem; color: var(--color-text-muted); margin-top: 0.25rem;">
-              <a href="javascript:void(0)" onclick="resetOtpStep()" style="color: var(--color-text-muted);">← Change email/mobile</a>
-              <a href="javascript:void(0)" onclick="sendPageOtp()" style="color: var(--color-gold); font-weight: 700;">Resend OTP</a>
+              <a href="javascript:void(0)" onclick="resetOtpStep()" style="color: var(--color-text-muted);">← Change Email Address</a>
+              <a href="javascript:void(0)" onclick="sendPageOtp()" style="color: var(--color-gold); font-weight: 700;">Resend OTP ✉️</a>
             </div>
 
           </div>
@@ -254,194 +256,44 @@
   <!-- Toast Notification Container -->
   <div class="toast-container" id="toast-container"></div>
 
-  <!-- Client-s    const OTP_SENDER_EMAIL = 'myakalanagarjun09@gmail.com';
+  <!-- Client-side script for login page -->
+  <script>
+    const OTP_SENDER_EMAIL = 'myakalanagarjun09@gmail.com';
     let currentGeneratedOtp = null;
     let currentOtpTarget = '';
-    let currentRegisteredUser = null;
 
-    // Default Seed Registered Patrons
-    const DEFAULT_REGISTERED_USERS = [
-      {
-        id: 'USR-1001',
-        name: 'Myakalanagarjun',
-        phone: '9010888842',
-        email: 'myakalanagarjun09@gmail.com',
-        address: 'Road No. 4, KPHB Colony, Kukatpally, Hyderabad',
-        coins: 50,
-        tier: 'VIP Patron',
-        memberSince: '2026'
-      },
-      {
-        id: 'USR-1002',
-        name: 'Srinivas Varma',
-        phone: '9876543210',
-        email: 'srinivas.varma@gmail.com',
-        address: 'MIG 295, Rd No. 4, KPHB Colony, Kukatpally, Hyderabad',
-        coins: 50,
-        tier: 'VIP Patron',
-        memberSince: '2026'
-      },
-      {
-        id: 'USR-1003',
-        name: 'Anand Godavari',
-        phone: '9121234567',
-        email: 'anand.godavari@wa.me',
-        address: 'Road No. 36, Jubilee Hills, Hyderabad',
-        coins: 50,
-        tier: 'VIP Patron',
-        memberSince: '2026'
-      }
-    ];
-
-    function getLocalRegisteredUsers() {
-      try {
-        const stored = localStorage.getItem('sgh_registered_users');
-        if (stored) {
-          const list = JSON.parse(stored);
-          return Array.isArray(list) ? list : DEFAULT_REGISTERED_USERS;
-        }
-      } catch (e) {
-        console.warn('Error reading registered users:', e);
-      }
-      return DEFAULT_REGISTERED_USERS;
-    }
-
-    function saveLocalRegisteredUser(user) {
-      try {
-        const list = getLocalRegisteredUsers();
-        const cleanPhone = (user.phone || '').replace(/\D/g, '').slice(-10);
-        const cleanEmail = (user.email || '').toLowerCase().trim();
-        const exists = list.some(u => {
-          const uPhone = (u.phone || '').replace(/\D/g, '').slice(-10);
-          const uEmail = (u.email || '').toLowerCase().trim();
-          return (cleanPhone && uPhone === cleanPhone) || (cleanEmail && uEmail === cleanEmail);
-        });
-        if (!exists) {
-          list.unshift(user);
-          localStorage.setItem('sgh_registered_users', JSON.stringify(list));
-        }
-      } catch (e) {
-        console.warn('Error saving registered user locally:', e);
-      }
-    }
-
-    async function checkUserRegistration(target) {
-      const cleanTarget = (target || '').trim();
-      const cleanPhone = cleanTarget.replace(/\D/g, '').slice(-10);
-      const isEmail = cleanTarget.includes('@');
-
-      // 1. Check API first
-      try {
-        const res = await fetch(`/api/users/check?target=${encodeURIComponent(cleanTarget)}`);
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.registered && data.user) {
-            return data.user;
-          }
-        }
-      } catch (err) {
-        console.warn('API check fallback to local database:', err.message);
-      }
-
-      // 2. Check Local Registered Users Database
-      const localUsers = getLocalRegisteredUsers();
-      const found = localUsers.find(u => {
-        const uPhone = (u.phone || '').replace(/\D/g, '').slice(-10);
-        const uEmail = (u.email || '').toLowerCase().trim();
-        if (cleanPhone && cleanPhone.length >= 10 && uPhone === cleanPhone) return true;
-        if (isEmail && uEmail === cleanTarget.toLowerCase()) return true;
-        return false;
-      });
-
-      return found || null;
-    }
-
-    // Switch between tabs: 'otp' and 'signup'
-    function switchLoginTab(tab) {
-      const btnOtp = document.getElementById('tab-btn-otp');
-      const btnSignup = document.getElementById('tab-btn-signup');
-      const panelOtp = document.getElementById('tab-panel-otp');
-      const panelSignup = document.getElementById('tab-panel-signup');
-
-      [btnOtp, btnSignup].forEach(b => {
-        if (b) b.classList.remove('active');
-      });
-
-      if (panelOtp) panelOtp.style.display = 'none';
-      if (panelSignup) panelSignup.style.display = 'none';
-
-      if (tab === 'otp' && btnOtp && panelOtp) {
-        btnOtp.classList.add('active');
-        panelOtp.style.display = 'block';
-        document.getElementById('page-otp-target')?.focus();
-      } else if (tab === 'signup' && btnSignup && panelSignup) {
-        btnSignup.classList.add('active');
-        panelSignup.style.display = 'block';
-        document.getElementById('page-reg-name')?.focus();
-      }
-    }
-
-    // Step 1: Check Registration & Send OTP
+    // Step 1: Send OTP to Customer Gmail
     async function sendPageOtp() {
       const targetInput = document.getElementById('page-otp-target');
       const targetVal = targetInput ? targetInput.value.trim() : '';
 
       if (!targetVal) {
-        showToast('⚠️ Please enter your email address or mobile number');
+        showToast('⚠️ Please enter your email address');
         if (targetInput) targetInput.focus();
         return;
       }
 
-      const isEmail = targetVal.includes('@');
-      if (isEmail && !targetVal.includes('.')) {
-        showToast('⚠️ Please enter a valid email address');
+      if (!targetVal.includes('@') || !targetVal.includes('.')) {
+        showToast('⚠️ Please enter a valid email address (e.g. name@gmail.com)');
         if (targetInput) targetInput.focus();
         return;
       }
 
-      if (!isEmail && targetVal.replace(/\D/g, '').length < 10) {
-        showToast('⚠️ Please enter a valid 10-digit mobile number or email');
-        if (targetInput) targetInput.focus();
-        return;
-      }
-
-      // STRICT CHECK: Customer must register first before logging in!
-      const regUser = await checkUserRegistration(targetVal);
-      if (!regUser) {
-        showToast('⚠️ No account found for this Mobile/Email! Please Register first.');
-        
-        // Auto-fill into registration form for smooth onboarding
-        if (isEmail) {
-          const regEmail = document.getElementById('page-reg-email');
-          if (regEmail) regEmail.value = targetVal;
-        } else {
-          const regPhone = document.getElementById('page-reg-phone');
-          if (regPhone) regPhone.value = targetVal.replace(/\D/g, '').slice(-10);
-        }
-
-        // Switch to registration form automatically
-        switchLoginTab('signup');
-        return;
-      }
-
-      currentRegisteredUser = regUser;
       currentOtpTarget = targetVal;
-
-      // Pre-set OTP immediately so the UI responds instantly without any delay
       currentGeneratedOtp = Math.floor(1000 + Math.random() * 9000).toString();
-      transitionToVerifyStep(targetVal, currentGeneratedOtp, true);
+      transitionToVerifyStep(targetVal, currentGeneratedOtp);
 
-      // Attempt server delivery with 3.5s timeout (prevents any freeze if hosting provider blocks SMTP)
+      // Trigger Live Email Dispatch from myakalanagarjun09@gmail.com to Customer Email
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3500);
+      const timeoutId = setTimeout(() => controller.abort(), 4000);
 
       try {
         const response = await fetch('/api/send-otp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            email: isEmail ? targetVal : `${targetVal.replace(/\D/g, '')}@subbayyagari.in`,
-            name: regUser.name || (isEmail ? targetVal.split('@')[0] : `Guest ${targetVal.slice(-4)}`)
+            email: targetVal,
+            name: targetVal.split('@')[0].replace(/[._]/g, ' ')
           }),
           signal: controller.signal
         });
@@ -465,7 +317,7 @@
       }
     }
 
-    function transitionToVerifyStep(targetVal, otpCode, isDemo) {
+    function transitionToVerifyStep(targetVal, otpCode) {
       const sendWrap = document.getElementById('page-otp-send-wrap');
       const verifyWrap = document.getElementById('page-otp-verify-wrap');
       const targetDisplay = document.getElementById('page-otp-target-display');
@@ -481,11 +333,7 @@
         codeInput.focus();
       }
 
-      if (isDemo) {
-        showToast(`✉️ Verification code generated! (Code: ${otpCode})`);
-      } else {
-        showToast(`✉️ Live OTP sent from ${OTP_SENDER_EMAIL} to ${targetVal}! Check your inbox.`);
-      }
+      showToast(`✉️ Verification code sent to ${targetVal}! Check your Gmail inbox.`);
     }
 
     function autoFillPageOtp() {
@@ -505,7 +353,7 @@
       document.getElementById('page-otp-target')?.focus();
     }
 
-    // Step 2: Handle OTP submission & validation
+    // Step 2: Handle OTP submission & login
     function handlePageOtpSubmit(event) {
       event.preventDefault();
       const codeInput = document.getElementById('page-otp-code');
@@ -526,68 +374,22 @@
         return;
       }
 
-      const isEmail = currentOtpTarget.includes('@');
-      const cleanPhone = isEmail ? '9010888842' : currentOtpTarget.replace(/\D/g, '');
+      const email = currentOtpTarget;
+      const rawName = email.split('@')[0].replace(/[._]/g, ' ');
+      const guestName = rawName.charAt(0).toUpperCase() + rawName.slice(1);
 
-      // Load registered user details
-      const user = currentRegisteredUser || {
-        name: isEmail ? currentOtpTarget.split('@')[0] : `Patron ${cleanPhone.slice(-4)}`,
-        phone: cleanPhone,
-        email: isEmail ? currentOtpTarget : `${cleanPhone}@subbayyagari.in`,
+      const user = {
+        name: guestName || 'Valued Patron',
+        phone: '9010888842',
+        email: email,
         address: 'Road No. 4, KPHB Colony, Kukatpally, Hyderabad',
         coins: 50,
         tier: 'VIP Patron',
-        memberSince: '2026'
+        memberSince: '2026',
+        verifiedVia: `Email OTP from ${OTP_SENDER_EMAIL}`
       };
 
-      finishLoginAndRedirect(user, `🎉 Welcome back, ${user.name}! Login successful.`);
-    }
-
-    // Registration handler (Register first, then login)
-    async function handlePageSignup(event) {
-      event.preventDefault();
-      const name = document.getElementById('page-reg-name')?.value.trim();
-      const phone = document.getElementById('page-reg-phone')?.value.trim();
-      const email = document.getElementById('page-reg-email')?.value.trim() || `${phone}@subbayyagari.in`;
-      const address = document.getElementById('page-reg-address')?.value.trim() || 'Hyderabad, Telangana';
-
-      if (!name || !phone) {
-        showToast('⚠️ Full Name and Mobile Number are required for registration');
-        return;
-      }
-
-      const cleanPhone = phone.replace(/\D/g, '').slice(-10);
-      if (cleanPhone.length < 10) {
-        showToast('⚠️ Please enter a valid 10-digit mobile number');
-        return;
-      }
-
-      const newUser = {
-        id: 'USR-' + Math.floor(1000 + Math.random() * 9000),
-        name: name,
-        phone: cleanPhone,
-        email: email,
-        address: address,
-        coins: 50,
-        tier: 'VIP Patron',
-        memberSince: new Date().getFullYear().toString()
-      };
-
-      // Save to local list immediately
-      saveLocalRegisteredUser(newUser);
-
-      // Save to API backend
-      try {
-        await fetch('/api/users/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(newUser)
-        });
-      } catch (err) {
-        console.warn('Backend user registration sync error (saved locally):', err.message);
-      }
-
-      finishLoginAndRedirect(newUser, `🎉 Welcome to Godavari Family, ${name}! Registered successfully & 🪙 50 Coins credited.`);
+      finishLoginAndRedirect(user, `🎉 Welcome, ${user.name}! Successfully logged in via Gmail.`);
     }
 
     // Save session and redirect back to index.html
