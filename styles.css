@@ -2754,6 +2754,68 @@ button {
   border: 1px solid #2563EB;
 }
 
+/* Order Live Tracker */
+.order-tracker-steps {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  margin: 0.75rem 0 0.25rem;
+}
+.order-tracker-steps::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  left: 20px;
+  right: 20px;
+  height: 3px;
+  background: var(--color-border);
+  z-index: 1;
+}
+.order-tracker-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  flex: 1;
+}
+.order-tracker-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  margin-bottom: 4px;
+}
+.order-tracker-step.completed .order-tracker-dot {
+  background: #16A34A;
+  border-color: #16A34A;
+  color: #fff;
+}
+.order-tracker-step.active .order-tracker-dot {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: #fff;
+  box-shadow: 0 0 0 4px rgba(217, 119, 6, 0.2);
+}
+.order-tracker-label {
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+.order-tracker-step.active .order-tracker-label,
+.order-tracker-step.completed .order-tracker-label {
+  color: var(--color-text);
+  font-weight: 700;
+}
 
 .modal-close-btn {
   position: absolute;

@@ -2827,18 +2827,61 @@ function proceedToCheckout() {
   });
 }
 
+let lastPlacedOrderData = null;
+
 function showOrderConfirmationModal(orderId, name, phone, whatsappMsg, details = {}) {
   const modal = document.getElementById('order-confirmation-modal');
   if (!modal) return;
 
-  document.getElementById('conf-order-id').textContent = orderId;
-  document.getElementById('conf-customer-name').textContent = name;
-  document.getElementById('conf-branch').textContent = (details.branchName || AppState.selectedBranch).toUpperCase();
-  document.getElementById('conf-total-items').textContent = (details.items ? details.items.reduce((s, i) => s + i.qty, 0) : AppState.cart.reduce((s, i) => s + i.qty, 0)) + ' Items';
+  lastPlacedOrderData = {
+    id: orderId,
+    name: name,
+    phone: phone,
+    whatsappMsg: whatsappMsg,
+    ...details
+  };
+
+  const confId = document.getElementById('conf-order-id');
+  const confName = document.getElementById('conf-customer-name');
+  const confBranch = document.getElementById('conf-branch');
+  const confPayment = document.getElementById('conf-payment-status');
+  const confOrderType = document.getElementById('conf-order-type');
+  const confDishesCount = document.getElementById('conf-dishes-count');
+  const confDishesList = document.getElementById('conf-dishes-list');
+  const confGrandTotal = document.getElementById('conf-grand-total');
+
+  if (confId) confId.textContent = orderId;
+  if (confName) confName.textContent = name;
+  if (confBranch) confBranch.textContent = (details.branchName || AppState.selectedBranch).toUpperCase();
+  if (confPayment) confPayment.textContent = details.paymentStatus || 'Paid Online (Verified)';
   
-  const orderTypeEl = document.getElementById('conf-order-type');
-  if (orderTypeEl) {
-    orderTypeEl.textContent = details.orderType === 'delivery' ? '🛵 Home Delivery' : '🥡 Restaurant Pickup';
+  if (confOrderType) {
+    confOrderType.textContent = details.orderType === 'delivery' ? '🛵 Home Delivery' : '🥡 Restaurant Pickup';
+  }
+
+  const items = details.items || AppState.cart || [];
+  const totalItemCount = items.reduce((s, i) => s + (i.qty || 1), 0);
+  if (confDishesCount) confDishesCount.textContent = totalItemCount;
+
+  if (confDishesList) {
+    if (items.length > 0) {
+      confDishesList.innerHTML = items.map(item => `
+        <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px dotted rgba(0,0,0,0.06); padding-bottom: 3px;">
+          <div style="display: flex; align-items: center; gap: 0.35rem;">
+            <span style="color: #16A34A; font-size: 0.72rem;">🟢</span>
+            <span style="font-weight: 600; color: var(--color-text);">${item.name}</span>
+            <span style="background: rgba(15, 90, 39, 0.08); color: var(--color-primary); font-weight: 700; padding: 0 5px; border-radius: 4px; font-size: 0.7rem;">x${item.qty || 1}</span>
+          </div>
+          <span style="font-weight: 700; color: var(--color-primary);">₹${(item.price || 0) * (item.qty || 1)}</span>
+        </div>
+      `).join('');
+    } else {
+      confDishesList.innerHTML = '<div style="color: var(--color-text-muted);">Royal Butta Feast Selection</div>';
+    }
+  }
+
+  if (confGrandTotal) {
+    confGrandTotal.textContent = `₹${details.grandTotal || 0}`;
   }
 
   const deliveryRow = document.getElementById('conf-delivery-row');
@@ -2877,6 +2920,15 @@ function showOrderConfirmationModal(orderId, name, phone, whatsappMsg, details =
   saveCart();
   renderMenuGrid();
 }
+
+function openOrderDetailsFromConfirmation() {
+  const confModal = document.getElementById('order-confirmation-modal');
+  if (confModal) confModal.classList.remove('active');
+  if (lastPlacedOrderData && lastPlacedOrderData.id) {
+    openOrderDetailsModal(lastPlacedOrderData.id);
+  }
+}
+window.openOrderDetailsFromConfirmation = openOrderDetailsFromConfirmation;
 
 // ==========================================================================
 // 8. UNBOX THE BUTTA BHOJANAM INTERACTIVITY
@@ -4350,12 +4402,15 @@ async function fetchAndRenderCustomerOrders() {
           ` : ''}
 
           <!-- Order Total & Actions -->
-          <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--color-border); padding-top: 0.75rem; margin-top: 0.4rem;">
+          <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem; border-top: 1px solid var(--color-border); padding-top: 0.75rem; margin-top: 0.4rem;">
             <div>
               <span style="font-size: 0.72rem; color: var(--color-text-muted);">Grand Total:</span>
               <span style="font-size: 1.15rem; font-weight: 800; color: var(--color-primary); margin-left: 0.25rem;">₹${ord.grandTotal || ord.subtotal || 0}</span>
             </div>
-            <div style="display: flex; gap: 0.4rem;">
+            <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+              <button type="button" class="btn btn-primary btn-sm" onclick="openOrderDetailsModal('${ord.id}')" style="font-size: 0.74rem; padding: 0.3rem 0.65rem; font-weight: 700;">
+                👁️ View Details
+              </button>
               <button type="button" class="btn btn-outline btn-sm" onclick="reorderCustomerItems('${ord.id}')" style="font-size: 0.74rem; padding: 0.3rem 0.65rem; border-color: var(--color-gold); color: var(--color-gold);">
                 🔄 Reorder
               </button>
@@ -4380,6 +4435,332 @@ async function fetchAndRenderCustomerOrders() {
   }
 }
 window.fetchAndRenderCustomerOrders = fetchAndRenderCustomerOrders;
+
+// ==========================================================================
+// 12. FULL ORDER DETAILS MODAL & RECEIPT PRINT
+// ==========================================================================
+let activeViewingOrder = null;
+
+async function openOrderDetailsModal(orderId) {
+  const modal = document.getElementById('order-details-modal');
+  if (!modal) return;
+
+  // 1. Search in local and memory caches
+  let ord = null;
+  if (lastPlacedOrderData && lastPlacedOrderData.id === orderId) {
+    ord = lastPlacedOrderData;
+  }
+  if (!ord && Array.isArray(currentCustomerOrders)) {
+    ord = currentCustomerOrders.find(o => o.id === orderId);
+  }
+  if (!ord) {
+    try {
+      const local = JSON.parse(localStorage.getItem('sgh_customer_orders') || '[]');
+      ord = local.find(o => o.id === orderId);
+    } catch (e) {}
+  }
+
+  // 2. Fetch from API if still not found
+  if (!ord) {
+    try {
+      const res = await fetch(`/api/orders`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data && Array.isArray(data.orders)) {
+          ord = data.orders.find(o => o.id === orderId);
+        }
+      }
+    } catch (e) {
+      console.warn('Could not fetch order details from server:', e);
+    }
+  }
+
+  if (!ord) {
+    showToast('⚠️ Order details could not be found.');
+    return;
+  }
+
+  activeViewingOrder = ord;
+
+  // Header and Status
+  const dtlId = document.getElementById('dtl-order-id');
+  const dtlStatusBadge = document.getElementById('dtl-order-status-badge');
+  const dtlStatusIcon = document.getElementById('dtl-order-status-icon');
+  const dtlStatusText = document.getElementById('dtl-order-status-text');
+
+  if (dtlId) dtlId.textContent = `Order #${ord.id}`;
+  
+  const statusStr = (ord.status || 'Received').toLowerCase();
+  let statusIcon = '👨‍🍳';
+  let badgeClass = 'cust-status-preparing';
+  if (statusStr === 'delivered') {
+    statusIcon = '✅';
+    badgeClass = 'cust-status-delivered';
+  } else if (statusStr === 'out for delivery' || statusStr === 'ready') {
+    statusIcon = '🛵';
+    badgeClass = 'cust-status-out';
+  } else if (statusStr === 'received') {
+    statusIcon = '📥';
+    badgeClass = 'cust-status-received';
+  }
+
+  if (dtlStatusBadge) dtlStatusBadge.className = `cust-status-badge ${badgeClass}`;
+  if (dtlStatusIcon) dtlStatusIcon.textContent = statusIcon;
+  if (dtlStatusText) dtlStatusText.textContent = ord.status || 'Received & Cooking';
+
+  // Live Tracker Steps
+  const trackerContainer = document.getElementById('dtl-order-tracker-steps');
+  if (trackerContainer) {
+    const isDelivery = ord.orderType === 'delivery';
+    const step3Label = isDelivery ? 'Out for Delivery' : 'Ready for Pickup';
+    const step4Label = isDelivery ? 'Delivered' : 'Picked Up';
+
+    let s1 = 'completed', s2 = '', s3 = '', s4 = '';
+    if (statusStr === 'received') {
+      s1 = 'completed';
+      s2 = 'active';
+    } else if (statusStr === 'preparing' || statusStr === 'cooking' || statusStr === 'received & cooking') {
+      s1 = 'completed';
+      s2 = 'active';
+    } else if (statusStr === 'out for delivery' || statusStr === 'ready') {
+      s1 = 'completed';
+      s2 = 'completed';
+      s3 = 'active';
+    } else if (statusStr === 'delivered' || statusStr === 'completed') {
+      s1 = 'completed';
+      s2 = 'completed';
+      s3 = 'completed';
+      s4 = 'completed';
+    } else {
+      s1 = 'completed';
+      s2 = 'active';
+    }
+
+    trackerContainer.innerHTML = `
+      <div class="order-tracker-step ${s1}">
+        <div class="order-tracker-dot">${s1 === 'completed' ? '✓' : '1'}</div>
+        <div class="order-tracker-label">Placed</div>
+      </div>
+      <div class="order-tracker-step ${s2}">
+        <div class="order-tracker-dot">${s2 === 'completed' ? '✓' : '2'}</div>
+        <div class="order-tracker-label">Cooking</div>
+      </div>
+      <div class="order-tracker-step ${s3}">
+        <div class="order-tracker-dot">${s3 === 'completed' ? '✓' : '3'}</div>
+        <div class="order-tracker-label">${step3Label}</div>
+      </div>
+      <div class="order-tracker-step ${s4}">
+        <div class="order-tracker-dot">${s4 === 'completed' ? '✓' : '4'}</div>
+        <div class="order-tracker-label">${step4Label}</div>
+      </div>
+    `;
+  }
+
+  // Patron & Destination Details
+  const dtlName = document.getElementById('dtl-customer-name');
+  const dtlPhone = document.getElementById('dtl-customer-phone');
+  const dtlBranch = document.getElementById('dtl-branch-name');
+  const dtlBranchAddr = document.getElementById('dtl-branch-address');
+  const dtlType = document.getElementById('dtl-order-type');
+  const dtlTime = document.getElementById('dtl-order-time');
+  const dtlPayment = document.getElementById('dtl-payment-status');
+
+  if (dtlName) dtlName.textContent = ord.customerName || 'Valued Guest';
+  if (dtlPhone) dtlPhone.textContent = ord.customerPhone || 'Contact Provided';
+  if (dtlBranch) dtlBranch.textContent = ord.branchName || 'KPHB Colony, Hyderabad';
+  if (dtlBranchAddr) dtlBranchAddr.textContent = ord.branchAddress || 'Subbayya Gari Signature Outlet';
+  
+  const formattedTime = ord.createdAt 
+    ? new Date(ord.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+    : 'Recent Feast Order';
+  if (dtlType) dtlType.textContent = ord.orderType === 'delivery' ? '🛵 Home Delivery' : '🥡 Restaurant Takeaway';
+  if (dtlTime) dtlTime.textContent = formattedTime;
+  if (dtlPayment) dtlPayment.textContent = ord.paymentStatus || 'Paid Online (Verified)';
+
+  // Delivery / Pickup specific banner
+  const bannerEl = document.getElementById('dtl-delivery-banner');
+  if (bannerEl) {
+    if (ord.orderType === 'delivery') {
+      let addrHtml = `<strong>🏠 Delivery Address:</strong> ${ord.deliveryAddress || 'Standard Delivery Location'}`;
+      if (ord.deliveryLandmark) {
+        addrHtml += `<br/><span style="color: var(--color-text-muted);">🚩 Landmark: ${ord.deliveryLandmark}</span>`;
+      }
+      if (ord.gpsMapUrl || ord.locationUrl) {
+        addrHtml += `<br/><a href="${ord.gpsMapUrl || ord.locationUrl}" target="_blank" style="color: var(--color-gold); font-weight: 700; text-decoration: underline;">📍 Open Exact Location in Google Maps ↗</a>`;
+      }
+      bannerEl.innerHTML = addrHtml;
+      bannerEl.style.display = 'block';
+    } else {
+      bannerEl.innerHTML = `
+        <strong>🥡 Pickup Time:</strong> ${ord.pickupSlot || 'Ready in 15-20 Minutes'}<br/>
+        <span style="color: var(--color-text-muted);">📍 Please collect at the designated Curbside Pickup counter at ${ord.branchName || 'Selected Outlet'}.</span>
+        ${ord.vehicleNote ? `<br/><span style="color: var(--color-gold); font-weight: 700;">🚗 Vehicle Details: ${ord.vehicleNote}</span>` : ''}
+      `;
+      bannerEl.style.display = 'block';
+    }
+  }
+
+  // Dishes Breakdown
+  const items = ord.items || [];
+  const countTag = document.getElementById('dtl-items-count-tag');
+  const itemsListEl = document.getElementById('dtl-items-list');
+  const totalCount = items.reduce((s, i) => s + (i.qty || 1), 0);
+
+  if (countTag) countTag.textContent = `${totalCount} Items`;
+  if (itemsListEl) {
+    if (items.length > 0) {
+      itemsListEl.innerHTML = items.map((item, idx) => `
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dotted rgba(0,0,0,0.06); padding-bottom: 4px;">
+          <div style="display: flex; align-items: center; gap: 0.45rem;">
+            <span style="color: #16A34A; font-size: 0.75rem;">🟢</span>
+            <div>
+              <span style="font-weight: 700; color: var(--color-text);">${item.name || 'Signature Bhojanam Dish'}</span>
+              <div style="font-size: 0.72rem; color: var(--color-text-muted);">₹${item.price || 0} per item</div>
+            </div>
+            <span style="background: rgba(15, 90, 39, 0.1); color: var(--color-primary); font-weight: 800; padding: 2px 7px; border-radius: 4px; font-size: 0.74rem;">x${item.qty || 1}</span>
+          </div>
+          <div style="font-weight: 800; color: var(--color-primary); font-size: 0.92rem;">
+            ₹${(item.price || 0) * (item.qty || 1)}
+          </div>
+        </div>
+      `).join('');
+    } else {
+      itemsListEl.innerHTML = '<div style="color: var(--color-text-muted); font-size: 0.82rem;">Royal Butta Feast Selection</div>';
+    }
+  }
+
+  // Bill Receipt Breakdown
+  const subtotalVal = ord.subtotal || items.reduce((s, i) => s + ((i.price || 0) * (i.qty || 1)), 0);
+  const packingVal = ord.packagingFee !== undefined ? ord.packagingFee : 15;
+  const deliveryVal = ord.deliveryFee || 0;
+  const discountVal = ord.discount || 0;
+  const grandTotalVal = ord.grandTotal || (subtotalVal + packingVal + deliveryVal - discountVal);
+
+  const subtotalEl = document.getElementById('dtl-bill-subtotal');
+  const packingEl = document.getElementById('dtl-bill-packing');
+  const deliveryRow = document.getElementById('dtl-bill-delivery-row');
+  const deliveryEl = document.getElementById('dtl-bill-delivery');
+  const discountRow = document.getElementById('dtl-bill-discount-row');
+  const discountEl = document.getElementById('dtl-bill-discount');
+  const grandTotalEl = document.getElementById('dtl-bill-grandtotal');
+
+  if (subtotalEl) subtotalEl.textContent = `₹${subtotalVal}`;
+  if (packingEl) packingEl.textContent = `₹${packingVal}`;
+  
+  if (deliveryRow && deliveryEl) {
+    if (ord.orderType === 'delivery') {
+      deliveryRow.style.display = 'flex';
+      deliveryEl.textContent = `₹${deliveryVal}`;
+    } else {
+      deliveryRow.style.display = 'none';
+    }
+  }
+
+  if (discountRow && discountEl) {
+    if (discountVal > 0) {
+      discountRow.style.display = 'flex';
+      discountEl.textContent = `-₹${discountVal}`;
+    } else {
+      discountRow.style.display = 'none';
+    }
+  }
+
+  if (grandTotalEl) grandTotalEl.textContent = `₹${grandTotalVal}`;
+
+  // WhatsApp Track Button
+  const waBtn = document.getElementById('dtl-whatsapp-track-btn');
+  if (waBtn) {
+    waBtn.href = `https://api.whatsapp.com/send?phone=919010888842&text=${encodeURIComponent('Hi Subbayya Gari Hotel, I would like to check the live status of my order #' + ord.id)}`;
+  }
+
+  modal.classList.add('active');
+}
+window.openOrderDetailsModal = openOrderDetailsModal;
+
+function closeOrderDetailsModal() {
+  const modal = document.getElementById('order-details-modal');
+  if (modal) modal.classList.remove('active');
+}
+window.closeOrderDetailsModal = closeOrderDetailsModal;
+
+function printOrderReceipt() {
+  if (!activeViewingOrder) {
+    window.print();
+    return;
+  }
+  const ord = activeViewingOrder;
+  const printWindow = window.open('', '_blank', 'width=650,height=750');
+  if (!printWindow) {
+    window.print();
+    return;
+  }
+
+  const itemsHtml = (ord.items || []).map(i => `
+    <tr>
+      <td style="padding: 6px 0; border-bottom: 1px dotted #ccc;">${i.name} (x${i.qty || 1})</td>
+      <td style="padding: 6px 0; border-bottom: 1px dotted #ccc; text-align: right;">₹${(i.price || 0) * (i.qty || 1)}</td>
+    </tr>
+  `).join('');
+
+  printWindow.document.write(`
+    <html>
+      <head>
+        <title>Subbayya Gari Hotel - Receipt #${ord.id}</title>
+        <style>
+          body { font-family: 'Segoe UI', Tahoma, sans-serif; padding: 20px; color: #222; max-width: 480px; margin: 0 auto; }
+          .header { text-align: center; border-bottom: 2px dashed #0F5A27; padding-bottom: 15px; margin-bottom: 15px; }
+          .title { font-size: 20px; font-weight: 800; color: #0F5A27; margin: 0; }
+          .subtitle { font-size: 12px; color: #666; margin-top: 4px; }
+          .row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
+          table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 13px; }
+          .total-row { border-top: 2px solid #0F5A27; font-size: 16px; font-weight: 800; padding-top: 8px; color: #0F5A27; }
+          .footer { text-align: center; font-size: 11px; color: #777; margin-top: 20px; border-top: 1px dashed #ccc; padding-top: 12px; }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="title">SUBBAYYA GARI HOTEL</div>
+          <div class="subtitle">Authentic Godavari Vegetarian Hospitality Since 1950</div>
+          <div style="font-weight: 800; font-size: 15px; margin-top: 8px; color: #D97706;">RECEIPT: #${ord.id}</div>
+        </div>
+        <div class="row"><span><strong>Date:</strong></span><span>${new Date(ord.createdAt || Date.now()).toLocaleString()}</span></div>
+        <div class="row"><span><strong>Customer:</strong></span><span>${ord.customerName} (${ord.customerPhone})</span></div>
+        <div class="row"><span><strong>Branch:</strong></span><span>${ord.branchName || 'KPHB Colony'}</span></div>
+        <div class="row"><span><strong>Order Type:</strong></span><span>${ord.orderType === 'delivery' ? 'Home Delivery' : 'Restaurant Pickup'}</span></div>
+        <div class="row"><span><strong>Payment:</strong></span><span>${ord.paymentStatus || 'Paid Online (Verified)'}</span></div>
+        
+        <table>
+          <thead>
+            <tr style="border-bottom: 1px solid #333; text-align: left; font-weight: 800;">
+              <th>Item</th>
+              <th style="text-align: right;">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${itemsHtml}
+          </tbody>
+        </table>
+
+        <div class="row"><span>Item Subtotal:</span><span>₹${ord.subtotal || 0}</span></div>
+        <div class="row"><span>Eco Banana Leaf Packing:</span><span>₹${ord.packagingFee || 15}</span></div>
+        ${ord.deliveryFee ? `<div class="row"><span>Delivery Charges:</span><span>₹${ord.deliveryFee}</span></div>` : ''}
+        ${ord.discount ? `<div class="row" style="color: #16A34A;"><span>Discount:</span><span>-₹${ord.discount}</span></div>` : ''}
+        <div class="row total-row"><span>Grand Total:</span><span>₹${ord.grandTotal || 0}</span></div>
+
+        <div class="footer">
+          🍃 Packed with Pure Flowing Ghee and Authentic Godavari Love.<br/>
+          Thank you for dining with Subbayya Gari Hotel!
+        </div>
+      </body>
+    </html>
+  `);
+  printWindow.document.close();
+  printWindow.focus();
+  setTimeout(() => {
+    printWindow.print();
+  }, 250);
+}
+window.printOrderReceipt = printOrderReceipt;
 
 // Re-add items from a past order into the customer cart
 function reorderCustomerItems(orderId) {
@@ -4497,7 +4878,7 @@ window.handleUserLogout = handleUserLogout;
 
 // Modal Backdrop and Escape Key Listeners
 document.addEventListener('DOMContentLoaded', () => {
-  ['auth-modal', 'profile-modal'].forEach(id => {
+  ['auth-modal', 'profile-modal', 'order-details-modal', 'order-confirmation-modal', 'review-modal'].forEach(id => {
     const modal = document.getElementById(id);
     if (modal) {
       modal.addEventListener('click', (e) => {
@@ -4512,6 +4893,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Escape') {
       closeAuthModal();
       closeProfileModal();
+      closeOrderDetailsModal();
+      const confModal = document.getElementById('order-confirmation-modal');
+      if (confModal) confModal.classList.remove('active');
     }
   });
 });

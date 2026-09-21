@@ -2687,7 +2687,7 @@
     </div>
   </div>
   <div class="modal-overlay" id="order-confirmation-modal">
-    <div class="modal-card">
+    <div class="modal-card" style="max-width: 540px; max-height: 90vh; overflow-y: auto;">
       <button class="modal-close-btn" onclick="document.getElementById('order-confirmation-modal').classList.remove('active')">✕</button>
 
       <div style="text-align: center;">
@@ -2697,9 +2697,14 @@
       </div>
 
       <div class="ticket-container" style="background: var(--color-surface-muted);">
-        <div class="ticket-header">
-          <span class="ticket-field-label">Order Token</span>
-          <div class="ticket-id" id="conf-order-id">SGH-993821</div>
+        <div class="ticket-header" style="display: flex; align-items: center; justify-content: space-between;">
+          <div style="text-align: left;">
+            <span class="ticket-field-label">Order Token</span>
+            <div class="ticket-id" id="conf-order-id">SGH-993821</div>
+          </div>
+          <span class="cust-status-badge cust-status-preparing" id="conf-status-badge">
+            <span>👨‍🍳</span> <span>Received & Cooking</span>
+          </span>
         </div>
         <div class="ticket-grid">
           <div>
@@ -2715,26 +2720,153 @@
             <div class="ticket-field-val" id="conf-order-type">Store Takeaway</div>
           </div>
           <div>
-            <span class="ticket-field-label">Items</span>
-            <div class="ticket-field-val" id="conf-total-items">3 Items</div>
+            <span class="ticket-field-label">Payment</span>
+            <div class="ticket-field-val" style="color: #16A34A;" id="conf-payment-status">Paid Online</div>
           </div>
         </div>
+
         <div id="conf-delivery-row" style="display: none; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px dashed var(--color-border); font-size: 0.82rem;">
           <span class="ticket-field-label">Delivery Destination & Pin</span>
           <div class="ticket-field-val" id="conf-delivery-loc" style="margin-top: 0.2rem; font-weight: 600; color: var(--color-text);"></div>
         </div>
+
+        <!-- Itemized Dishes Summary Box -->
+        <div id="conf-dishes-box" style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px dashed var(--color-border);">
+          <div style="font-size: 0.72rem; font-weight: 700; color: var(--color-gold); text-transform: uppercase; margin-bottom: 0.35rem; letter-spacing: 0.04em;">
+            🍽️ Dishes Ordered (<span id="conf-dishes-count">0</span> items)
+          </div>
+          <div id="conf-dishes-list" style="display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.8rem;">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Bill Total Row -->
+        <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--color-border); display: flex; align-items: center; justify-content: space-between;">
+          <span style="font-size: 0.85rem; font-weight: 700; color: var(--color-text-muted);">Amount Paid:</span>
+          <span style="font-size: 1.2rem; font-weight: 800; color: var(--color-primary);" id="conf-grand-total">₹0</span>
+        </div>
       </div>
 
-      <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.25rem;">
-        <button class="btn btn-primary" style="width: 100%; font-weight: 800;" onclick="document.getElementById('order-confirmation-modal').classList.remove('active'); openProfileModal('orders');">
+      <div style="display: flex; flex-direction: column; gap: 0.65rem; margin-top: 1.25rem;">
+        <button class="btn btn-primary" id="conf-btn-view-details" style="width: 100%; font-weight: 800;" onclick="openOrderDetailsFromConfirmation()">
+          <span>👁️ View Complete Order Details & Receipt</span>
+        </button>
+        <button class="btn btn-outline" style="width: 100%; font-weight: 700; border-color: var(--color-gold); color: var(--color-gold);" onclick="document.getElementById('order-confirmation-modal').classList.remove('active'); openProfileModal('orders');">
           <span>📋 View in My Orders & Track Live</span>
         </button>
-        <a id="conf-whatsapp-btn" href="#" target="_blank" class="btn btn-gold" style="width: 100%;">
-          <span>Track on WhatsApp 📱</span>
-        </a>
-        <button class="btn btn-outline" onclick="document.getElementById('order-confirmation-modal').classList.remove('active')">
-          <span>Back to Home</span>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+          <a id="conf-whatsapp-btn" href="#" target="_blank" class="btn btn-gold" style="font-size: 0.82rem; text-align: center;">
+            <span>Track WhatsApp 📱</span>
+          </a>
+          <button class="btn btn-outline" style="font-size: 0.82rem;" onclick="document.getElementById('order-confirmation-modal').classList.remove('active')">
+            <span>Back to Home</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL: FULL ORDER DETAILS & RECEIPT (ITEMIZED BREAKDOWN & LIVE TRACKER)
+       ========================================================================== -->
+  <div class="modal-overlay" id="order-details-modal">
+    <div class="modal-card" style="max-width: 580px; max-height: 90vh; overflow-y: auto;">
+      <button class="modal-close-btn" onclick="document.getElementById('order-details-modal').classList.remove('active')">✕</button>
+
+      <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--color-border); padding-bottom: 0.85rem; margin-bottom: 1rem;">
+        <div>
+          <span style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-muted); font-weight: 700;">Subbayya Gari Bhojanam Receipt</span>
+          <h3 style="font-family: var(--font-serif); font-size: 1.35rem; color: var(--color-primary); margin: 2px 0 0;" id="dtl-order-id">Order #SGH-123456</h3>
+        </div>
+        <span class="cust-status-badge cust-status-preparing" id="dtl-order-status-badge">
+          <span id="dtl-order-status-icon">👨‍🍳</span>
+          <span id="dtl-order-status-text">Preparing</span>
+        </span>
+      </div>
+
+      <!-- Live Kitchen Progress Tracker -->
+      <div style="background: var(--color-surface-muted); border-radius: var(--radius-md); padding: 0.85rem; margin-bottom: 1rem; border: 1px solid var(--color-border);">
+        <div style="font-size: 0.74rem; font-weight: 700; color: var(--color-gold); margin-bottom: 0.35rem; text-transform: uppercase; letter-spacing: 0.04em;">
+          🔥 Kitchen Live Status Tracker
+        </div>
+        <div class="order-tracker-steps" id="dtl-order-tracker-steps">
+          <!-- Dynamic tracker steps -->
+        </div>
+      </div>
+
+      <!-- Customer & Destination Details Grid -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; background: var(--color-surface-muted); padding: 0.85rem; border-radius: var(--radius-md); font-size: 0.82rem; margin-bottom: 1rem; border: 1px solid var(--color-border);">
+        <div>
+          <div style="font-size: 0.7rem; color: var(--color-text-muted); text-transform: uppercase; font-weight: 700;">Patron Name</div>
+          <div style="font-weight: 700; color: var(--color-text); margin-top: 2px;" id="dtl-customer-name">--</div>
+          <div style="font-size: 0.74rem; color: var(--color-text-muted);" id="dtl-customer-phone">--</div>
+        </div>
+        <div>
+          <div style="font-size: 0.7rem; color: var(--color-text-muted); text-transform: uppercase; font-weight: 700;">Branch / Outlet</div>
+          <div style="font-weight: 700; color: var(--color-primary); margin-top: 2px;" id="dtl-branch-name">--</div>
+          <div style="font-size: 0.72rem; color: var(--color-text-muted);" id="dtl-branch-address">--</div>
+        </div>
+        <div>
+          <div style="font-size: 0.7rem; color: var(--color-text-muted); text-transform: uppercase; font-weight: 700;">Order Type & Time</div>
+          <div style="font-weight: 700; color: var(--color-text); margin-top: 2px;" id="dtl-order-type">--</div>
+          <div style="font-size: 0.72rem; color: var(--color-text-muted);" id="dtl-order-time">--</div>
+        </div>
+        <div>
+          <div style="font-size: 0.7rem; color: var(--color-text-muted); text-transform: uppercase; font-weight: 700;">Payment Status</div>
+          <div style="font-weight: 700; color: #16A34A; margin-top: 2px;" id="dtl-payment-status">Paid Online (Verified)</div>
+          <div style="font-size: 0.72rem; color: var(--color-text-muted);">Digital Token Verified</div>
+        </div>
+      </div>
+
+      <!-- Specific Address or Pickup Slot Banner -->
+      <div id="dtl-delivery-banner" style="background: rgba(15, 90, 39, 0.06); border-left: 4px solid var(--color-primary); padding: 0.75rem 0.85rem; border-radius: var(--radius-sm); font-size: 0.82rem; margin-bottom: 1rem;">
+        <!-- Filled dynamically -->
+      </div>
+
+      <!-- Itemized Dishes Breakdown -->
+      <div style="margin-bottom: 1rem;">
+        <div style="font-size: 0.75rem; font-weight: 700; color: var(--color-gold); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+          <span>🍽️ Dishes Ordered</span>
+          <span id="dtl-items-count-tag" style="color: var(--color-text-muted); font-size: 0.72rem;">0 Items</span>
+        </div>
+        <div id="dtl-items-list" style="display: flex; flex-direction: column; gap: 0.5rem; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 0.75rem; background: var(--color-surface);">
+          <!-- Dynamic item rows -->
+        </div>
+      </div>
+
+      <!-- Bill Receipt Summary Breakdown -->
+      <div style="background: var(--color-surface-muted); border-radius: var(--radius-md); padding: 0.85rem 1rem; border: 1px solid var(--color-border); font-size: 0.82rem; margin-bottom: 1.25rem;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem; color: var(--color-text-muted);">
+          <span>Item Subtotal</span>
+          <span id="dtl-bill-subtotal" style="font-weight: 600; color: var(--color-text);">₹0</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem; color: var(--color-text-muted);">
+          <span>🍃 Authentic Banana Leaf & Butta Packing</span>
+          <span id="dtl-bill-packing" style="font-weight: 600; color: var(--color-text);">₹15</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem; color: var(--color-text-muted);" id="dtl-bill-delivery-row">
+          <span>🛵 Delivery Charges</span>
+          <span id="dtl-bill-delivery" style="font-weight: 600; color: var(--color-text);">₹0</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem; color: #16A34A;" id="dtl-bill-discount-row">
+          <span>🎉 Godavari Discount</span>
+          <span id="dtl-bill-discount" style="font-weight: 700;">-₹0</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; border-top: 1px dashed var(--color-border); padding-top: 0.5rem; margin-top: 0.4rem; font-size: 1.05rem; font-weight: 800; color: var(--color-primary);">
+          <span>Grand Total</span>
+          <span id="dtl-bill-grandtotal">₹0</span>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem;">
+        <button type="button" class="btn btn-outline" onclick="printOrderReceipt()" style="font-weight: 700; font-size: 0.82rem;">
+          🖨️ Print Receipt
         </button>
+        <a id="dtl-whatsapp-track-btn" href="#" target="_blank" class="btn btn-gold" style="font-weight: 700; font-size: 0.82rem; text-align: center;">
+          Track WhatsApp 📱
+        </a>
       </div>
 
     </div>
