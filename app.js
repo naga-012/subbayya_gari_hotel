@@ -1613,8 +1613,7 @@ function initStorage() {
     if (savedBranch) {
       AppState.selectedBranch = savedBranch;
     }
-    localStorage.removeItem('sgh_user');
-    const savedUser = sessionStorage.getItem('sgh_user');
+    const savedUser = sessionStorage.getItem('sgh_user') || localStorage.getItem('sgh_user');
     if (savedUser) {
       AppState.currentUser = JSON.parse(savedUser);
     }
@@ -4286,12 +4285,10 @@ async function fetchAndRenderCustomerOrders() {
     // Merge server orders and local orders, deduplicating by ID
     const orderMap = new Map();
 
-    // 1. Add local orders
+    // 1. Add all local orders placed on this device
     localOrders.forEach(ord => {
       if (ord && ord.id) {
-        if (!cleanPhone || !ord.customerPhone || ord.customerPhone.replace(/\D/g, '').slice(-10) === cleanPhone) {
-          orderMap.set(ord.id, ord);
-        }
+        orderMap.set(ord.id, ord);
       }
     });
 

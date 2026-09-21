@@ -81,6 +81,7 @@
           <li><a href="#catering" class="nav-link">Catering</a></li>
           <li><a href="#branches" class="nav-link">Branches</a></li>
           <li><a href="#reviews" class="nav-link">Reviews</a></li>
+          <li id="nav-item-my-orders"><a href="javascript:void(0)" onclick="openProfileModal('orders')" class="nav-link" style="color: var(--color-gold); font-weight: 700;">My Orders 📦</a></li>
         </ul>
       </nav>
 
@@ -246,8 +247,8 @@
           </button>
         </div>
 
-        <!-- My Orders Button (Shows all customer orders & live status, ONLY visible after login) -->
-        <button type="button" class="btn btn-outline-gold btn-sm" id="btn-header-my-orders" onclick="openProfileModal('orders')" title="View All My Orders & Live Status" style="display: none; padding: 0.4rem 0.85rem; font-size: 0.82rem; font-weight: 700; align-items: center; gap: 0.35rem; border-radius: 50px;">
+        <!-- My Orders Button (Shows all customer orders & live status) -->
+        <button type="button" class="btn btn-outline-gold btn-sm" id="btn-header-my-orders" onclick="openProfileModal('orders')" title="View All My Orders & Live Status" style="display: inline-flex; padding: 0.4rem 0.85rem; font-size: 0.82rem; font-weight: 700; align-items: center; gap: 0.35rem; border-radius: 50px;">
           <span>📦</span>
           <span>My Orders</span>
         </button>
@@ -3239,7 +3240,7 @@
           <span id="mobile-auth-text">Login / Guest Sign In</span>
         </a>
       </li>
-      <li id="mobile-drawer-my-orders" style="display: none;"><a href="javascript:void(0)" class="mobile-drawer-link" onclick="openProfileModal('orders'); toggleMobileDrawer(false);" style="background: rgba(15, 90, 39, 0.08); color: var(--color-primary); font-weight: 800; border-radius: var(--radius-md);"><span>📦</span> My Orders & Live Status</a></li>
+      <li id="mobile-drawer-my-orders" style="display: block;"><a href="javascript:void(0)" class="mobile-drawer-link" onclick="openProfileModal('orders'); toggleMobileDrawer(false);" style="background: rgba(15, 90, 39, 0.08); color: var(--color-primary); font-weight: 800; border-radius: var(--radius-md);"><span>📦</span> My Orders & Live Status</a></li>
       <li><a href="#hero" class="mobile-drawer-link" onclick="toggleMobileDrawer(false)"><span>🏠</span> Home</a></li>
       <li><a href="#unbox" class="mobile-drawer-link" onclick="toggleMobileDrawer(false)"><span>🧺</span> Butta Bhojanam Unbox</a></li>
       <li><a href="#menu" class="mobile-drawer-link" onclick="toggleMobileDrawer(false)"><span>🍛</span> Authentic Veg Menu</a></li>
@@ -3302,6 +3303,6 @@
   </nav>
 
   <!-- Scripts -->
-  <script src="app.js?v=3.1"></script>
+  <script src="app.js?v=3.2"></script>
 </body>
 </html>
