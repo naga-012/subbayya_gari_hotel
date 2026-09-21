@@ -1714,6 +1714,11 @@ document.addEventListener('DOMContentLoaded', () => {
   setupEventListeners();
   updateCartBadge();
   updateAuthUI();
+
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('openCart') === 'true') {
+    setTimeout(() => toggleCart(true), 350);
+  }
 });
 
 // ==========================================================================
@@ -3795,7 +3800,11 @@ function updateAuthUI() {
       authBtnText.textContent = `${firstName} (${coins} 🪙)`;
     }
     if (authHeaderBtn) {
-      authHeaderBtn.onclick = openProfileModal;
+      authHeaderBtn.removeAttribute('href');
+      authHeaderBtn.onclick = (e) => {
+        if (e) e.preventDefault();
+        openProfileModal();
+      };
       authHeaderBtn.title = 'View My Profile & Ghee Coins';
       authHeaderBtn.style.background = 'rgba(217, 119, 6, 0.15)';
       authHeaderBtn.style.borderColor = 'var(--color-gold)';
@@ -3811,7 +3820,9 @@ function updateAuthUI() {
     if (mobileAuthItem) {
       const link = mobileAuthItem.querySelector('a');
       if (link) {
-        link.onclick = () => {
+        link.removeAttribute('href');
+        link.onclick = (e) => {
+          if (e) e.preventDefault();
           openProfileModal();
           toggleMobileDrawer(false);
         };
@@ -3848,7 +3859,8 @@ function updateAuthUI() {
       authBtnText.textContent = 'Login';
     }
     if (authHeaderBtn) {
-      authHeaderBtn.onclick = () => openAuthModal('otp');
+      authHeaderBtn.href = 'login.html';
+      authHeaderBtn.onclick = null;
       authHeaderBtn.title = 'Customer Login / Sign In';
       authHeaderBtn.style.background = 'transparent';
       authHeaderBtn.style.borderColor = 'var(--color-gold)';
@@ -3864,10 +3876,8 @@ function updateAuthUI() {
     if (mobileAuthItem) {
       const link = mobileAuthItem.querySelector('a');
       if (link) {
-        link.onclick = () => {
-          openAuthModal('otp');
-          toggleMobileDrawer(false);
-        };
+        link.href = 'login.html';
+        link.onclick = null;
       }
     }
 

@@ -251,10 +251,10 @@
 
         <!-- User Account / Login Button -->
         <div id="auth-header-container" style="display: flex; align-items: center;">
-          <button class="btn btn-outline-gold btn-sm" id="auth-header-btn" onclick="openAuthModal('otp')" style="padding: 0.4rem 0.8rem; font-size: 0.82rem; font-weight: 700; display: flex; align-items: center; gap: 0.35rem; border-radius: 50px;">
+          <a href="login.html" class="btn btn-outline-gold btn-sm" id="auth-header-btn" style="padding: 0.4rem 0.8rem; font-size: 0.82rem; font-weight: 700; display: flex; align-items: center; gap: 0.35rem; border-radius: 50px; text-decoration: none;">
             <span>👤</span>
             <span id="auth-header-btn-text">Login</span>
-          </button>
+          </a>
         </div>
 
         <!-- CTA Button -->
@@ -1538,7 +1538,7 @@
                 <strong>🔒 Login Required to Book</strong>
                 <div style="font-size: 0.76rem; opacity: 0.85; margin-top: 2px;">Sign in via quick Mobile OTP or Email to reserve your banana leaf table.</div>
               </div>
-              <button type="button" class="auth-gate-login-btn" onclick="openAuthModal('otp')">Login Now 👤</button>
+              <a href="login.html?redirect=reservations" class="auth-gate-login-btn" style="text-decoration: none; display: inline-block;">Login Now 👤</a>
             </div>
 
             <form class="res-form" id="table-reservation-form">
@@ -2464,7 +2464,7 @@
             <strong>🔒 Login Required to Place Order</strong>
             <div style="font-size: 0.76rem; opacity: 0.85; margin-top: 2px;">Delivery & Pickup orders require customer login.</div>
           </div>
-          <button type="button" class="auth-gate-login-btn" onclick="openAuthModal('otp')">Login / Sign Up 👤</button>
+          <a href="login.html?redirect=cart" class="auth-gate-login-btn" style="text-decoration: none; display: inline-block;">Login / Sign Up 👤</a>
         </div>
 
         <div class="cart-form-group">
@@ -3112,7 +3112,7 @@
 
     <ul class="mobile-drawer-links">
       <li id="mobile-drawer-auth-item">
-        <a href="javascript:void(0)" class="mobile-drawer-link" onclick="openAuthModal('otp'); toggleMobileDrawer(false);" style="background: rgba(217, 119, 6, 0.1); color: var(--color-gold); font-weight: 700; border-radius: var(--radius-md);">
+        <a href="login.html" class="mobile-drawer-link" style="background: rgba(217, 119, 6, 0.1); color: var(--color-gold); font-weight: 700; border-radius: var(--radius-md); text-decoration: none;">
           <span id="mobile-auth-icon">👤</span> 
           <span id="mobile-auth-text">Login / Guest Sign In</span>
         </a>

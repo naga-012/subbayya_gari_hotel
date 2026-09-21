@@ -22,6 +22,11 @@ app.get('/healthz', (req, res) => {
 const sendOtpHandler = require('./api/send-otp');
 app.all('/api/send-otp', sendOtpHandler);
 
+// Dedicated Login Page Route
+app.get(['/login', '/login.html'], (req, res) => {
+  res.sendFile(path.join(__dirname, 'login.html'));
+});
+
 // Serve static assets from project root
 app.use(express.static(path.join(__dirname), {
   maxAge: '1h',
