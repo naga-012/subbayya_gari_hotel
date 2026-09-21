@@ -5,6 +5,24 @@
 
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
+
+// Load environment variables from .env if present
+const envPath = path.join(__dirname, '.env');
+if (fs.existsSync(envPath)) {
+  try {
+    const envLines = fs.readFileSync(envPath, 'utf8').split('\n');
+    envLines.forEach(line => {
+      const trimmed = line.trim();
+      if (trimmed && !trimmed.startsWith('#') && trimmed.includes('=')) {
+        const [key, ...vals] = trimmed.split('=');
+        process.env[key.trim()] = vals.join('=').trim().replace(/^["']|["']$/g, '');
+      }
+    });
+  } catch (err) {
+    console.warn('Could not read .env file:', err.message);
+  }
+}
 
 const app = express();
 const PORT = process.env.PORT || 3000;

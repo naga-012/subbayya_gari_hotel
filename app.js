@@ -3714,7 +3714,9 @@ async function sendLoginOtp() {
       if (data && data.otp) {
         activeGeneratedOtp = String(data.otp);
         if (data.liveEmailSent) {
-          showToast(`✉️ Live OTP sent from ${OTP_SENDER_EMAIL} to ${targetVal}! Check your inbox.`);
+          showToast(`✉️ Live OTP delivered to ${targetVal}! Check your Gmail inbox.`);
+        } else {
+          showToast(`ℹ️ Email delivery requires GMAIL_APP_PASSWORD. For testing, your OTP is: ${activeGeneratedOtp}`);
         }
       }
     }
