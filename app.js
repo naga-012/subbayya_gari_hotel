@@ -2976,6 +2976,7 @@ function setupReservationForm() {
           notes: document.getElementById('res-notes')?.value || 'Standard Pure Veg Bhojanam',
           seating: selectedSeating
         }
+      };
       showToast('🔒 Please log in to confirm your table reservation');
       setTimeout(() => {
         window.location.href = 'login.html?redirect=reservations';
