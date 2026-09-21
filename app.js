@@ -3676,63 +3676,73 @@ async function sendLoginOtp() {
   }
 
   activeOtpTarget = targetVal;
-  activeGeneratedOtp = Math.floor(1000 + Math.random() * 9000).toString();
+  const newOtp = Math.floor(1000 + Math.random() * 9000).toString();
+  activeGeneratedOtp = newOtp;
 
   // Show verify step with empty code input
   const sendStep = document.getElementById('auth-otp-send-step');
   const verifyStep = document.getElementById('auth-otp-verify-step');
   const displaySpan = document.getElementById('otp-target-display');
   const codeInput = document.getElementById('auth-otp-code');
+  const sendBtn = document.getElementById('btn-send-otp');
+  const resendBtn = document.getElementById('btn-resend-modal-otp');
 
   if (sendStep) sendStep.style.display = 'none';
   if (verifyStep) verifyStep.style.display = 'flex';
   if (displaySpan) displaySpan.textContent = targetVal;
   if (codeInput) {
     codeInput.value = ''; // Empty input: customer must enter code from Gmail
+    codeInput.style.borderColor = '';
     codeInput.focus();
   }
+
+  if (resendBtn) {
+    resendBtn.style.pointerEvents = 'none';
+    resendBtn.style.opacity = '0.6';
+    resendBtn.textContent = 'Sending new OTP... ⏳';
+    setTimeout(() => {
+      resendBtn.style.pointerEvents = 'auto';
+      resendBtn.style.opacity = '1';
+      resendBtn.textContent = 'Resend OTP ✉️';
+    }, 2000);
+  }
+
   showToast(`✉️ Verification code sent to ${targetVal}! Please check your Gmail.`);
 
-  // Background live dispatch to customer Gmail with 4s timeout
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 4000);
-
+  // Background live dispatch to customer Gmail with exact synced OTP
   try {
     const response = await fetch('/api/send-otp', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         email: targetVal,
-        name: targetVal.split('@')[0].replace(/[._]/g, ' ')
-      }),
-      signal: controller.signal
+        name: targetVal.split('@')[0].replace(/[._]/g, ' '),
+        otp: newOtp
+      })
     });
-    clearTimeout(timeoutId);
 
     if (response.ok) {
       const data = await response.json();
       if (data && data.otp) {
         activeGeneratedOtp = String(data.otp);
-        if (data.liveEmailSent) {
-          showToast(`✉️ Live OTP delivered to ${targetVal}! Check your Gmail inbox.`);
-        } else {
-          showToast(`ℹ️ Email delivery requires GMAIL_APP_PASSWORD. For testing, your OTP is: ${activeGeneratedOtp}`);
-        }
+      }
+      if (data && data.liveEmailSent) {
+        showToast(`✉️ Live OTP delivered to ${targetVal}! Check your Gmail.`);
       }
     }
   } catch (err) {
-    console.warn('Background OTP dispatch finished or timed out gracefully:', err.message);
+    console.warn('Background OTP dispatch error/timeout:', err.message);
   }
 }
 window.sendLoginOtp = sendLoginOtp;
 
 function handleOtpSubmit(event) {
-  event.preventDefault();
+  if (event) event.preventDefault();
   const codeInput = document.getElementById('auth-otp-code');
-  const code = codeInput?.value.trim();
+  const code = codeInput ? codeInput.value.replace(/\D/g, '').trim() : '';
 
   if (!code || code.length < 4) {
-    showToast('⚠️ Please enter the 4-digit verification code');
+    showToast('⚠️ Please enter the 4-digit verification code from your Gmail');
     if (codeInput) codeInput.focus();
     return;
   }
@@ -3744,7 +3754,7 @@ function handleOtpSubmit(event) {
   }
 
   if (code !== activeGeneratedOtp) {
-    showToast(`❌ Incorrect OTP! Please enter the exact 4-digit code sent from ${OTP_SENDER_EMAIL}`);
+    showToast(`❌ Incorrect OTP! Please check your Gmail or click Resend OTP.`);
     if (codeInput) {
       codeInput.style.borderColor = '#EF4444';
       codeInput.focus();
@@ -3753,7 +3763,7 @@ function handleOtpSubmit(event) {
   }
 
   // Reset border if previously failed
-  if (codeInput) codeInput.style.borderColor = '';
+  if (codeInput) codeInput.style.borderColor = '#16A34A';
 
   const email = activeOtpTarget;
   const rawName = email.split('@')[0].replace(/[._]/g, ' ');

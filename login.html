@@ -232,7 +232,7 @@
 
             <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.76rem; color: var(--color-text-muted); margin-top: 0.25rem;">
               <a href="javascript:void(0)" onclick="resetOtpStep()" style="color: var(--color-text-muted);">← Change Email Address</a>
-              <a href="javascript:void(0)" onclick="sendPageOtp()" style="color: var(--color-gold); font-weight: 700;">Resend OTP ✉️</a>
+              <a href="javascript:void(0)" id="btn-resend-otp" onclick="sendPageOtp(true)" style="color: var(--color-gold); font-weight: 700; text-decoration: underline; cursor: pointer;">Resend OTP ✉️</a>
             </div>
 
           </div>
@@ -250,11 +250,14 @@
     const OTP_SENDER_EMAIL = 'myakalanagarjun09@gmail.com';
     let currentGeneratedOtp = null;
     let currentOtpTarget = '';
+    let isOtpSending = false;
 
     // Step 1: Send OTP to Customer Gmail
-    async function sendPageOtp() {
+    async function sendPageOtp(isResend = false) {
+      if (isOtpSending) return;
+
       const targetInput = document.getElementById('page-otp-target');
-      const targetVal = targetInput ? targetInput.value.trim() : '';
+      const targetVal = currentOtpTarget || (targetInput ? targetInput.value.trim() : '');
 
       if (!targetVal) {
         showToast('⚠️ Please enter your email address');
@@ -269,38 +272,68 @@
       }
 
       currentOtpTarget = targetVal;
-      currentGeneratedOtp = Math.floor(1000 + Math.random() * 9000).toString();
+      // Generate a fresh 4-digit OTP
+      const newOtp = Math.floor(1000 + Math.random() * 9000).toString();
+      currentGeneratedOtp = newOtp;
+
+      // Update UI state
+      isOtpSending = true;
+      const sendBtn = document.getElementById('btn-page-send-otp');
+      const resendBtn = document.getElementById('btn-resend-otp');
+
+      if (sendBtn) {
+        sendBtn.disabled = true;
+        sendBtn.innerHTML = '<span>Sending OTP to Gmail... ⏳</span>';
+      }
+      if (resendBtn) {
+        resendBtn.style.pointerEvents = 'none';
+        resendBtn.style.opacity = '0.6';
+        resendBtn.textContent = 'Sending new OTP... ⏳';
+      }
+
       transitionToVerifyStep(targetVal);
 
-      // Trigger Live Email Dispatch from myakalanagarjun09@gmail.com to Customer Email
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 4000);
+      if (isResend) {
+        showToast(`✉️ Sending fresh OTP (${newOtp}) to ${targetVal}...`);
+      }
 
+      // Trigger Live Email Dispatch from myakalanagarjun09@gmail.com with EXACT synced OTP
       try {
         const response = await fetch('/api/send-otp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             email: targetVal,
-            name: targetVal.split('@')[0].replace(/[._]/g, ' ')
-          }),
-          signal: controller.signal
+            name: targetVal.split('@')[0].replace(/[._]/g, ' '),
+            otp: newOtp
+          })
         });
-        clearTimeout(timeoutId);
 
         if (response.ok) {
           const data = await response.json();
           if (data && data.otp) {
+            // Keep synced
             currentGeneratedOtp = String(data.otp);
-            if (data.liveEmailSent) {
-              showToast(`✉️ Live OTP delivered to ${targetVal}! Check your Gmail inbox.`);
-            } else {
-              showToast(`ℹ️ Email delivery requires GMAIL_APP_PASSWORD. For testing, your OTP is: ${currentGeneratedOtp}`);
-            }
+          }
+          if (data && data.liveEmailSent) {
+            showToast(`✉️ Live OTP delivered to ${targetVal}! Check your Gmail.`);
           }
         }
       } catch (err) {
-        console.warn('Background OTP dispatch finished or timed out gracefully:', err.message);
+        console.warn('OTP dispatch finished/backgrounded:', err.message);
+      } finally {
+        isOtpSending = false;
+        if (sendBtn) {
+          sendBtn.disabled = false;
+          sendBtn.innerHTML = '<span>Send OTP to My Gmail ✉️</span>';
+        }
+        if (resendBtn) {
+          setTimeout(() => {
+            resendBtn.style.pointerEvents = 'auto';
+            resendBtn.style.opacity = '1';
+            resendBtn.textContent = 'Resend OTP ✉️';
+          }, 2000);
+        }
       }
     }
 
@@ -315,6 +348,7 @@
       if (targetDisplay) targetDisplay.textContent = targetVal;
       if (codeInput) {
         codeInput.value = ''; // Clean empty field for customer to type received OTP
+        codeInput.style.borderColor = '';
         codeInput.focus();
       }
 
@@ -331,23 +365,28 @@
 
     // Step 2: Handle OTP submission & login
     function handlePageOtpSubmit(event) {
-      event.preventDefault();
+      if (event) event.preventDefault();
       const codeInput = document.getElementById('page-otp-code');
-      const code = codeInput ? codeInput.value.trim() : '';
+      // Extract only digits in case of extra spaces
+      const code = codeInput ? codeInput.value.replace(/\D/g, '').trim() : '';
 
       if (!code || code.length < 4) {
-        showToast('⚠️ Please enter the 4-digit verification code');
+        showToast('⚠️ Please enter the 4-digit verification code from your Gmail');
         if (codeInput) codeInput.focus();
         return;
       }
 
-      if (currentGeneratedOtp && code !== currentGeneratedOtp) {
-        showToast(`❌ Incorrect OTP! Please enter code ${currentGeneratedOtp} sent from ${OTP_SENDER_EMAIL}`);
+      if (!currentGeneratedOtp || code !== currentGeneratedOtp) {
+        showToast(`❌ Incorrect OTP! Please check your Gmail or click Resend OTP.`);
         if (codeInput) {
           codeInput.style.borderColor = '#EF4444';
           codeInput.focus();
         }
         return;
+      }
+
+      if (codeInput) {
+        codeInput.style.borderColor = '#16A34A';
       }
 
       const email = currentOtpTarget;

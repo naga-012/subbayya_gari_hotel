@@ -47,14 +47,16 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const { email, name } = req.body || {};
+    const { email, name, otp: clientOtp } = req.body || {};
 
     if (!email || !email.includes('@')) {
       return res.status(400).json({ error: 'Valid email address is required.' });
     }
 
-    // Generate a secure 4-digit OTP code
-    const otp = Math.floor(1000 + Math.random() * 9000).toString();
+    // Use client-supplied OTP or generate a secure 4-digit OTP code
+    const otp = (clientOtp && String(clientOtp).trim().length === 4)
+      ? String(clientOtp).trim()
+      : Math.floor(1000 + Math.random() * 9000).toString();
     const guestName = name || email.split('@')[0];
 
     const gmailPassword = process.env.GMAIL_APP_PASSWORD || process.env.EMAIL_PASS;
