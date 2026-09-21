@@ -2813,18 +2813,7 @@ function proceedToCheckout() {
 
   // Close Cart and show simulated live order ticket
   toggleCart(false);
-  showOrderConfirmationModal(newOrderId, customerName, customerPhone, message, {
-    orderType: AppState.orderType,
-    branchName: activeBranchObj.name,
-    branchAddress: activeBranchObj.address,
-    pickupSlot: pickupSlot,
-    vehicleNote: vehicleNote,
-    address: deliveryAddress,
-    landmark: deliveryLandmark,
-    locationUrl: gpsMapUrl,
-    items: orderItemsCopy,
-    grandTotal: grandTotal
-  });
+  showOrderConfirmationModal(newOrderId, customerName, customerPhone, message, orderPayload);
 }
 
 let lastPlacedOrderData = null;
@@ -4144,13 +4133,27 @@ function updateAuthUI() {
       authHeaderBtn.style.color = 'var(--color-gold)';
     }
 
-    // Hide "My Orders" buttons before customer logs in
+    // Manage "My Orders" buttons visibility
+    const localOrdersCount = (() => {
+      try {
+        return (JSON.parse(localStorage.getItem('sgh_customer_orders') || '[]')).length;
+      } catch (e) {
+        return 0;
+      }
+    })();
+
     const navMyOrders = document.getElementById('nav-item-my-orders');
     const btnHeaderMyOrders = document.getElementById('btn-header-my-orders');
     const mobileDrawerMyOrders = document.getElementById('mobile-drawer-my-orders');
-    if (navMyOrders) navMyOrders.style.display = 'none';
-    if (btnHeaderMyOrders) btnHeaderMyOrders.style.display = 'none';
-    if (mobileDrawerMyOrders) mobileDrawerMyOrders.style.display = 'none';
+    if (localOrdersCount > 0) {
+      if (navMyOrders) navMyOrders.style.display = 'block';
+      if (btnHeaderMyOrders) btnHeaderMyOrders.style.display = 'inline-flex';
+      if (mobileDrawerMyOrders) mobileDrawerMyOrders.style.display = 'block';
+    } else {
+      if (navMyOrders) navMyOrders.style.display = 'none';
+      if (btnHeaderMyOrders) btnHeaderMyOrders.style.display = 'none';
+      if (mobileDrawerMyOrders) mobileDrawerMyOrders.style.display = 'none';
+    }
 
     const dockLoginText = document.getElementById('dock-login-text');
     const dockLoginItem = document.getElementById('dock-item-login');
@@ -4213,6 +4216,7 @@ function switchProfileTab(tab) {
   } else {
     if (btnOrders) btnOrders.classList.add('active');
     if (tabOrders) tabOrders.style.display = 'block';
+    fetchAndRenderCustomerOrders();
   }
 }
 window.switchProfileTab = switchProfileTab;
