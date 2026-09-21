@@ -3678,22 +3678,20 @@ async function sendLoginOtp() {
   activeOtpTarget = targetVal;
   activeGeneratedOtp = Math.floor(1000 + Math.random() * 9000).toString();
 
-  // Instantly show verify step with pre-filled code so users never freeze
+  // Show verify step with empty code input
   const sendStep = document.getElementById('auth-otp-send-step');
   const verifyStep = document.getElementById('auth-otp-verify-step');
   const displaySpan = document.getElementById('otp-target-display');
-  const hintBadge = document.getElementById('otp-hint-badge');
   const codeInput = document.getElementById('auth-otp-code');
 
   if (sendStep) sendStep.style.display = 'none';
   if (verifyStep) verifyStep.style.display = 'flex';
   if (displaySpan) displaySpan.textContent = targetVal;
-  if (hintBadge) hintBadge.textContent = `Code: ${activeGeneratedOtp}`;
   if (codeInput) {
-    codeInput.value = activeGeneratedOtp;
+    codeInput.value = ''; // Empty input: customer must enter code from Gmail
     codeInput.focus();
   }
-  showToast(`✉️ Verification code sent to ${targetVal}! Check your Gmail inbox.`);
+  showToast(`✉️ Verification code sent to ${targetVal}! Please check your Gmail.`);
 
   // Background live dispatch to customer Gmail with 4s timeout
   const controller = new AbortController();
@@ -3715,8 +3713,6 @@ async function sendLoginOtp() {
       const data = await response.json();
       if (data && data.otp) {
         activeGeneratedOtp = String(data.otp);
-        if (hintBadge) hintBadge.textContent = data.liveEmailSent ? `Sent via ${OTP_SENDER_EMAIL}` : `Code: ${activeGeneratedOtp}`;
-        if (codeInput) codeInput.value = activeGeneratedOtp;
         if (data.liveEmailSent) {
           showToast(`✉️ Live OTP sent from ${OTP_SENDER_EMAIL} to ${targetVal}! Check your inbox.`);
         }

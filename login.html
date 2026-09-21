@@ -203,28 +203,16 @@
           </div>
 
           <!-- Step 2: Verification Code Input Section (Shown after clicking Send OTP) -->
-          <div id="page-otp-verify-wrap" style="display: none; flex-direction: column; gap: 0.85rem; padding: 1rem; background: rgba(15, 90, 39, 0.04); border: 1px dashed var(--color-primary-light); border-radius: var(--radius-md);">
+          <div id="page-otp-verify-wrap" style="display: none; flex-direction: column; gap: 0.95rem; padding: 1.25rem; background: rgba(15, 90, 39, 0.04); border: 1px dashed var(--color-primary-light); border-radius: var(--radius-md);">
             
-            <!-- Code Banner & Quick Fill -->
-            <div class="otp-display-box" id="page-demo-box" onclick="autoFillPageOtp()">
-              <div style="font-size: 0.76rem; font-weight: 700; color: var(--color-gold); text-transform: uppercase; letter-spacing: 0.05em;">
-                ⚡ Verification Code Ready
-              </div>
-              <div id="page-otp-code-highlight" style="font-size: 1.85rem; font-weight: 900; letter-spacing: 0.25em; color: var(--color-primary); font-family: monospace; margin: 0.25rem 0;">
-                ----
-              </div>
-              <div style="font-size: 0.72rem; color: var(--color-text-muted);">
-                (Click here to auto-fill code & verify immediately ⚡)
-              </div>
-            </div>
-
-            <div style="font-size: 0.78rem; color: var(--color-text); text-align: center; background: #FFFFFF; padding: 0.5rem; border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
-              ✉️ Verification code sent from <strong>myakalanagarjun09@gmail.com</strong> to <strong id="page-otp-target-display" style="color: var(--color-primary);">your email</strong>
+            <div style="font-size: 0.82rem; color: var(--color-text); text-align: center; background: #FFFFFF; padding: 0.75rem; border-radius: var(--radius-sm); border: 1px solid var(--color-border); line-height: 1.5;">
+              ✉️ A 4-digit verification code has been sent from <strong>myakalanagarjun09@gmail.com</strong> to <strong id="page-otp-target-display" style="color: var(--color-primary);">your email</strong>.<br/>
+              <span style="font-size: 0.74rem; color: var(--color-text-muted);">Please check your Gmail inbox (and Promotions/Spam if needed) and enter the code below:</span>
             </div>
 
             <div class="form-group" style="margin: 0;">
-              <label class="form-label" for="page-otp-code" style="font-size: 0.82rem; font-weight: 700; text-align: center; display: block;">
-                Enter 4-Digit OTP Code
+              <label class="form-label" for="page-otp-code" style="font-size: 0.84rem; font-weight: 700; text-align: center; display: block; color: var(--color-primary);">
+                Enter 4-Digit Code from Gmail:
               </label>
               <input 
                 type="text" 
@@ -232,7 +220,8 @@
                 class="form-control" 
                 placeholder="• • • •" 
                 maxlength="4" 
-                style="text-align: center; font-size: 1.45rem; font-weight: 900; letter-spacing: 0.3em; padding: 0.65rem;"
+                autocomplete="one-time-code"
+                style="text-align: center; font-size: 1.5rem; font-weight: 900; letter-spacing: 0.35em; padding: 0.7rem;"
                 onkeydown="if(event.key==='Enter'){event.preventDefault();handlePageOtpSubmit(event);}"
               />
             </div>
@@ -281,7 +270,7 @@
 
       currentOtpTarget = targetVal;
       currentGeneratedOtp = Math.floor(1000 + Math.random() * 9000).toString();
-      transitionToVerifyStep(targetVal, currentGeneratedOtp);
+      transitionToVerifyStep(targetVal);
 
       // Trigger Live Email Dispatch from myakalanagarjun09@gmail.com to Customer Email
       const controller = new AbortController();
@@ -303,12 +292,8 @@
           const data = await response.json();
           if (data && data.otp) {
             currentGeneratedOtp = String(data.otp);
-            const highlight = document.getElementById('page-otp-code-highlight');
-            const codeInput = document.getElementById('page-otp-code');
-            if (highlight) highlight.textContent = currentGeneratedOtp;
-            if (codeInput) codeInput.value = currentGeneratedOtp;
             if (data.liveEmailSent) {
-              showToast(`✉️ Live OTP sent from ${OTP_SENDER_EMAIL} to ${targetVal}! Check your inbox.`);
+              showToast(`✉️ Live OTP sent from ${OTP_SENDER_EMAIL} to ${targetVal}! Check your Gmail inbox.`);
             }
           }
         }
@@ -317,37 +302,30 @@
       }
     }
 
-    function transitionToVerifyStep(targetVal, otpCode) {
+    function transitionToVerifyStep(targetVal) {
       const sendWrap = document.getElementById('page-otp-send-wrap');
       const verifyWrap = document.getElementById('page-otp-verify-wrap');
       const targetDisplay = document.getElementById('page-otp-target-display');
-      const highlight = document.getElementById('page-otp-code-highlight');
       const codeInput = document.getElementById('page-otp-code');
 
       if (sendWrap) sendWrap.style.display = 'none';
       if (verifyWrap) verifyWrap.style.display = 'flex';
       if (targetDisplay) targetDisplay.textContent = targetVal;
-      if (highlight) highlight.textContent = otpCode;
       if (codeInput) {
-        codeInput.value = otpCode; // Auto-prefill for zero friction
+        codeInput.value = ''; // Clean empty field for customer to type received OTP
         codeInput.focus();
       }
 
-      showToast(`✉️ Verification code sent to ${targetVal}! Check your Gmail inbox.`);
-    }
-
-    function autoFillPageOtp() {
-      const codeInput = document.getElementById('page-otp-code');
-      if (codeInput && currentGeneratedOtp) {
-        codeInput.value = currentGeneratedOtp;
-        showToast(`⚡ Auto-filled code: ${currentGeneratedOtp}`);
-        codeInput.focus();
-      }
+      showToast(`✉️ Verification code sent to ${targetVal}! Please check your Gmail.`);
     }
 
     function resetOtpStep() {
       const sendWrap = document.getElementById('page-otp-send-wrap');
       const verifyWrap = document.getElementById('page-otp-verify-wrap');
+      if (sendWrap) sendWrap.style.display = 'block';
+      if (verifyWrap) verifyWrap.style.display = 'none';
+      document.getElementById('page-otp-target')?.focus();
+    }
       if (sendWrap) sendWrap.style.display = 'block';
       if (verifyWrap) verifyWrap.style.display = 'none';
       document.getElementById('page-otp-target')?.focus();

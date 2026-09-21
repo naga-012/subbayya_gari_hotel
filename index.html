@@ -2837,20 +2837,22 @@
         </div>
 
         <!-- Step 2 Enter OTP Section (Hidden initially) -->
-        <div id="auth-otp-verify-step" style="display: none; flex-direction: column; gap: 0.75rem; padding: 0.85rem; background: rgba(15, 90, 39, 0.05); border: 1px dashed var(--color-primary-light); border-radius: var(--radius-sm);">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-size: 0.8rem; font-weight: 700; color: var(--color-primary);">Enter Verification Code:</span>
-            <span id="otp-hint-badge" style="font-size: 0.72rem; color: #16A34A; font-weight: 700;">Check Inbox</span>
+        <div id="auth-otp-verify-step" style="display: none; flex-direction: column; gap: 0.85rem; padding: 1.1rem; background: rgba(15, 90, 39, 0.05); border: 1px dashed var(--color-primary-light); border-radius: var(--radius-sm);">
+          <div style="font-size: 0.8rem; color: var(--color-text); text-align: center; background: #FFFFFF; padding: 0.6rem; border-radius: 4px; border: 1px solid var(--color-border); line-height: 1.45;">
+            ✉️ Verification code sent from <strong>myakalanagarjun09@gmail.com</strong> to <strong id="otp-target-display" style="color: var(--color-primary);">your email</strong>.<br/>
+            <span style="font-size: 0.72rem; color: var(--color-text-muted);">Check your Gmail inbox and enter the 4-digit code below:</span>
           </div>
-          <div style="font-size: 0.74rem; color: var(--color-text-muted);">
-            Sent from: <strong>myakalanagarjun09@gmail.com</strong> to <span id="otp-target-display" style="color: var(--color-primary); font-weight: 700;">your email</span>
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label" for="auth-otp-code" style="font-size: 0.82rem; font-weight: 700; text-align: center; display: block; color: var(--color-primary);">
+              Enter 4-Digit Code from Gmail:
+            </label>
+            <input type="text" id="auth-otp-code" class="form-control" placeholder="• • • •" maxlength="4" autocomplete="one-time-code" style="text-align: center; font-size: 1.45rem; font-weight: 900; letter-spacing: 0.35em; padding: 0.65rem;" onkeydown="if(event.key==='Enter'){event.preventDefault();handleOtpSubmit(event);}" />
           </div>
-          <input type="text" id="auth-otp-code" class="form-control" placeholder="Enter 4-Digit Code" maxlength="4" style="text-align: center; font-size: 1.25rem; font-weight: 800; letter-spacing: 0.25em;" onkeydown="if(event.key==='Enter'){event.preventDefault();handleOtpSubmit(event);}" />
           <button type="submit" class="btn btn-primary" style="width: 100%;">
             <span>Verify & Enter Feast 🍽️</span>
           </button>
           <div style="text-align: center; font-size: 0.75rem; color: var(--color-text-muted);">
-            Didn't receive? <a href="javascript:void(0)" onclick="sendLoginOtp()" style="color: var(--color-gold); font-weight: 700;">Resend OTP</a>
+            Didn't receive? <a href="javascript:void(0)" onclick="sendLoginOtp()" style="color: var(--color-gold); font-weight: 700;">Resend OTP ✉️</a>
           </div>
         </div>
       </form>
