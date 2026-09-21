@@ -3275,12 +3275,8 @@ button {
     font-size: 0.95rem;
   }
 
-  #auth-header-btn {
-    padding: 0.35rem 0.65rem;
-    font-size: 0.74rem;
-  }
-
-  /* Hide desktop-only "Book Leaf Table" from top header on mobile */
+  /* Hide Login button and Book Leaf Table from top header on mobile */
+  #auth-header-container,
   .site-header .btn-primary[href="#reservations"] {
     display: none !important;
   }
