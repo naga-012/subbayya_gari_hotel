@@ -22,19 +22,22 @@
 <body>
 
   <!-- ==========================================================================
-       TOP ANNOUNCEMENT BAR
+       FIXED TOP NAVIGATION CONTAINER (Announcement, Mode Switcher, Main Navbar)
        ========================================================================== -->
-  <aside class="announcement-bar" aria-label="Announcement">
-    <div>
-      <span class="announcement-badge">TRADITION SINCE 1950</span>
-      <span>Authentic East Godavari Pure Vegetarian Bhojanam with Overflowing Warm Ghee!</span>
-    </div>
-    <div style="display: flex; align-items: center; gap: 1rem;">
-      <a href="#catering">Book Event Catering 🍛</a>
-      <span>|</span>
-      <a href="tel:+919010888842">📞 Helpline: 9010 888 842</a>
-    </div>
-  </aside>
+  <div class="fixed-top-container" id="fixed-top-container">
+
+    <!-- TOP ANNOUNCEMENT BAR -->
+    <aside class="announcement-bar" aria-label="Announcement">
+      <div>
+        <span class="announcement-badge">TRADITION SINCE 1950</span>
+        <span>Authentic East Godavari Pure Vegetarian Bhojanam with Overflowing Warm Ghee!</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <a href="#catering">Book Event Catering 🍛</a>
+        <span>|</span>
+        <a href="tel:+919010888842">📞 Helpline: 9010 888 842</a>
+      </div>
+    </aside>
 
   <!-- ==========================================================================
        APP MODE SWITCHER (Customer, Loyalty, Table QR, Manager CRM)
@@ -269,6 +272,7 @@
 
     </div>
   </header>
+  </div>
 
   <!-- ==========================================================================
        HERO SECTION
