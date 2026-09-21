@@ -5,6 +5,25 @@
  */
 
 const nodemailer = require('nodemailer');
+const fs = require('fs');
+const path = require('path');
+
+// Auto-read .env if present
+const envPath = path.join(__dirname, '..', '.env');
+if (fs.existsSync(envPath)) {
+  try {
+    const lines = fs.readFileSync(envPath, 'utf8').split('\n');
+    lines.forEach(line => {
+      const trimmed = line.trim();
+      if (trimmed && !trimmed.startsWith('#') && trimmed.includes('=')) {
+        const [key, ...vals] = trimmed.split('=');
+        if (!process.env[key.trim()]) {
+          process.env[key.trim()] = vals.join('=').trim().replace(/^["']|["']$/g, '');
+        }
+      }
+    });
+  } catch (e) {}
+}
 
 const SENDER_EMAIL = 'myakalanagarjun09@gmail.com';
 
