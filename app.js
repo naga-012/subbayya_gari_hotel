@@ -4781,6 +4781,17 @@ function openProfileModal(initialTab = 'account') {
   const modal = document.getElementById('profile-modal');
   if (!modal) return;
 
+  // Close other modals if any are open
+  ['auth-modal', 'order-details-modal', 'order-confirmation-modal', 'review-modal', 'reservation-pass-modal', 'delivery-location-modal'].forEach(id => {
+    const m = document.getElementById(id);
+    if (m) {
+      m.classList.remove('active');
+      m.style.display = '';
+      m.style.visibility = '';
+      m.style.opacity = '';
+    }
+  });
+
   const user = AppState.currentUser || {
     name: 'Valued Guest',
     phone: '+91 9876543210',
@@ -4818,16 +4829,25 @@ function openProfileModal(initialTab = 'account') {
   if (detailSinceEl) detailSinceEl.textContent = user.memberSince || '2026';
 
   switchProfileTab(initialTab);
+  
   modal.classList.add('active');
+  modal.style.display = 'flex';
+  modal.style.visibility = 'visible';
+  modal.style.opacity = '1';
+  modal.style.zIndex = '9999';
 
-  // Load orders immediately so data is ready when toggled
   fetchAndRenderCustomerOrders();
 }
 window.openProfileModal = openProfileModal;
 
 function closeProfileModal() {
   const modal = document.getElementById('profile-modal');
-  if (modal) modal.classList.remove('active');
+  if (modal) {
+    modal.classList.remove('active');
+    modal.style.display = 'none';
+    modal.style.visibility = 'hidden';
+    modal.style.opacity = '0';
+  }
 }
 window.closeProfileModal = closeProfileModal;
 
