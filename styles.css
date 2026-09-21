@@ -492,6 +492,50 @@ button {
   flex-shrink: 0;
 }
 
+#btn-header-my-orders {
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+#auth-header-container {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0 !important;
+}
+
+#auth-header-btn {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+  max-width: 145px;
+}
+
+#auth-header-btn-text {
+  display: inline-block;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+@media (max-width: 1300px) {
+  .nav-menu {
+    gap: 0.75rem;
+  }
+  .nav-link {
+    font-size: 0.82rem;
+  }
+  .header-actions {
+    gap: 0.4rem;
+  }
+}
+
 .branch-selector-wrapper {
   position: relative;
 }

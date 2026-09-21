@@ -3998,11 +3998,11 @@ function updateAuthUI() {
   const resSubmitBtnText = document.getElementById('res-submit-btn-text');
 
   if (AppState.currentUser) {
-    const firstName = AppState.currentUser.name.split(' ')[0];
+    const firstName = AppState.currentUser.name.split(' ')[0] || 'Profile';
     const coins = AppState.currentUser.coins || 50;
 
     if (authBtnText) {
-      authBtnText.textContent = `${firstName} (${coins} 🪙)`;
+      authBtnText.textContent = firstName.length > 9 ? `${firstName.slice(0, 8)}…` : firstName;
     }
     if (authHeaderBtn) {
       authHeaderBtn.href = 'javascript:void(0)';
@@ -4010,7 +4010,7 @@ function updateAuthUI() {
         if (e) e.preventDefault();
         openProfileModal('account');
       };
-      authHeaderBtn.title = 'View My Profile & Customer Details';
+      authHeaderBtn.title = `${AppState.currentUser.name} • ${coins} Ghee Coins 🪙 (Click to View Customer Profile)`;
       authHeaderBtn.style.background = 'rgba(217, 119, 6, 0.15)';
       authHeaderBtn.style.borderColor = 'var(--color-gold)';
       authHeaderBtn.style.color = 'var(--color-gold)';
@@ -4162,6 +4162,9 @@ function switchProfileTab(tab) {
   const btnAccount = document.getElementById('prof-tab-btn-account');
   const tabOrders = document.getElementById('prof-tab-orders');
   const tabAccount = document.getElementById('prof-tab-account');
+  const modalTitle = document.getElementById('prof-modal-title');
+  const modalSubtitle = document.getElementById('prof-modal-subtitle');
+  const modalIcon = document.getElementById('prof-modal-icon');
 
   if (btnOrders) btnOrders.classList.remove('active');
   if (btnAccount) btnAccount.classList.remove('active');
@@ -4171,9 +4174,15 @@ function switchProfileTab(tab) {
   if (tab === 'account') {
     if (btnAccount) btnAccount.classList.add('active');
     if (tabAccount) tabAccount.style.display = 'block';
+    if (modalTitle) modalTitle.textContent = 'Customer Profile';
+    if (modalSubtitle) modalSubtitle.textContent = 'Subbayya Gari Royal Patron Dashboard';
+    if (modalIcon) modalIcon.textContent = '👤';
   } else {
     if (btnOrders) btnOrders.classList.add('active');
     if (tabOrders) tabOrders.style.display = 'block';
+    if (modalTitle) modalTitle.textContent = 'My Orders & Live Status';
+    if (modalSubtitle) modalSubtitle.textContent = 'Your Placed Feast Orders & Kitchen Tracking';
+    if (modalIcon) modalIcon.textContent = '📦';
     fetchAndRenderCustomerOrders();
   }
 }
