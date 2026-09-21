@@ -4532,27 +4532,35 @@ async function fetchAndRenderCustomerOrders() {
 
       const isDelivery = ord.orderType === 'delivery';
 
-      // Build Items List HTML
+      // Build Items List HTML with rich dish rows
       const itemsListHtml = (ord.items || []).map(item => `
-        <div class="cust-order-item-row">
-          <div style="display: flex; align-items: center; gap: 0.4rem;">
-            <span style="color: #16A34A; font-size: 0.75rem;">🟢</span>
-            <span style="font-weight: 600; color: var(--color-text);">${item.name || 'Bhojanam Specialty'}</span>
-            <span style="background: rgba(15, 90, 39, 0.08); color: var(--color-primary); font-weight: 700; padding: 1px 6px; border-radius: 4px; font-size: 0.72rem;">x${item.qty || 1}</span>
+        <div class="cust-order-item-row" style="display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0; border-bottom: 1px dotted rgba(0,0,0,0.08);">
+          <div style="display: flex; align-items: center; gap: 0.45rem; flex: 1; min-width: 0;">
+            <span style="color: #16A34A; font-size: 0.72rem; flex-shrink: 0;">🟢</span>
+            <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+              <span style="font-weight: 700; color: var(--color-text); font-size: 0.84rem;">${item.name || 'Bhojanam Specialty'}</span>
+              <span style="font-size: 0.72rem; color: var(--color-text-muted); margin-left: 0.25rem;">(₹${item.price || 0} each)</span>
+            </div>
+            <span style="background: rgba(15, 90, 39, 0.1); color: var(--color-primary); font-weight: 800; padding: 2px 7px; border-radius: 4px; font-size: 0.72rem; flex-shrink: 0;">x${item.qty || 1}</span>
           </div>
-          <div style="font-weight: 700; color: var(--color-primary);">
+          <div style="font-weight: 800; color: var(--color-primary); font-size: 0.88rem; margin-left: 0.5rem; flex-shrink: 0;">
             ₹${(item.price || 0) * (item.qty || 1)}
           </div>
         </div>
       `).join('');
 
+      const subtotalVal = ord.subtotal || (ord.items || []).reduce((s, i) => s + ((i.price || 0) * (i.qty || 1)), 0);
+      const packingVal = ord.packagingFee !== undefined ? ord.packagingFee : 30;
+      const deliveryVal = ord.deliveryFee || 0;
+      const discountVal = ord.discount || 0;
+
       return `
-        <div class="cust-order-card">
+        <div class="cust-order-card" style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 1.15rem; margin-bottom: 1.1rem; box-shadow: var(--shadow-xs);">
           <!-- Header -->
-          <div class="cust-order-header">
+          <div class="cust-order-header" style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--color-border); padding-bottom: 0.65rem; margin-bottom: 0.75rem;">
             <div>
-              <div class="cust-order-id">#${ord.id}</div>
-              <div style="font-size: 0.72rem; color: var(--color-text-muted); margin-top: 2px;">📅 ${formattedDate}</div>
+              <div class="cust-order-id" style="font-family: var(--font-brand), monospace; font-weight: 800; color: var(--color-primary); font-size: 0.96rem;">#${ord.id}</div>
+              <div style="font-size: 0.72rem; color: var(--color-text-muted); margin-top: 2px;">📅 Placed: ${formattedDate}</div>
             </div>
             <span class="cust-status-badge ${statusClass}">
               <span>${statusIcon}</span>
@@ -4561,33 +4569,58 @@ async function fetchAndRenderCustomerOrders() {
           </div>
 
           <!-- Order Type & Branch Destination -->
-          <div style="font-size: 0.78rem; color: var(--color-text-muted); margin-bottom: 0.65rem; display: flex; align-items: center; justify-content: space-between;">
+          <div style="font-size: 0.78rem; color: var(--color-text-muted); margin-bottom: 0.65rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.35rem;">
             <div>
               <strong>${isDelivery ? '🛵 Home Delivery' : '🥡 Takeaway / Curbside'}</strong>
               <span style="color: var(--color-border-hover);"> • </span>
               <span>${ord.branchName || 'KPHB Colony, Hyderabad'}</span>
             </div>
-            <span style="color: var(--color-gold); font-weight: 700; font-size: 0.74rem;">${ord.paymentStatus || 'Paid Online'}</span>
+            <span style="color: var(--color-gold); font-weight: 700; font-size: 0.74rem;">💳 ${ord.paymentStatus || 'Paid Online'}</span>
           </div>
 
-          <!-- What are ordered: Itemized Breakdown -->
-          <div class="cust-order-items-box">
-            <div style="font-size: 0.72rem; font-weight: 700; color: var(--color-gold); text-transform: uppercase; margin-bottom: 0.35rem; letter-spacing: 0.04em;">
-              🍽️ Dishes Ordered (${ord.itemCount || (ord.items ? ord.items.length : 0)} items)
+          <!-- Dishes Ordered: Itemized List -->
+          <div class="cust-order-items-box" style="background: var(--color-surface-muted); border-radius: var(--radius-sm); padding: 0.75rem 0.85rem; margin-bottom: 0.75rem; border: 1px dashed rgba(15, 90, 39, 0.2);">
+            <div style="font-size: 0.72rem; font-weight: 800; color: var(--color-gold); text-transform: uppercase; margin-bottom: 0.4rem; letter-spacing: 0.04em; display: flex; justify-content: space-between; align-items: center;">
+              <span>🍽️ Dishes Ordered (${ord.itemCount || (ord.items ? ord.items.length : 0)} items)</span>
+              <span style="font-size: 0.7rem; color: var(--color-text-muted); font-weight: 600;">Items Subtotal: ₹${subtotalVal}</span>
             </div>
-            ${itemsListHtml || '<div style="font-size: 0.78rem; color: var(--color-text-muted);">Royal Butta Feast Selection</div>'}
+            <div style="display: flex; flex-direction: column;">
+              ${itemsListHtml || '<div style="font-size: 0.78rem; color: var(--color-text-muted);">Royal Butta Feast Selection</div>'}
+            </div>
+
+            <!-- Small Fee Summary -->
+            <div style="border-top: 1px dashed rgba(0,0,0,0.08); margin-top: 0.5rem; padding-top: 0.4rem; display: flex; flex-direction: column; gap: 0.2rem; font-size: 0.72rem; color: var(--color-text-muted);">
+              <div style="display: flex; justify-content: space-between;">
+                <span>🍃 Eco Banana Leaf & Ghee Packing:</span>
+                <span>₹${packingVal}</span>
+              </div>
+              ${deliveryVal > 0 ? `
+                <div style="display: flex; justify-content: space-between;">
+                  <span>🛵 Delivery Charges:</span>
+                  <span>₹${deliveryVal}</span>
+                </div>
+              ` : ''}
+              ${discountVal > 0 ? `
+                <div style="display: flex; justify-content: space-between; color: #16A34A; font-weight: 700;">
+                  <span>🎉 Discount Savings:</span>
+                  <span>-₹${discountVal}</span>
+                </div>
+              ` : ''}
+            </div>
           </div>
 
           <!-- Address or Pickup Note if available -->
           ${ord.deliveryAddress ? `
-            <div style="font-size: 0.74rem; color: var(--color-text-muted); background: rgba(0,0,0,0.02); padding: 0.4rem 0.6rem; border-radius: 4px; margin-bottom: 0.65rem;">
-              🏠 <strong>Address:</strong> ${ord.deliveryAddress}
+            <div style="font-size: 0.74rem; color: var(--color-text-muted); background: rgba(0,0,0,0.02); padding: 0.45rem 0.65rem; border-radius: 4px; margin-bottom: 0.65rem; border: 1px solid var(--color-border);">
+              🏠 <strong>Delivery Address:</strong> ${ord.deliveryAddress}
+              ${ord.deliveryLandmark ? ` (Landmark: ${ord.deliveryLandmark})` : ''}
             </div>
           ` : ''}
 
           ${ord.pickupSlot ? `
-            <div style="font-size: 0.74rem; color: #16A34A; font-weight: 600; margin-bottom: 0.65rem;">
-              ⏰ <strong>Pickup Time:</strong> ${ord.pickupSlot}
+            <div style="font-size: 0.74rem; color: #16A34A; font-weight: 600; margin-bottom: 0.65rem; background: rgba(22, 163, 74, 0.06); padding: 0.4rem 0.6rem; border-radius: 4px;">
+              ⏰ <strong>Takeaway Slot:</strong> ${ord.pickupSlot}
+              ${ord.vehicleNote ? ` • 🚗 ${ord.vehicleNote}` : ''}
             </div>
           ` : ''}
 
