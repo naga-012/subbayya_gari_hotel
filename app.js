@@ -2177,9 +2177,9 @@ function renderCartDrawer() {
       cartAuthBanner.innerHTML = `
         <div>
           <strong style="color: var(--color-gold);">🔒 Login Required for ${orderModeLabel}</strong>
-          <div style="font-size: 0.76rem; color: var(--color-text-muted); margin-top: 2px;">Please log in with your mobile OTP to place your order.</div>
+          <div style="font-size: 0.76rem; color: var(--color-text-muted); margin-top: 2px;">Please log in to place your order.</div>
         </div>
-        <button type="button" class="auth-gate-login-btn" onclick="openAuthModal('otp')">Login / Sign Up 👤</button>
+        <a href="login.html?redirect=cart" class="auth-gate-login-btn">Login 👤</a>
       `;
     }
 
@@ -2633,10 +2633,9 @@ function proceedToCheckout() {
   // REQUIRE LOGIN FOR DELIVERY AND PICKUP ORDERS
   if (!AppState.currentUser) {
     showToast(`🔒 Please log in to complete your ${orderModeLabel} order!`);
-    AppState.pendingAction = {
-      type: 'checkout_order'
-    };
-    openAuthModal('otp');
+    setTimeout(() => {
+      window.location.href = 'login.html?redirect=cart';
+    }, 350);
     return;
   }
   
@@ -2977,8 +2976,10 @@ function setupReservationForm() {
           notes: document.getElementById('res-notes')?.value || 'Standard Pure Veg Bhojanam',
           seating: selectedSeating
         }
-      };
-      openAuthModal('otp');
+      showToast('🔒 Please log in to confirm your table reservation');
+      setTimeout(() => {
+        window.location.href = 'login.html?redirect=reservations';
+      }, 350);
       return;
     }
 
@@ -3549,27 +3550,7 @@ function advanceOrderStatus(orderId, newStatus) {
 // ==========================================================================
 
 function openAuthModal(initialTab = 'otp') {
-  const modal = document.getElementById('auth-modal');
-  if (!modal) {
-    window.location.href = 'login.html';
-    return;
-  }
-  switchAuthTab(initialTab || 'otp');
-
-  // Reset steps so user can enter email cleanly
-  const sendStep = document.getElementById('auth-otp-send-step');
-  const verifyStep = document.getElementById('auth-otp-verify-step');
-  const codeInput = document.getElementById('auth-otp-code');
-  if (sendStep) sendStep.style.display = 'block';
-  if (verifyStep) verifyStep.style.display = 'none';
-  if (codeInput) codeInput.value = '';
-
-  modal.classList.add('active');
-
-  setTimeout(() => {
-    const targetInput = document.getElementById('auth-otp-target');
-    if (targetInput && targetInput.offsetParent !== null) targetInput.focus();
-  }, 100);
+  window.location.href = 'login.html?redirect=cart';
 }
 window.openAuthModal = openAuthModal;
 
@@ -4097,7 +4078,7 @@ function updateAuthUI() {
     }
 
     if (mobileAuthText) {
-      mobileAuthText.textContent = 'Login / Guest Sign In';
+      mobileAuthText.textContent = 'Login';
     }
     if (mobileAuthIcon) {
       mobileAuthIcon.textContent = '👤';
@@ -4116,9 +4097,9 @@ function updateAuthUI() {
       resAuthBanner.innerHTML = `
         <div>
           <strong style="color: var(--color-gold);">🔒 Login Required to Book</strong>
-          <div style="font-size: 0.76rem; color: var(--color-text-muted); margin-top: 2px;">Sign in via quick Mobile OTP or Email to reserve your banana leaf table.</div>
+          <div style="font-size: 0.76rem; color: var(--color-text-muted); margin-top: 2px;">Sign in to reserve your banana leaf table.</div>
         </div>
-        <button type="button" class="auth-gate-login-btn" onclick="openAuthModal('otp')">Login Now 👤</button>
+        <a href="login.html?redirect=reservations" class="auth-gate-login-btn">Login Now 👤</a>
       `;
     }
 

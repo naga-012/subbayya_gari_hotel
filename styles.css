@@ -214,11 +214,17 @@ button {
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  text-decoration: none;
   transition: all var(--transition-fast);
 }
 
 .auth-gate-login-btn:hover {
   background: var(--color-primary);
+  color: #FFFFFF;
   transform: translateY(-1px);
 }
 
