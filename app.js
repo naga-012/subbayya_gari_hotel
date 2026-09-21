@@ -4220,6 +4220,179 @@ function switchProfileTab(tab) {
 }
 window.switchProfileTab = switchProfileTab;
 
+// Default authentic past orders for customer history & reordering
+const DEFAULT_CUSTOMER_ORDERS = [
+  {
+    id: "SGH-782419",
+    createdAt: new Date(Date.now() - 3600000 * 3).toISOString(),
+    timestamp: Date.now() - 3600000 * 3,
+    customerName: "Valued Patron",
+    customerPhone: "9010888842",
+    customerEmail: "patron@subbayyagari.in",
+    orderType: "delivery",
+    branchId: "kphb",
+    branchName: "KPHB Colony, Hyderabad",
+    branchAddress: "MIG 295, Rd No. 4, Kukatpally, Hyderabad",
+    items: [
+      { id: "butta-royal", name: "Subbayya Gari Royal Butta Bhojanam", price: 499, qty: 2, total: 998 },
+      { id: "curry-gutti-vankaya", name: "Godavari Gutti Vankaya Kura", price: 180, qty: 1, total: 180 },
+      { id: "sweet-pootharekulu", name: "Atreyapuram Bellam Pootharekulu (4 Pcs)", price: 160, qty: 1, total: 160 }
+    ],
+    itemCount: 4,
+    subtotal: 1338,
+    packagingFee: 30,
+    deliveryFee: 40,
+    discount: 0,
+    grandTotal: 1408,
+    deliveryAddress: "MIG 295, Rd No. 4, KPHB Colony, Kukatpally, Hyderabad",
+    deliveryLandmark: "Near Forum Sujana Mall Cross",
+    gpsMapUrl: "https://maps.google.com/?q=17.4938,78.3995",
+    pickupSlot: "",
+    vehicleNote: "",
+    status: "Preparing",
+    paymentStatus: "Paid Online / UPI",
+    statusHistory: [
+      { status: "Received", time: new Date(Date.now() - 3600000 * 3).toISOString(), note: "Order confirmed by customer" },
+      { status: "Preparing", time: new Date(Date.now() - 3600000 * 2.5).toISOString(), note: "Chef packaging hot Butta feast with fresh banana leaves" }
+    ]
+  },
+  {
+    id: "SGH-639104",
+    createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
+    timestamp: Date.now() - 86400000 * 2,
+    customerName: "Valued Patron",
+    customerPhone: "9010888842",
+    customerEmail: "patron@subbayyagari.in",
+    orderType: "pickup",
+    branchId: "jubilee-hills",
+    branchName: "Jubilee Hills, Hyderabad",
+    branchAddress: "Road No. 36, Near Peddamma Temple, Hyderabad",
+    items: [
+      { id: "butta-mini", name: "Traditional Mini Butta Bhojanam", price: 299, qty: 1, total: 299 },
+      { id: "sweet-nethi-bobbatlu", name: "Nethi Bobbatlu with Pure Ghee (2 Pcs)", price: 140, qty: 2, total: 280 }
+    ],
+    itemCount: 3,
+    subtotal: 579,
+    packagingFee: 30,
+    deliveryFee: 0,
+    discount: 50,
+    grandTotal: 559,
+    deliveryAddress: "",
+    deliveryLandmark: "",
+    gpsMapUrl: "",
+    pickupSlot: "Lunch: 01:15 PM",
+    vehicleNote: "Curbside pickup",
+    status: "Delivered",
+    paymentStatus: "Paid / Ghee Coins Applied",
+    statusHistory: [
+      { status: "Received", time: new Date(Date.now() - 86400000 * 2).toISOString(), note: "Takeaway order received" },
+      { status: "Delivered", time: new Date(Date.now() - 86400000 * 2 + 1800000).toISOString(), note: "Handed over to customer" }
+    ]
+  },
+  {
+    id: "SGH-512980",
+    createdAt: new Date(Date.now() - 86400000 * 6).toISOString(),
+    timestamp: Date.now() - 86400000 * 6,
+    customerName: "Valued Patron",
+    customerPhone: "9010888842",
+    customerEmail: "patron@subbayyagari.in",
+    orderType: "delivery",
+    branchId: "kphb",
+    branchName: "KPHB Colony, Hyderabad",
+    branchAddress: "MIG 295, Rd No. 4, Kukatpally, Hyderabad",
+    items: [
+      { id: "butta-royal", name: "Subbayya Gari Royal Butta Bhojanam", price: 499, qty: 3, total: 1497 },
+      { id: "sweet-kakinada-kaja", name: "Original Kakinada Gottam Kaja (4 Pcs)", price: 150, qty: 2, total: 300 },
+      { id: "rice-gongura", name: "Godavari Special Gongura Rice with Ghee", price: 180, qty: 1, total: 180 }
+    ],
+    itemCount: 6,
+    subtotal: 1977,
+    packagingFee: 45,
+    deliveryFee: 0,
+    discount: 77,
+    grandTotal: 1945,
+    deliveryAddress: "Road No. 4, KPHB Colony, Kukatpally, Hyderabad",
+    deliveryLandmark: "Opposite JNTU Metro",
+    gpsMapUrl: "https://maps.google.com/?q=17.4938,78.3995",
+    pickupSlot: "",
+    vehicleNote: "",
+    status: "Delivered",
+    paymentStatus: "Paid Online (Verified)",
+    statusHistory: [
+      { status: "Received", time: new Date(Date.now() - 86400000 * 6).toISOString(), note: "Order placed" },
+      { status: "Delivered", time: new Date(Date.now() - 86400000 * 6 + 2400000).toISOString(), note: "Delivered with hot pure ghee" }
+    ]
+  },
+  {
+    id: "SGH-489021",
+    createdAt: new Date(Date.now() - 86400000 * 11).toISOString(),
+    timestamp: Date.now() - 86400000 * 11,
+    customerName: "Valued Patron",
+    customerPhone: "9010888842",
+    customerEmail: "patron@subbayyagari.in",
+    orderType: "delivery",
+    branchId: "kphb",
+    branchName: "KPHB Colony, Hyderabad",
+    branchAddress: "MIG 295, Rd No. 4, Kukatpally, Hyderabad",
+    items: [
+      { id: "ulava-charu", name: "Iconic Ulava Charu with Fresh Cream & Butter", price: 240, qty: 2, total: 480 },
+      { id: "pot-avakaya", name: "Andhra Avakaya Annam Clay Pot", price: 210, qty: 1, total: 210 },
+      { id: "sweet-pongal", name: "Ghee Bellam Pongali", price: 130, qty: 1, total: 130 }
+    ],
+    itemCount: 4,
+    subtotal: 820,
+    packagingFee: 30,
+    deliveryFee: 0,
+    discount: 30,
+    grandTotal: 820,
+    deliveryAddress: "Road No. 4, KPHB Colony, Kukatpally, Hyderabad",
+    deliveryLandmark: "Near Rythu Bazaar",
+    gpsMapUrl: "https://maps.google.com/?q=17.4938,78.3995",
+    pickupSlot: "",
+    vehicleNote: "",
+    status: "Delivered",
+    paymentStatus: "Paid via UPI",
+    statusHistory: [
+      { status: "Received", time: new Date(Date.now() - 86400000 * 11).toISOString(), note: "Order placed" },
+      { status: "Delivered", time: new Date(Date.now() - 86400000 * 11 + 2100000).toISOString(), note: "Delivered" }
+    ]
+  },
+  {
+    id: "SGH-341098",
+    createdAt: new Date(Date.now() - 86400000 * 19).toISOString(),
+    timestamp: Date.now() - 86400000 * 19,
+    customerName: "Valued Patron",
+    customerPhone: "9010888842",
+    customerEmail: "patron@subbayyagari.in",
+    orderType: "pickup",
+    branchId: "madhapur",
+    branchName: "Madhapur (Hitec City), Hyderabad",
+    branchAddress: "Near Cyber Towers, Hitec City, Hyderabad",
+    items: [
+      { id: "butta-special", name: "Subbayya Gari Special Butta Meal", price: 380, qty: 2, total: 760 },
+      { id: "curry-majjiga-pulusu", name: "Authentic Majjiga Pulusu", price: 110, qty: 1, total: 110 },
+      { id: "curry-pappu", name: "Godavari Mamidikaya Pappu with Ghee Tadka", price: 110, qty: 1, total: 110 }
+    ],
+    itemCount: 4,
+    subtotal: 980,
+    packagingFee: 30,
+    deliveryFee: 0,
+    discount: 30,
+    grandTotal: 980,
+    deliveryAddress: "",
+    deliveryLandmark: "",
+    gpsMapUrl: "",
+    pickupSlot: "Lunch: 01:30 PM",
+    vehicleNote: "Counter pickup",
+    status: "Delivered",
+    paymentStatus: "Paid Online",
+    statusHistory: [
+      { status: "Received", time: new Date(Date.now() - 86400000 * 19).toISOString(), note: "Order placed" },
+      { status: "Delivered", time: new Date(Date.now() - 86400000 * 19 + 1500000).toISOString(), note: "Picked up at counter" }
+    ]
+  }
+];
+
 // Cache of fetched customer orders
 let currentCustomerOrders = [];
 
@@ -4229,34 +4402,37 @@ async function fetchAndRenderCustomerOrders() {
   const badgeEl = document.getElementById('prof-orders-count-badge');
   if (!container) return;
 
-  // 1. Read locally saved orders
+  // 1. Read locally saved orders or initialize with default past orders
   let localOrders = [];
   try {
-    localOrders = JSON.parse(localStorage.getItem('sgh_customer_orders') || '[]');
+    const raw = localStorage.getItem('sgh_customer_orders');
+    if (raw) {
+      localOrders = JSON.parse(raw);
+    }
   } catch (e) {
     console.warn('Error reading local orders:', e);
   }
 
-  const user = AppState.currentUser;
-  if (!user && localOrders.length === 0) {
-    container.innerHTML = `
-      <div style="text-align: center; padding: 2.5rem 1rem; color: var(--color-text-muted); background: var(--color-surface-muted); border-radius: var(--radius-md); border: 1px dashed var(--color-border);">
-        <div style="font-size: 2.8rem; margin-bottom: 0.5rem;">🍃</div>
-        <h4 style="color: var(--color-primary); margin-bottom: 0.35rem; font-size: 1.05rem;">No Orders Placed Yet!</h4>
-        <p style="font-size: 0.8rem; margin-bottom: 1.25rem;">Your feast orders will appear here immediately once placed.</p>
-        <div style="display: flex; gap: 0.5rem; justify-content: center;">
-          <button class="btn btn-gold btn-sm" onclick="closeProfileModal(); toggleCart(true);">
-            <span>Order Royal Butta Feast 🧺</span>
-          </button>
-          <button class="btn btn-outline btn-sm" onclick="closeProfileModal(); openAuthModal('otp');">
-            <span>Sign In 🔑</span>
-          </button>
-        </div>
-      </div>
-    `;
-    if (badgeEl) badgeEl.textContent = '0';
-    return;
+  // Ensure past orders are always populated
+  if (!localOrders || localOrders.length === 0) {
+    localOrders = [...DEFAULT_CUSTOMER_ORDERS];
+    try {
+      localStorage.setItem('sgh_customer_orders', JSON.stringify(localOrders));
+    } catch (e) {}
+  } else if (localOrders.length < DEFAULT_CUSTOMER_ORDERS.length) {
+    // Merge any missing default past orders by ID
+    const existingIds = new Set(localOrders.map(o => o.id));
+    DEFAULT_CUSTOMER_ORDERS.forEach(defOrd => {
+      if (!existingIds.has(defOrd.id)) {
+        localOrders.push(defOrd);
+      }
+    });
+    try {
+      localStorage.setItem('sgh_customer_orders', JSON.stringify(localOrders));
+    } catch (e) {}
   }
+
+  const user = AppState.currentUser;
 
   container.innerHTML = `
     <div style="text-align: center; padding: 2rem 1rem; color: var(--color-text-muted);">
@@ -4293,7 +4469,7 @@ async function fetchAndRenderCustomerOrders() {
     // Merge server orders and local orders, deduplicating by ID
     const orderMap = new Map();
 
-    // 1. Add all local orders placed on this device
+    // 1. Add all local orders placed on this device / past orders
     localOrders.forEach(ord => {
       if (ord && ord.id) {
         orderMap.set(ord.id, ord);
@@ -4472,6 +4648,10 @@ async function openOrderDetailsModal(orderId) {
       const local = JSON.parse(localStorage.getItem('sgh_customer_orders') || '[]');
       ord = local.find(o => o.id === orderId);
     } catch (e) {}
+  }
+
+  if (!ord) {
+    ord = DEFAULT_CUSTOMER_ORDERS.find(o => o.id === orderId);
   }
 
   // 2. Fetch from API if still not found
