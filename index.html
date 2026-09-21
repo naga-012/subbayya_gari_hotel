@@ -81,6 +81,7 @@
           <li><a href="#catering" class="nav-link">Catering</a></li>
           <li><a href="#branches" class="nav-link">Branches</a></li>
           <li><a href="#reviews" class="nav-link">Reviews</a></li>
+          <li><a href="javascript:void(0)" onclick="openProfileModal('orders')" class="nav-link" id="nav-link-my-orders" style="display: inline-flex; align-items: center; gap: 0.35rem; color: var(--color-gold); font-weight: 800;"><span>📦</span> <span>My Orders</span></a></li>
         </ul>
       </nav>
 
@@ -245,6 +246,12 @@
             <span class="cart-count-badge" id="cart-count-badge" style="display: none;">0</span>
           </button>
         </div>
+
+        <!-- My Orders Button (Shows all customer orders & live status) -->
+        <button type="button" class="btn btn-outline-gold btn-sm" id="btn-header-my-orders" onclick="openProfileModal('orders')" title="View All My Orders & Live Status" style="padding: 0.4rem 0.85rem; font-size: 0.82rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 50px;">
+          <span>📦</span>
+          <span>My Orders</span>
+        </button>
 
         <!-- User Account / Login Button -->
         <div id="auth-header-container" style="display: flex; align-items: center;">
@@ -3106,6 +3113,7 @@
           <span id="mobile-auth-text">Login / Guest Sign In</span>
         </a>
       </li>
+      <li><a href="javascript:void(0)" class="mobile-drawer-link" onclick="openProfileModal('orders'); toggleMobileDrawer(false);" style="background: rgba(15, 90, 39, 0.08); color: var(--color-primary); font-weight: 800; border-radius: var(--radius-md);"><span>📦</span> My Orders & Live Status</a></li>
       <li><a href="#hero" class="mobile-drawer-link" onclick="toggleMobileDrawer(false)"><span>🏠</span> Home</a></li>
       <li><a href="#unbox" class="mobile-drawer-link" onclick="toggleMobileDrawer(false)"><span>🧺</span> Butta Bhojanam Unbox</a></li>
       <li><a href="#menu" class="mobile-drawer-link" onclick="toggleMobileDrawer(false)"><span>🍛</span> Authentic Veg Menu</a></li>
