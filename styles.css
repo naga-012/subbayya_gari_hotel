@@ -3275,8 +3275,43 @@ button {
     font-size: 0.95rem;
   }
 
-  /* Hide Login button and Book Leaf Table from top header on mobile */
-  #auth-header-container,
+  .mobile-menu-btn {
+    display: flex;
+    width: 36px;
+    height: 36px;
+    background: rgba(217, 119, 6, 0.12);
+    border: 1px solid var(--color-gold);
+    border-radius: 8px;
+    cursor: pointer;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    padding: 0;
+  }
+
+  .mobile-menu-btn span {
+    width: 18px;
+    height: 2px;
+    background: var(--color-gold);
+  }
+
+  /* Compact Login button in top header on mobile */
+  #auth-header-container {
+    display: flex !important;
+  }
+
+  #auth-header-btn {
+    padding: 0.28rem 0.55rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    border-radius: 50px;
+    border: 1px solid var(--color-gold);
+    color: var(--color-gold);
+    background: rgba(217, 119, 6, 0.08);
+  }
+
+  /* Hide desktop-only "Book Leaf Table" from top header on mobile */
   .site-header .btn-primary[href="#reservations"] {
     display: none !important;
   }

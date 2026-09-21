@@ -4011,6 +4011,17 @@ function updateAuthUI() {
     if (mobileAuthIcon) {
       mobileAuthIcon.textContent = '👑';
     }
+
+    const dockLoginText = document.getElementById('dock-login-text');
+    const dockLoginItem = document.getElementById('dock-item-login');
+    if (dockLoginText) dockLoginText.textContent = firstName || 'Account';
+    if (dockLoginItem) {
+      dockLoginItem.href = 'javascript:void(0)';
+      dockLoginItem.onclick = (e) => {
+        if (e) e.preventDefault();
+        openProfileModal('account');
+      };
+    }
     if (mobileAuthItem) {
       const link = mobileAuthItem.querySelector('a');
       if (link) {
@@ -4059,6 +4070,14 @@ function updateAuthUI() {
       authHeaderBtn.style.background = 'transparent';
       authHeaderBtn.style.borderColor = 'var(--color-gold)';
       authHeaderBtn.style.color = 'var(--color-gold)';
+    }
+
+    const dockLoginText = document.getElementById('dock-login-text');
+    const dockLoginItem = document.getElementById('dock-item-login');
+    if (dockLoginText) dockLoginText.textContent = 'Login';
+    if (dockLoginItem) {
+      dockLoginItem.href = 'login.html';
+      dockLoginItem.onclick = null;
     }
 
     if (mobileAuthText) {

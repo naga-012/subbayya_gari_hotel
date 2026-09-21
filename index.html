@@ -3141,29 +3141,29 @@
   </div>
 
   <!-- ==========================================================================
-       MOBILE APP-LIKE BOTTOM NAVIGATION DOCK
+       MOBILE APP-LIKE BOTTOM NAVIGATION DOCK (Home, Menu, Plate, Reserve, Login)
        ========================================================================== -->
   <nav class="mobile-bottom-dock" aria-label="Mobile Navigation Dock">
-    <a href="javascript:void(0)" class="dock-item active" onclick="switchAppMode('guest')">
-      <span class="dock-icon">🍽️</span>
-      <span>Feast</span>
+    <a href="#hero" class="dock-item active" id="dock-item-home">
+      <span class="dock-icon">🏠</span>
+      <span>Home</span>
     </a>
-    <a href="javascript:void(0)" class="dock-item" onclick="switchAppMode('loyalty')">
-      <span class="dock-icon">👑</span>
-      <span>Loyalty</span>
+    <a href="#menu" class="dock-item" id="dock-item-menu">
+      <span class="dock-icon">🍛</span>
+      <span>Our Menu</span>
     </a>
-    <a href="javascript:void(0)" class="dock-item" onclick="switchAppMode('table-qr')">
-      <span class="dock-icon">📱</span>
-      <span>Table QR</span>
-    </a>
-    <a href="owner.html" class="dock-item" title="Owner Command Center">
-      <span class="dock-icon">📊</span>
-      <span>Owner</span>
-    </a>
-    <a href="javascript:void(0)" class="dock-item" onclick="toggleCart(true)">
-      <span class="dock-icon">🛒</span>
+    <a href="javascript:void(0)" class="dock-item" onclick="toggleCart(true)" id="dock-item-cart">
+      <span class="dock-icon">🧺</span>
       <span>Plate</span>
       <span class="dock-badge" id="dock-cart-badge" style="display: none;">0</span>
+    </a>
+    <a href="#reservations" class="dock-item" id="dock-item-reserve">
+      <span class="dock-icon">🎟️</span>
+      <span>Reserve</span>
+    </a>
+    <a href="login.html" class="dock-item" id="dock-item-login" onclick="handleAuthHeaderBtnClick(event)">
+      <span class="dock-icon">👤</span>
+      <span id="dock-login-text">Login</span>
     </a>
   </nav>
 
