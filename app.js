@@ -2143,48 +2143,17 @@ function renderCartDrawer() {
 
   document.getElementById('cart-grand-total').textContent = `₹${grandTotal}`;
 
-  // Update Cart Auth Banner and Checkout Button State
-  const cartAuthBanner = document.getElementById('cart-auth-banner');
+  // Update Checkout Button State
   const cartCheckoutBtn = document.getElementById('cart-checkout-btn');
   const cartCheckoutBtnText = document.getElementById('cart-checkout-btn-text');
   const orderModeLabel = isDelivery ? 'Delivery' : 'Pickup';
 
-  if (AppState.currentUser) {
-    if (cartAuthBanner) {
-      cartAuthBanner.className = 'auth-gate-banner logged-in';
-      cartAuthBanner.innerHTML = `
-        <div>
-          <strong style="color: #16A34A;">✅ Verified Guest: ${AppState.currentUser.name}</strong>
-          <div style="font-size: 0.76rem; color: var(--color-text-muted); margin-top: 2px;">📞 ${AppState.currentUser.phone} • ${AppState.currentUser.coins || 50} Ghee Coins 🪙</div>
-        </div>
-        <button type="button" class="auth-gate-login-btn" style="background: rgba(22, 163, 74, 0.15); color: #16A34A; border: 1px solid #16A34A;" onclick="openProfileModal()">Profile 👑</button>
-      `;
-    }
-
-    if (cartCheckoutBtnText) {
-      cartCheckoutBtnText.textContent = `Confirm Your ${orderModeLabel} Order 🚀`;
-    }
-    if (cartCheckoutBtn) {
-      cartCheckoutBtn.classList.remove('btn-outline-gold');
-      cartCheckoutBtn.classList.add('btn-gold');
-    }
-
-    // Do not autofill details - let guest enter manually
-  } else {
-    if (cartAuthBanner) {
-      cartAuthBanner.className = 'auth-gate-banner logged-out';
-      cartAuthBanner.innerHTML = `
-        <div>
-          <strong style="color: var(--color-gold);">🔒 Login Required for ${orderModeLabel}</strong>
-          <div style="font-size: 0.76rem; color: var(--color-text-muted); margin-top: 2px;">Please log in to place your order.</div>
-        </div>
-        <a href="login.html?redirect=cart" class="auth-gate-login-btn">Login 👤</a>
-      `;
-    }
-
-    if (cartCheckoutBtnText) {
-      cartCheckoutBtnText.textContent = `🔒 Login to Place ${orderModeLabel} Order`;
-    }
+  if (cartCheckoutBtnText) {
+    cartCheckoutBtnText.textContent = `Confirm & Place ${orderModeLabel} Order (₹${grandTotal}) 🚀`;
+  }
+  if (cartCheckoutBtn) {
+    cartCheckoutBtn.classList.remove('btn-outline-gold');
+    cartCheckoutBtn.classList.add('btn-gold');
   }
 }
 
@@ -2627,16 +2596,6 @@ function proceedToCheckout() {
   }
 
   const isDelivery = AppState.orderType === 'delivery';
-  const orderModeLabel = isDelivery ? 'Delivery' : 'Pickup';
-
-  // REQUIRE LOGIN FOR DELIVERY AND PICKUP ORDERS
-  if (!AppState.currentUser) {
-    showToast(`🔒 Please log in to complete your ${orderModeLabel} order!`);
-    setTimeout(() => {
-      window.location.href = 'login.html?redirect=cart';
-    }, 350);
-    return;
-  }
   
   const customerName = document.getElementById('order-customer-name')?.value.trim();
   const customerPhone = document.getElementById('order-customer-phone')?.value.trim();
@@ -4240,10 +4199,18 @@ async function fetchAndRenderCustomerOrders() {
   const user = AppState.currentUser;
   if (!user && localOrders.length === 0) {
     container.innerHTML = `
-      <div style="text-align: center; padding: 2.5rem 1rem; color: var(--color-text-muted);">
-        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔒</div>
-        <p style="font-weight: 700; margin-bottom: 0.75rem;">Please log in to view your orders</p>
-        <button class="btn btn-gold btn-sm" onclick="closeProfileModal(); openAuthModal('otp');">Sign In Now 🔑</button>
+      <div style="text-align: center; padding: 2.5rem 1rem; color: var(--color-text-muted); background: var(--color-surface-muted); border-radius: var(--radius-md); border: 1px dashed var(--color-border);">
+        <div style="font-size: 2.8rem; margin-bottom: 0.5rem;">🍃</div>
+        <h4 style="color: var(--color-primary); margin-bottom: 0.35rem; font-size: 1.05rem;">No Orders Placed Yet!</h4>
+        <p style="font-size: 0.8rem; margin-bottom: 1.25rem;">Your feast orders will appear here immediately once placed.</p>
+        <div style="display: flex; gap: 0.5rem; justify-content: center;">
+          <button class="btn btn-gold btn-sm" onclick="closeProfileModal(); toggleCart(true);">
+            <span>Order Royal Butta Feast 🧺</span>
+          </button>
+          <button class="btn btn-outline btn-sm" onclick="closeProfileModal(); openAuthModal('otp');">
+            <span>Sign In 🔑</span>
+          </button>
+        </div>
       </div>
     `;
     if (badgeEl) badgeEl.textContent = '0';
@@ -4306,6 +4273,11 @@ async function fetchAndRenderCustomerOrders() {
 
     currentCustomerOrders = orders;
     if (badgeEl) badgeEl.textContent = orders.length;
+
+    const headerMyOrdersBtn = document.getElementById('btn-header-my-orders');
+    if (headerMyOrdersBtn) {
+      headerMyOrdersBtn.innerHTML = `<span>📦</span><span>My Orders (${orders.length})</span>`;
+    }
 
     if (orders.length === 0) {
       container.innerHTML = `
