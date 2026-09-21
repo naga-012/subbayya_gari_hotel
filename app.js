@@ -2170,13 +2170,7 @@ function renderCartDrawer() {
       cartCheckoutBtn.classList.add('btn-gold');
     }
 
-    // Auto-fill logged in user info if empty
-    const nameInput = document.getElementById('order-customer-name');
-    const phoneInput = document.getElementById('order-customer-phone');
-    const addrInput = document.getElementById('order-delivery-address');
-    if (nameInput && !nameInput.value) nameInput.value = AppState.currentUser.name || '';
-    if (phoneInput && !phoneInput.value) phoneInput.value = AppState.currentUser.phone || '';
-    if (addrInput && !addrInput.value && AppState.currentUser.address) addrInput.value = AppState.currentUser.address;
+    // Do not autofill details - let guest enter manually
   } else {
     if (cartAuthBanner) {
       cartAuthBanner.className = 'auth-gate-banner logged-out';
@@ -2646,8 +2640,8 @@ function proceedToCheckout() {
     return;
   }
   
-  const customerName = document.getElementById('order-customer-name')?.value.trim() || AppState.currentUser.name;
-  const customerPhone = document.getElementById('order-customer-phone')?.value.trim() || AppState.currentUser.phone;
+  const customerName = document.getElementById('order-customer-name')?.value.trim();
+  const customerPhone = document.getElementById('order-customer-phone')?.value.trim();
 
   if (!customerName) {
     showToast('⚠️ Please enter your Full Name');
@@ -3954,14 +3948,7 @@ function loginUserSuccess(user, welcomeMsg) {
 }
 
 function autoFillCheckoutDetails() {
-  if (!AppState.currentUser) return;
-  const nameInput = document.getElementById('order-customer-name');
-  const phoneInput = document.getElementById('order-customer-phone');
-  const addrInput = document.getElementById('order-delivery-address');
-
-  if (nameInput && !nameInput.value) nameInput.value = AppState.currentUser.name;
-  if (phoneInput && !phoneInput.value) phoneInput.value = AppState.currentUser.phone;
-  if (addrInput && !addrInput.value && AppState.currentUser.address) addrInput.value = AppState.currentUser.address;
+  // Autofill disabled as requested
 }
 
 function handleAuthHeaderBtnClick(event) {
