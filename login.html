@@ -167,13 +167,10 @@
       <!-- Navigation Tabs -->
       <div class="tab-switch-container">
         <button type="button" class="auth-tab-nav-btn active" id="tab-btn-otp" onclick="switchLoginTab('otp')">
-          📨 Instant OTP
-        </button>
-        <button type="button" class="auth-tab-nav-btn" id="tab-btn-email" onclick="switchLoginTab('email')">
-          📧 Email Login
+          📨 Instant OTP Login
         </button>
         <button type="button" class="auth-tab-nav-btn" id="tab-btn-signup" onclick="switchLoginTab('signup')">
-          ✨ Sign Up
+          ✨ New Patron Sign Up
         </button>
       </div>
 
@@ -263,29 +260,7 @@
       </div>
 
       <!-- ======================================================================
-           TAB 2: EMAIL & PASSWORD LOGIN
-           ====================================================================== -->
-      <div id="panel-email" style="display: none;">
-        <form onsubmit="handlePageEmailLogin(event)" style="display: flex; flex-direction: column; gap: 0.95rem;">
-          <div class="form-group">
-            <label class="form-label" for="page-login-email" style="font-size: 0.84rem; font-weight: 700;">Email Address *</label>
-            <input type="email" id="page-login-email" class="form-control" placeholder="you@example.com" required style="font-size: 0.95rem;" />
-          </div>
-          <div class="form-group">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
-              <label class="form-label" for="page-login-password" style="font-size: 0.84rem; font-weight: 700; margin: 0;">Password *</label>
-              <a href="javascript:void(0)" onclick="showToast('🔑 Password reset link sent to your registered email!')" style="font-size: 0.72rem; color: var(--color-gold);">Forgot?</a>
-            </div>
-            <input type="password" id="page-login-password" class="form-control" placeholder="••••••••" required style="font-size: 0.95rem;" />
-          </div>
-          <button type="submit" class="btn btn-gold btn-lg" style="width: 100%;">
-            <span>Sign In to Account 🔐</span>
-          </button>
-        </form>
-      </div>
-
-      <!-- ======================================================================
-           TAB 3: NEW PATRON SIGN UP
+           TAB 2: NEW PATRON SIGN UP (PASSWORDLESS)
            ====================================================================== -->
       <div id="panel-signup" style="display: none;">
         <form onsubmit="handlePageSignup(event)" style="display: flex; flex-direction: column; gap: 0.85rem;">
@@ -305,15 +280,11 @@
             <label class="form-label" for="page-reg-address" style="font-size: 0.82rem; font-weight: 700;">Delivery Address</label>
             <input type="text" id="page-reg-address" class="form-control" placeholder="Flat No., Landmark, City" />
           </div>
-          <div class="form-group">
-            <label class="form-label" for="page-reg-password" style="font-size: 0.82rem; font-weight: 700;">Password *</label>
-            <input type="password" id="page-reg-password" class="form-control" placeholder="At least 6 characters" required />
-          </div>
           <div style="background: rgba(217, 119, 6, 0.08); padding: 0.5rem; border-radius: var(--radius-sm); border: 1px dashed var(--color-gold); font-size: 0.75rem; color: var(--color-gold); font-weight: 700; text-align: center;">
             🎁 Welcome Gift: +50 Free Ghee Coins (₹50 Value) credited instantly!
           </div>
           <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
-            <span>Register & Claim 50 Coins 🪙</span>
+            <span>Instant Register & Claim 50 Coins 🪙</span>
           </button>
         </form>
       </div>
@@ -344,31 +315,24 @@
     let currentGeneratedOtp = null;
     let currentOtpTarget = '';
 
-    // Switch between tabs: 'otp', 'email', 'signup'
+    // Switch between tabs: 'otp' and 'signup'
     function switchLoginTab(tab) {
       const btnOtp = document.getElementById('tab-btn-otp');
-      const btnEmail = document.getElementById('tab-btn-email');
       const btnSignup = document.getElementById('tab-btn-signup');
       const panelOtp = document.getElementById('panel-otp');
-      const panelEmail = document.getElementById('panel-email');
       const panelSignup = document.getElementById('panel-signup');
 
-      [btnOtp, btnEmail, btnSignup].forEach(b => {
+      [btnOtp, btnSignup].forEach(b => {
         if (b) b.classList.remove('active');
       });
 
       if (panelOtp) panelOtp.style.display = 'none';
-      if (panelEmail) panelEmail.style.display = 'none';
       if (panelSignup) panelSignup.style.display = 'none';
 
       if (tab === 'otp' && btnOtp && panelOtp) {
         btnOtp.classList.add('active');
         panelOtp.style.display = 'block';
         document.getElementById('page-otp-target')?.focus();
-      } else if (tab === 'email' && btnEmail && panelEmail) {
-        btnEmail.classList.add('active');
-        panelEmail.style.display = 'block';
-        document.getElementById('page-login-email')?.focus();
       } else if (tab === 'signup' && btnSignup && panelSignup) {
         btnSignup.classList.add('active');
         panelSignup.style.display = 'block';

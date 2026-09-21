@@ -3510,19 +3510,17 @@ function closeAuthModal() {
 window.closeAuthModal = closeAuthModal;
 
 function switchAuthTab(tab) {
-  if (!tab || tab === 'login' || !['otp', 'email', 'signup'].includes(tab)) {
+  if (!tab || tab === 'login' || !['otp', 'signup'].includes(tab)) {
     tab = 'otp';
   }
 
   const tabOtp = document.getElementById('auth-tab-otp');
-  const tabEmail = document.getElementById('auth-tab-email');
   const tabSignup = document.getElementById('auth-tab-signup');
   const formOtp = document.getElementById('auth-form-otp');
-  const formEmail = document.getElementById('auth-form-email');
   const formSignup = document.getElementById('auth-form-signup');
 
   // Reset tab button styles
-  [tabOtp, tabEmail, tabSignup].forEach(t => {
+  [tabOtp, tabSignup].forEach(t => {
     if (t) {
       t.style.background = 'transparent';
       t.style.color = 'var(--color-text-muted)';
@@ -3533,7 +3531,6 @@ function switchAuthTab(tab) {
 
   // Hide all forms
   if (formOtp) formOtp.style.display = 'none';
-  if (formEmail) formEmail.style.display = 'none';
   if (formSignup) formSignup.style.display = 'none';
 
   if (tab === 'otp' && tabOtp && formOtp) {
@@ -3545,16 +3542,6 @@ function switchAuthTab(tab) {
     setTimeout(() => {
       const targetInput = document.getElementById('auth-otp-target');
       if (targetInput && targetInput.offsetParent !== null) targetInput.focus();
-    }, 50);
-  } else if (tab === 'email' && tabEmail && formEmail) {
-    tabEmail.style.background = 'var(--color-surface)';
-    tabEmail.style.color = 'var(--color-primary)';
-    tabEmail.style.boxShadow = 'var(--shadow-xs)';
-    tabEmail.classList.add('active');
-    formEmail.style.display = 'flex';
-    setTimeout(() => {
-      const emailInput = document.getElementById('auth-login-email');
-      if (emailInput && emailInput.offsetParent !== null) emailInput.focus();
     }, 50);
   } else if (tab === 'signup' && tabSignup && formSignup) {
     tabSignup.style.background = 'var(--color-surface)';
