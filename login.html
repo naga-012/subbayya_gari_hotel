@@ -230,6 +230,9 @@
               <span>Verify Code & Enter Feast 🍽️</span>
             </button>
 
+            <div id="otp-demo-helper" style="display: none; padding: 0.6rem; background: #FEF3C7; border: 1px dashed #D97706; border-radius: 6px; text-align: center; font-size: 0.82rem; color: #92400E; font-weight: 700;">
+            </div>
+
             <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.76rem; color: var(--color-text-muted); margin-top: 0.25rem;">
               <a href="javascript:void(0)" onclick="resetOtpStep()" style="color: var(--color-text-muted);">← Change Email Address</a>
               <a href="javascript:void(0)" id="btn-resend-otp" onclick="sendPageOtp(true)" style="color: var(--color-gold); font-weight: 700; text-decoration: underline; cursor: pointer;">Resend OTP ✉️</a>
@@ -312,11 +315,18 @@
         if (response.ok) {
           const data = await response.json();
           if (data && data.otp) {
-            // Keep synced
             currentGeneratedOtp = String(data.otp);
           }
+          const helper = document.getElementById('otp-demo-helper');
           if (data && data.liveEmailSent) {
             showToast(`✉️ Live OTP delivered to ${targetVal}! Check your Gmail.`);
+            if (helper) helper.style.display = 'none';
+          } else {
+            showToast(`🔑 Verification Code: ${currentGeneratedOtp}`);
+            if (helper) {
+              helper.style.display = 'block';
+              helper.innerHTML = `🔑 Verification Code: <strong style="font-size: 1.1rem; letter-spacing: 2px;">${currentGeneratedOtp}</strong><br/><span style="font-size: 0.72rem; font-weight: 500;">(Render cloud port restriction fallback)</span>`;
+            }
           }
         }
       } catch (err) {

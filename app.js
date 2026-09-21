@@ -3790,6 +3790,8 @@ async function sendLoginOtp() {
       }
       if (data && data.liveEmailSent) {
         showToast(`✉️ Live OTP delivered to ${targetVal}! Check your Gmail.`);
+      } else {
+        showToast(`🔑 Verification Code: ${activeGeneratedOtp}`);
       }
     }
   } catch (err) {
