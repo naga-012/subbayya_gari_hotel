@@ -3795,6 +3795,15 @@ function autoFillCheckoutDetails() {
   if (addrInput && !addrInput.value && AppState.currentUser.address) addrInput.value = AppState.currentUser.address;
 }
 
+function handleAuthHeaderBtnClick(event) {
+  if (AppState.currentUser) {
+    if (event) event.preventDefault();
+    openProfileModal('orders');
+    return false;
+  }
+}
+window.handleAuthHeaderBtnClick = handleAuthHeaderBtnClick;
+
 function updateAuthUI() {
   const authHeaderBtn = document.getElementById('auth-header-btn');
   const authBtnText = document.getElementById('auth-header-btn-text');
@@ -3816,10 +3825,10 @@ function updateAuthUI() {
       authBtnText.textContent = `${firstName} (${coins} 🪙)`;
     }
     if (authHeaderBtn) {
-      authHeaderBtn.removeAttribute('href');
+      authHeaderBtn.href = 'javascript:void(0)';
       authHeaderBtn.onclick = (e) => {
         if (e) e.preventDefault();
-        openProfileModal();
+        openProfileModal('orders');
       };
       authHeaderBtn.title = 'View My Profile & Ghee Coins';
       authHeaderBtn.style.background = 'rgba(217, 119, 6, 0.15)';
