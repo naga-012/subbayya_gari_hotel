@@ -3207,6 +3207,44 @@ let CRM_LIVE_ORDERS = [
 AppState.loyaltyCoins = 480;
 let currentCrmBranchFilter = 'all';
 
+// Top Bar Dining Mode Switcher: Delivery, Pickup (Takeaway), Dine Table (Leaf Reservations)
+function switchDiningMode(mode) {
+  const customerSections = ['hero', 'unbox', 'menu', 'reservations', 'catering', 'branches', 'reviews', 'faq'];
+  const loyaltySection = document.getElementById('loyalty-section');
+  const tableQrSection = document.getElementById('table-qr-section');
+  const crmSection = document.getElementById('crm-analytics-section');
+
+  customerSections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = '';
+  });
+  if (loyaltySection) loyaltySection.style.display = 'none';
+  if (tableQrSection) tableQrSection.style.display = 'none';
+  if (crmSection) crmSection.style.display = 'none';
+
+  // Update top mode buttons active state
+  document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+  const activeBtn = document.getElementById(`mode-btn-${mode}`);
+  if (activeBtn) activeBtn.classList.add('active');
+
+  if (mode === 'delivery') {
+    setOrderMode('delivery');
+    const menuEl = document.getElementById('menu');
+    if (menuEl) menuEl.scrollIntoView({ behavior: 'smooth' });
+    showToast('🛵 Delivery Mode: Select your favorite Godavari Butta Bhojanam dishes!');
+  } else if (mode === 'takeaway') {
+    setOrderMode('takeaway');
+    const menuEl = document.getElementById('menu');
+    if (menuEl) menuEl.scrollIntoView({ behavior: 'smooth' });
+    showToast('🥡 Pickup Mode: Fresh parcel packed in eco-bamboo basket & banana leaf!');
+  } else if (mode === 'dine-table') {
+    const resEl = document.getElementById('reservations');
+    if (resEl) resEl.scrollIntoView({ behavior: 'smooth' });
+    showToast('🍽️ Banana Leaf Table Booking: Reserve your traditional dining pass!');
+  }
+}
+window.switchDiningMode = switchDiningMode;
+
 // App Mode Switcher (Customer Website vs Loyalty vs Table QR vs Manager CRM)
 function switchAppMode(mode) {
   // Update buttons

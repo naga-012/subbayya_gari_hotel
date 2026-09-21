@@ -42,9 +42,15 @@
   <!-- ==========================================================================
        APP MODE SWITCHER (Customer, Loyalty, Table QR, Manager CRM)
        ========================================================================== -->
-  <div class="app-mode-bar" id="app-mode-bar" role="navigation" aria-label="App Role Switcher">
-    <button class="mode-btn active" onclick="switchAppMode('guest')" id="mode-btn-guest">
-      <span>🍽️ Feast & Order</span>
+  <div class="app-mode-bar" id="app-mode-bar" role="navigation" aria-label="Dining & App Mode Switcher">
+    <button class="mode-btn active" onclick="switchDiningMode('delivery')" id="mode-btn-delivery">
+      <span>🛵 Delivery</span>
+    </button>
+    <button class="mode-btn" onclick="switchDiningMode('takeaway')" id="mode-btn-takeaway">
+      <span>🥡 Pickup</span>
+    </button>
+    <button class="mode-btn" onclick="switchDiningMode('dine-table')" id="mode-btn-dine-table">
+      <span>🍽️ Dine Table</span>
     </button>
     <button class="mode-btn" onclick="switchAppMode('loyalty')" id="mode-btn-loyalty">
       <span>👑 Godavari Loyalty</span>
