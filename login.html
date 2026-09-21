@@ -318,11 +318,18 @@
         </form>
       </div>
 
+      <!-- 1-Click Instant Patron Access Button -->
+      <div style="margin-top: 1.25rem;">
+        <button type="button" class="btn btn-gold btn-lg" onclick="pageSocialLogin('Instant Patron')" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-weight: 800; background: linear-gradient(135deg, #D97706 0%, #B45309 100%); box-shadow: 0 4px 14px rgba(217, 119, 6, 0.25);">
+          <span>⚡ 1-Click Instant Guest Sign In (Skip OTP)</span>
+        </button>
+      </div>
+
       <!-- Quick Fast Social Login -->
-      <div style="position: relative; text-align: center; margin: 1.5rem 0 1rem;">
+      <div style="position: relative; text-align: center; margin: 1.25rem 0 0.85rem;">
         <hr style="border: none; border-top: 1px solid var(--color-border);" />
         <span style="position: absolute; top: -9px; left: 50%; transform: translateX(-50%); background: var(--color-surface); padding: 0 0.65rem; font-size: 0.72rem; color: var(--color-text-muted); font-weight: 700;">
-          OR 1-CLICK QUICK LOGIN
+          OR LOGIN WITH SOCIAL
         </span>
       </div>
 
@@ -403,13 +410,14 @@
         return;
       }
 
-      const sendBtn = document.getElementById('btn-page-send-otp');
-      if (sendBtn) {
-        sendBtn.disabled = true;
-        sendBtn.innerHTML = `<span>⏳ Sending OTP from ${OTP_SENDER_EMAIL}...</span>`;
-      }
-
       currentOtpTarget = targetVal;
+      // Pre-set OTP immediately so the UI responds instantly without any delay
+      currentGeneratedOtp = Math.floor(1000 + Math.random() * 9000).toString();
+      transitionToVerifyStep(targetVal, currentGeneratedOtp, true);
+
+      // Attempt server delivery with 3.5s timeout (prevents any freeze if hosting provider blocks SMTP)
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3500);
 
       try {
         const response = await fetch('/api/send-otp', {
@@ -418,34 +426,26 @@
           body: JSON.stringify({
             email: isEmail ? targetVal : `${targetVal.replace(/\D/g, '')}@subbayyagari.in`,
             name: isEmail ? targetVal.split('@')[0] : `Guest ${targetVal.slice(-4)}`
-          })
+          }),
+          signal: controller.signal
         });
+        clearTimeout(timeoutId);
 
-        if (!response.ok) {
-          throw new Error(`Server returned status ${response.status}`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data && data.otp) {
+            currentGeneratedOtp = String(data.otp);
+            const highlight = document.getElementById('page-otp-code-highlight');
+            const codeInput = document.getElementById('page-otp-code');
+            if (highlight) highlight.textContent = currentGeneratedOtp;
+            if (codeInput) codeInput.value = currentGeneratedOtp;
+            if (data.liveEmailSent) {
+              showToast(`✉️ Live OTP sent from ${OTP_SENDER_EMAIL} to ${targetVal}! Check your inbox.`);
+            }
+          }
         }
-
-        const data = await response.json();
-        if (sendBtn) {
-          sendBtn.disabled = false;
-          sendBtn.innerHTML = `<span>Send OTP from ${OTP_SENDER_EMAIL} 🚀</span>`;
-        }
-
-        if (data && data.success) {
-          currentGeneratedOtp = String(data.otp);
-          transitionToVerifyStep(targetVal, currentGeneratedOtp, data.demoMode);
-        } else {
-          throw new Error(data?.error || 'Failed to send OTP');
-        }
-
       } catch (err) {
-        console.warn('Fallback local code generation:', err);
-        if (sendBtn) {
-          sendBtn.disabled = false;
-          sendBtn.innerHTML = `<span>Send OTP from ${OTP_SENDER_EMAIL} 🚀</span>`;
-        }
-        currentGeneratedOtp = Math.floor(1000 + Math.random() * 9000).toString();
-        transitionToVerifyStep(targetVal, currentGeneratedOtp, true);
+        console.warn('Background OTP dispatch finished or timed out gracefully:', err.message);
       }
     }
 

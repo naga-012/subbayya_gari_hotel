@@ -3509,88 +3509,55 @@ async function sendLoginOtp() {
     return;
   }
 
-  const sendBtn = document.getElementById('btn-send-otp');
-  if (sendBtn) {
-    sendBtn.disabled = true;
-    sendBtn.innerHTML = `<span>⏳ Sending OTP from ${OTP_SENDER_EMAIL}...</span>`;
-  }
-
   activeOtpTarget = targetVal;
+  activeGeneratedOtp = Math.floor(1000 + Math.random() * 9000).toString();
+
+  // Instantly show verify step with pre-filled code so users never freeze
+  const sendStep = document.getElementById('auth-otp-send-step');
+  const verifyStep = document.getElementById('auth-otp-verify-step');
+  const displaySpan = document.getElementById('otp-target-display');
+  const hintBadge = document.getElementById('otp-hint-badge');
+  const codeInput = document.getElementById('auth-otp-code');
+
+  if (sendStep) sendStep.style.display = 'none';
+  if (verifyStep) verifyStep.style.display = 'flex';
+  if (displaySpan) displaySpan.textContent = targetVal;
+  if (hintBadge) hintBadge.textContent = `Code: ${activeGeneratedOtp}`;
+  if (codeInput) {
+    codeInput.value = activeGeneratedOtp;
+    codeInput.focus();
+  }
+  showToast(`✉️ Verification code generated! (Code: ${activeGeneratedOtp})`);
+
+  // Background dispatch with 3.5s timeout
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 3500);
 
   try {
-    // Attempt sending through Vercel serverless function
     const response = await fetch('/api/send-otp', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         email: isEmail ? targetVal : `${targetVal.replace(/\D/g, '')}@subbayyagari.in`,
         name: isEmail ? targetVal.split('@')[0] : `Guest ${targetVal.slice(-4)}`
-      })
+      }),
+      signal: controller.signal
     });
+    clearTimeout(timeoutId);
 
-    if (!response.ok) {
-      throw new Error(`Server returned ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    if (sendBtn) {
-      sendBtn.disabled = false;
-      sendBtn.innerHTML = `<span>Send OTP from ${OTP_SENDER_EMAIL} 🚀</span>`;
-    }
-
-    if (data && data.success) {
-      activeGeneratedOtp = String(data.otp);
-      const sendStep = document.getElementById('auth-otp-send-step');
-      const verifyStep = document.getElementById('auth-otp-verify-step');
-      const displaySpan = document.getElementById('otp-target-display');
-      const hintBadge = document.getElementById('otp-hint-badge');
-      const codeInput = document.getElementById('auth-otp-code');
-
-      if (sendStep) sendStep.style.display = 'none';
-      if (verifyStep) verifyStep.style.display = 'flex';
-      if (displaySpan) displaySpan.textContent = targetVal;
-      if (codeInput) {
-        codeInput.value = '';
-        codeInput.focus();
+    if (response.ok) {
+      const data = await response.json();
+      if (data && data.otp) {
+        activeGeneratedOtp = String(data.otp);
+        if (hintBadge) hintBadge.textContent = data.liveEmailSent ? `Sent via ${OTP_SENDER_EMAIL}` : `Code: ${activeGeneratedOtp}`;
+        if (codeInput) codeInput.value = activeGeneratedOtp;
+        if (data.liveEmailSent) {
+          showToast(`✉️ Live OTP sent from ${OTP_SENDER_EMAIL} to ${targetVal}! Check your inbox.`);
+        }
       }
-
-      if (data.demoMode) {
-        if (hintBadge) hintBadge.textContent = `Demo Code: ${activeGeneratedOtp}`;
-        showToast(`✉️ Verification code sent from ${OTP_SENDER_EMAIL} to ${targetVal}! (Code: ${activeGeneratedOtp})`);
-      } else {
-        if (hintBadge) hintBadge.textContent = `Sent from ${OTP_SENDER_EMAIL}`;
-        showToast(`✉️ Live OTP sent from ${OTP_SENDER_EMAIL} to ${targetVal}! Check your inbox.`);
-      }
-    } else {
-      throw new Error(data?.error || 'Failed to send OTP email');
     }
-
   } catch (err) {
-    console.warn('API send-otp fallback:', err);
-    if (sendBtn) {
-      sendBtn.disabled = false;
-      sendBtn.innerHTML = `<span>Send OTP from ${OTP_SENDER_EMAIL} 🚀</span>`;
-    }
-
-    // Local development fallback
-    activeGeneratedOtp = Math.floor(1000 + Math.random() * 9000).toString();
-    const sendStep = document.getElementById('auth-otp-send-step');
-    const verifyStep = document.getElementById('auth-otp-verify-step');
-    const displaySpan = document.getElementById('otp-target-display');
-    const hintBadge = document.getElementById('otp-hint-badge');
-    const codeInput = document.getElementById('auth-otp-code');
-
-    if (sendStep) sendStep.style.display = 'none';
-    if (verifyStep) verifyStep.style.display = 'flex';
-    if (displaySpan) displaySpan.textContent = targetVal;
-    if (hintBadge) hintBadge.textContent = `Code: ${activeGeneratedOtp}`;
-    if (codeInput) {
-      codeInput.value = '';
-      codeInput.focus();
-    }
-
-    showToast(`✉️ Verification OTP generated from ${OTP_SENDER_EMAIL}! (Code: ${activeGeneratedOtp})`);
+    console.warn('Background OTP dispatch finished or timed out gracefully:', err.message);
   }
 }
 window.sendLoginOtp = sendLoginOtp;
