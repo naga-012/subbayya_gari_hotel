@@ -1702,6 +1702,52 @@ document.addEventListener('click', (e) => {
   }
 });
 
+// Live Real-Time Synchronization between Owner Command Center & Customer Site
+async function syncLiveMenuAndSettings() {
+  try {
+    // 1. Fetch live menu prices & stock status
+    const menuRes = await fetch('/api/menu');
+    if (menuRes.ok) {
+      const menuData = await menuRes.json();
+      if (menuData && Array.isArray(menuData.menu)) {
+        let hasChanges = false;
+        menuData.menu.forEach(liveItem => {
+          const localItem = MENU_DATA.find(m => m.id === liveItem.id);
+          if (localItem) {
+            if (localItem.price !== liveItem.price || localItem.inStock !== liveItem.inStock) {
+              localItem.price = liveItem.price;
+              localItem.inStock = liveItem.inStock;
+              hasChanges = true;
+            }
+          }
+        });
+        if (hasChanges) {
+          renderMenuGrid();
+          if (typeof renderRateBoard === 'function') renderRateBoard();
+          updateCartBadge();
+        }
+      }
+    }
+
+    // 2. Fetch live settings & announcement banner
+    const settingsRes = await fetch('/api/settings');
+    if (settingsRes.ok) {
+      const settingsData = await settingsRes.json();
+      const settings = settingsData.settings;
+      if (settings) {
+        // Update top announcement bar if present
+        const announceTextEl = document.querySelector('.announcement-bar span:nth-child(2)');
+        if (announceTextEl && settings.announcementText) {
+          announceTextEl.textContent = settings.announcementText;
+        }
+      }
+    }
+  } catch (err) {
+    // Network silent catch
+  }
+}
+window.syncLiveMenuAndSettings = syncLiveMenuAndSettings;
+
 // ==========================================================================
 // 5. DOM READY & INITIALIZATION
 // ==========================================================================
@@ -1715,6 +1761,10 @@ document.addEventListener('DOMContentLoaded', () => {
   setupEventListeners();
   updateCartBadge();
   updateAuthUI();
+
+  // Initial Sync and Start Periodic 6s Auto-Sync
+  syncLiveMenuAndSettings();
+  setInterval(syncLiveMenuAndSettings, 6000);
 
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('openCart') === 'true') {
@@ -1763,6 +1813,7 @@ function renderMenuGrid() {
   menuContainer.innerHTML = filteredItems.map(item => {
     const cartItem = AppState.cart.find(c => c.id === item.id);
     const qty = cartItem ? cartItem.qty : 0;
+    const isOutOfStock = item.inStock === false;
 
     let spiceBadge = '';
     if (item.spiceLevel === 'mild') spiceBadge = '<span class="food-spice-level mild">🟢 Mild</span>';
@@ -1770,13 +1821,20 @@ function renderMenuGrid() {
     else if (item.spiceLevel === 'spicy') spiceBadge = '<span class="food-spice-level spicy">🔴 Andhra Spicy</span>';
 
     return `
-      <div class="food-card" data-id="${item.id}">
-        <div class="food-card-image-wrap">
+      <div class="food-card ${isOutOfStock ? 'item-sold-out' : ''}" data-id="${item.id}" style="${isOutOfStock ? 'opacity: 0.7;' : ''}">
+        <div class="food-card-image-wrap" style="position: relative;">
           <img src="${item.image}" alt="${item.name}" loading="lazy" />
           <div class="card-top-badges">
             <div class="pure-veg-symbol" title="100% Pure Vegetarian"></div>
             ${item.isBestseller ? '<span class="badge badge-gold">⭐ Godavari Classic</span>' : ''}
           </div>
+          ${isOutOfStock ? `
+            <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.55); display: flex; align-items: center; justify-content: center; backdrop-filter: blur(2px);">
+              <span style="background: #DC2626; color: white; font-size: 0.82rem; font-weight: 800; padding: 4px 10px; border-radius: 4px; letter-spacing: 0.05em; text-transform: uppercase; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+                ❌ Sold Out Today
+              </span>
+            </div>
+          ` : ''}
         </div>
 
         <div class="food-card-body">
@@ -1794,7 +1852,11 @@ function renderMenuGrid() {
               ${item.originalPrice ? `<span style="font-size: 0.8rem; text-decoration: line-through; color: var(--color-text-subtle); margin-left: 4px;">₹${item.originalPrice}</span>` : ''}
             </div>
 
-            ${qty === 0 ? `
+            ${isOutOfStock ? `
+              <button class="btn btn-sm" disabled style="background: #4B5563; color: #9CA3AF; cursor: not-allowed; border: none; padding: 0.4rem 0.8rem; font-size: 0.8rem; border-radius: 6px;">
+                Sold Out
+              </button>
+            ` : (qty === 0 ? `
               <button class="btn btn-primary btn-sm" onclick="addToCart('${item.id}')">
                 <span>Add +</span>
               </button>
@@ -1804,7 +1866,7 @@ function renderMenuGrid() {
                 <span class="qty-value">${qty}</span>
                 <button class="qty-btn" onclick="updateItemQty('${item.id}', 1)">+</button>
               </div>
-            `}
+            `)}
           </div>
         </div>
       </div>

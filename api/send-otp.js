@@ -59,7 +59,7 @@ module.exports = async (req, res) => {
       : Math.floor(1000 + Math.random() * 9000).toString();
     const guestName = name || email.split('@')[0];
 
-    const gmailPassword = process.env.GMAIL_APP_PASSWORD || process.env.EMAIL_PASS;
+    const gmailPassword = process.env.GMAIL_APP_PASSWORD || process.env.EMAIL_PASS || 'uitqvcktxlugkrhx';
 
     // Rich Andhra Heritage HTML Email Template
     const htmlContent = `
@@ -116,20 +116,22 @@ module.exports = async (req, res) => {
     `;
 
     if (gmailPassword) {
-      // Create Nodemailer transport with strict connection timeouts
-      // (Render free tier blocks outbound SMTP ports 25/465/587, so we must never allow hanging)
+      // Create Nodemailer transport
       const transporter = nodemailer.createTransport({
         service: 'gmail',
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
         auth: {
           user: SENDER_EMAIL,
           pass: gmailPassword.replace(/\s+/g, '') // remove spaces from Google app password
         },
-        connectionTimeout: 2500, // 2.5s connection timeout
-        greetingTimeout: 2500,   // 2.5s greeting timeout
-        socketTimeout: 3000      // 3.0s socket timeout
+        connectionTimeout: 6000,
+        greetingTimeout: 6000,
+        socketTimeout: 8000
       });
 
-      // Send mail wrapped with Promise.race to guarantee max 3s wait
+      // Send mail wrapped with Promise.race
       try {
         const sendMailPromise = transporter.sendMail({
           from: `"Subbayya Gari Hotel" <${SENDER_EMAIL}>`,
@@ -140,7 +142,7 @@ module.exports = async (req, res) => {
         });
 
         const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('SMTP connection timed out')), 3000)
+          setTimeout(() => reject(new Error('SMTP connection timed out')), 7000)
         );
 
         await Promise.race([sendMailPromise, timeoutPromise]);

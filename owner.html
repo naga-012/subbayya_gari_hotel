@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Subbayya Gari Hotel | Live Owner & Kitchen Command Center</title>
+  <meta name="description" content="Subbayya Gari Hotel real-time owner dashboard for live orders, menu pricing, stock availability, and restaurant announcements." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Yatra+One&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    :root {
+      --owner-bg: #0B1911;
+      --owner-card: #13271C;
+      --owner-card-sub: #1B3527;
+      --owner-border: #234734;
+      --owner-gold: #F59E0B;
+      --owner-text: #F3F4F6;
+      --owner-text-muted: #9CA3AF;
+    }
+
+    body {
+      background-color: var(--owner-bg);
+      color: var(--owner-text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Top Navigation Bar */
+    .owner-header {
+      background: rgba(11, 25, 17, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--owner-border);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .brand-logo-badge {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, #D97706 0%, #B45309 100%);
+      color: #FFFFFF;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      font-weight: 800;
+      box-shadow: 0 4px 12px rgba(217, 119, 6, 0.35);
+    }
+
+    .brand-text h1 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin: 0;
+      color: #FFFFFF;
+      letter-spacing: -0.01em;
+    }
+
+    .brand-text p {
+      font-size: 0.75rem;
+      color: var(--owner-gold);
+      margin: 0;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .live-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.85rem;
+      background: rgba(22, 163, 74, 0.15);
+      border: 1px solid #16A34A;
+      color: #4ADE80;
+      border-radius: 50px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: #4ADE80;
+      border-radius: 50%;
+      animation: pulseAnimation 1.5s infinite;
+    }
+
+    @keyframes pulseAnimation {
+      0% { transform: scale(0.9); opacity: 0.8; }
+      50% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 10px #4ADE80; }
+      100% { transform: scale(0.9); opacity: 0.8; }
+    }
+
+    .nav-link-btn {
+      background: var(--owner-card);
+      border: 1px solid var(--owner-border);
+      color: #FFFFFF;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .nav-link-btn:hover {
+      background: var(--owner-card-sub);
+      border-color: var(--owner-gold);
+      color: var(--owner-gold);
+    }
+
+    /* Main Container & Tabs */
+    .owner-container {
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.5rem 1rem;
+      flex: 1;
+    }
+
+    .nav-tabs-wrapper {
+      display: flex;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--owner-border);
+      padding-bottom: 0.75rem;
+      margin-bottom: 1.5rem;
+      overflow-x: auto;
+    }
+
+    .owner-tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--owner-text-muted);
+      padding: 0.65rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .owner-tab-btn:hover {
+      color: #FFFFFF;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .owner-tab-btn.active {
+      background: var(--owner-gold);
+      color: #0B1911;
+      font-weight: 800;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+    }
+
+    .tab-badge {
+      background: rgba(0, 0, 0, 0.25);
+      color: currentColor;
+      padding: 2px 7px;
+      border-radius: 12px;
+      font-size: 0.72rem;
+      font-weight: 800;
+    }
+
+    /* Content Cards */
+    .dashboard-panel {
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .dashboard-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .owner-card {
+      background: var(--owner-card);
+      border: 1px solid var(--owner-border);
+      border-radius: 14px;
+      padding: 1.35rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--owner-border);
+    }
+
+    .card-title-row h2 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin: 0;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Orders List Styling */
+    .order-item-card {
+      background: var(--owner-card-sub);
+      border: 1px solid var(--owner-border);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 0.85rem;
+      transition: all 0.2s ease;
+    }
+
+    .order-item-card:hover {
+      border-color: var(--owner-gold);
+    }
+
+    .order-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .order-id-badge {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: var(--owner-gold);
+      font-family: monospace;
+    }
+
+    .order-status-tag {
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .status-Received { background: #2563EB; color: white; }
+    .status-Kitchen { background: #D97706; color: white; }
+    .status-Delivery { background: #9333EA; color: white; }
+    .status-Delivered { background: #16A34A; color: white; }
+    .status-Cancelled { background: #DC2626; color: white; }
+
+    .status-buttons-group {
+      display: flex;
+      gap: 0.4rem;
+      margin-top: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .status-action-btn {
+      background: var(--owner-card);
+      border: 1px solid var(--owner-border);
+      color: var(--owner-text);
+      padding: 0.35rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .status-action-btn:hover {
+      background: var(--owner-gold);
+      color: #0B1911;
+      border-color: var(--owner-gold);
+    }
+
+    /* Menu Item Control Table/Grid */
+    .menu-mgmt-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    .menu-mgmt-table th {
+      text-align: left;
+      padding: 0.75rem 0.85rem;
+      background: var(--owner-card-sub);
+      color: var(--owner-gold);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border-bottom: 1px solid var(--owner-border);
+    }
+
+    .menu-mgmt-table td {
+      padding: 0.85rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      vertical-align: middle;
+    }
+
+    .stock-toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 46px;
+      height: 24px;
+    }
+
+    .stock-toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #EF4444;
+      transition: .3s;
+      border-radius: 24px;
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+
+    input:checked + .toggle-slider {
+      background-color: #16A34A;
+    }
+
+    input:checked + .toggle-slider:before {
+      transform: translateX(22px);
+    }
+
+    .price-input-box {
+      background: #0B1911;
+      border: 1px solid var(--owner-border);
+      color: #FFFFFF;
+      padding: 0.4rem 0.6rem;
+      border-radius: 6px;
+      width: 80px;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .save-price-btn {
+      background: var(--owner-gold);
+      border: none;
+      color: #0B1911;
+      padding: 0.4rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      cursor: pointer;
+      margin-left: 0.4rem;
+    }
+
+    .save-price-btn:hover {
+      background: #FBBF24;
+    }
+
+    /* Form Controls */
+    .owner-input {
+      width: 100%;
+      background: #0B1911;
+      border: 1px solid var(--owner-border);
+      color: #FFFFFF;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      box-sizing: border-box;
+      margin-top: 0.35rem;
+    }
+
+    .owner-input:focus {
+      outline: none;
+      border-color: var(--owner-gold);
+    }
+
+    .btn-action-primary {
+      background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+      color: #0B1911;
+      border: none;
+      padding: 0.85rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+      transition: all 0.2s ease;
+    }
+
+    .btn-action-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Owner Navigation -->
+  <header class="owner-header">
+    <div class="brand-group">
+      <div class="brand-logo-badge">సు</div>
+      <div class="brand-text">
+        <h1>Subbayya Gari Hotel</h1>
+        <p>Owner & Kitchen Control Center</p>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <div class="live-status-pill">
+        <div class="pulse-dot"></div>
+        <span id="live-sync-indicator">Live Sync Active</span>
+      </div>
+      <a href="index.html" target="_blank" class="nav-link-btn">
+        <span>🌐 View Customer Website</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Container -->
+  <main class="owner-container">
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs-wrapper">
+      <button class="owner-tab-btn active" onclick="switchOwnerTab('orders')">
+        <span>📦 Live Orders</span>
+        <span class="tab-badge" id="badge-orders-count">0</span>
+      </button>
+      <button class="owner-tab-btn" onclick="switchOwnerTab('menu')">
+        <span>🍛 Menu & Prices</span>
+        <span class="tab-badge" id="badge-menu-count">0</span>
+      </button>
+      <button class="owner-tab-btn" onclick="switchOwnerTab('announcements')">
+        <span>📢 Notice & Store Status</span>
+      </button>
+      <button class="owner-tab-btn" onclick="switchOwnerTab('customers')">
+        <span>👥 Registered Patrons</span>
+      </button>
+    </div>
+
+    <!-- ======================================================================
+         PANEL 1: LIVE ORDERS MANAGEMENT
+         ====================================================================== -->
+    <div id="panel-orders" class="dashboard-panel active">
+      <div class="owner-card">
+        <div class="card-title-row">
+          <h2>
+            <span>📦 Real-Time Kitchen & Takeaway Orders</span>
+          </h2>
+          <div style="display: flex; gap: 0.5rem;">
+            <button class="status-action-btn" onclick="loadLiveOrders()">🔄 Refresh Orders</button>
+          </div>
+        </div>
+
+        <div id="orders-list-container">
+          <div style="text-align: center; padding: 3rem; color: var(--owner-text-muted);">
+            ⏳ Fetching live orders from database...
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================================
+         PANEL 2: MENU & LIVE PRICING & STOCK CONTROLLER
+         ====================================================================== -->
+    <div id="panel-menu" class="dashboard-panel">
+      <div class="owner-card">
+        <div class="card-title-row">
+          <div>
+            <h2><span>🍛 Menu Items, Prices & Live Stock Availability</span></h2>
+            <p style="font-size: 0.8rem; color: var(--owner-text-muted); margin: 4px 0 0;">
+              Changes made here update instantly on the customer ordering website.
+            </p>
+          </div>
+          <button class="status-action-btn" onclick="restoreDefaultMenu()">↺ Reset to Defaults</button>
+        </div>
+
+        <div style="overflow-x: auto;">
+          <table class="menu-mgmt-table">
+            <thead>
+              <tr>
+                <th>Dish Name & Telugu</th>
+                <th>Category</th>
+                <th>Live Price (₹)</th>
+                <th>In Stock (Customer Website)</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="menu-table-body">
+              <tr>
+                <td colspan="5" style="text-align: center; color: var(--owner-text-muted); padding: 2rem;">
+                  ⏳ Loading authentic menu catalog...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================================
+         PANEL 3: NOTICE BAR & STORE STATUS CONTROLLER
+         ====================================================================== -->
+    <div id="panel-announcements" class="dashboard-panel">
+      <div class="grid-2">
+        
+        <!-- Operating Status Card -->
+        <div class="owner-card">
+          <div class="card-title-row">
+            <h2><span>🟢 Restaurant Operating Status</span></h2>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--owner-text-muted);">
+            Set the live status displayed at the top of the customer website.
+          </p>
+
+          <div style="display: flex; gap: 0.75rem; margin-top: 1rem;">
+            <button type="button" class="nav-link-btn" id="btn-status-open" onclick="setStoreStatus('open')" style="flex: 1; text-align: center; justify-content: center; background: #16A34A; color: white;">
+              🟢 Open
+            </button>
+            <button type="button" class="nav-link-btn" id="btn-status-rush" onclick="setStoreStatus('rush')" style="flex: 1; text-align: center; justify-content: center;">
+              🟡 Rush Hour (Busy)
+            </button>
+            <button type="button" class="nav-link-btn" id="btn-status-closed" onclick="setStoreStatus('closed')" style="flex: 1; text-align: center; justify-content: center;">
+              🔴 Kitchen Closed
+            </button>
+          </div>
+
+          <div style="margin-top: 1.5rem;">
+            <label style="font-size: 0.82rem; font-weight: 700; color: var(--owner-gold);">
+              Status Subtitle Shown to Customers:
+            </label>
+            <input type="text" id="input-status-msg" class="owner-input" placeholder="e.g. Accepting Online Orders & Banana Leaf Dining" />
+          </div>
+
+          <div style="margin-top: 1.25rem;">
+            <label style="font-size: 0.82rem; font-weight: 700; color: var(--owner-gold);">
+              Kitchen Estimated Preparation Time (Minutes):
+            </label>
+            <input type="number" id="input-wait-time" class="owner-input" placeholder="20" min="5" max="90" />
+          </div>
+        </div>
+
+        <!-- Announcement Marquee Card -->
+        <div class="owner-card">
+          <div class="card-title-row">
+            <h2><span>📢 Top Announcement Banner</span></h2>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--owner-text-muted);">
+            This text scrolls at the very top of the customer website header.
+          </p>
+
+          <div style="margin-top: 1rem;">
+            <label style="font-size: 0.82rem; font-weight: 700; color: var(--owner-gold);">
+              Top Marquee Announcement Message:
+            </label>
+            <textarea id="input-announcement-text" class="owner-input" rows="3" placeholder="Enter special announcements, festival offers, or holiday wishes..."></textarea>
+          </div>
+
+          <div style="margin-top: 1rem;">
+            <label style="font-size: 0.82rem; font-weight: 700; color: var(--owner-gold);">
+              Promo Offer Banner:
+            </label>
+            <input type="text" id="input-promo-banner" class="owner-input" placeholder="e.g. 🎉 Use Code GHEE50 for Flat ₹50 OFF" />
+          </div>
+
+          <button type="button" class="btn-action-primary" onclick="saveStoreSettings()" style="width: 100%; margin-top: 1.5rem;">
+            <span>⚡ Push Updates to Customer Website</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ======================================================================
+         PANEL 4: REGISTERED CUSTOMERS
+         ====================================================================== -->
+    <div id="panel-customers" class="dashboard-panel">
+      <div class="owner-card">
+        <div class="card-title-row">
+          <h2><span>👥 Registered Godavari Patrons</span></h2>
+          <button class="status-action-btn" onclick="loadPatrons()">🔄 Refresh List</button>
+        </div>
+        <div id="patrons-list-container">
+          <div style="text-align: center; padding: 2rem; color: var(--owner-text-muted);">
+            ⏳ Fetching registered patrons...
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script>
+    let activeSettings = {};
+    let activeMenu = [];
+
+    // Tab switcher
+    function switchOwnerTab(tabName) {
+      document.querySelectorAll('.owner-tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.dashboard-panel').forEach(panel => panel.classList.remove('active'));
+
+      const targetBtn = Array.from(document.querySelectorAll('.owner-tab-btn')).find(b => b.textContent.toLowerCase().includes(tabName));
+      if (targetBtn) targetBtn.classList.add('active');
+
+      const targetPanel = document.getElementById(`panel-${tabName}`);
+      if (targetPanel) targetPanel.classList.add('active');
+
+      if (tabName === 'orders') loadLiveOrders();
+      if (tabName === 'menu') loadMenuData();
+      if (tabName === 'announcements') loadStoreSettings();
+      if (tabName === 'customers') loadPatrons();
+    }
+
+    // 1. LIVE ORDERS
+    async function loadLiveOrders() {
+      const container = document.getElementById('orders-list-container');
+      const badge = document.getElementById('badge-orders-count');
+      try {
+        const res = await fetch('/api/orders');
+        const data = await res.json();
+        const orders = data.orders || [];
+        if (badge) badge.textContent = orders.length;
+
+        if (orders.length === 0) {
+          container.innerHTML = `
+            <div style="text-align: center; padding: 3rem; color: var(--owner-text-muted);">
+              🍃 No live orders yet. Orders placed by customers on the website will stream here instantly!
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = orders.map(order => `
+          <div class="order-item-card" id="order-card-${order.id}">
+            <div class="order-top">
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <span class="order-id-badge">#${order.id}</span>
+                <span style="font-weight: 700; color: white;">${order.customerName}</span>
+                <span style="font-size: 0.8rem; color: var(--owner-text-muted);">📱 ${order.customerPhone}</span>
+              </div>
+              <div>
+                <span class="order-status-tag status-${order.status || 'Received'}">${order.status || 'Received'}</span>
+              </div>
+            </div>
+
+            <div style="font-size: 0.84rem; color: #D1D5DB; margin: 0.5rem 0; line-height: 1.5;">
+              <strong>Items (${order.itemCount || 1}):</strong> 
+              ${(order.items || []).map(i => `${i.name} (x${i.qty || 1})`).join(', ') || '1x Butta Bhojanam'}
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--owner-text-muted); border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 0.5rem; margin-top: 0.5rem;">
+              <div>
+                <span>📍 ${order.orderType === 'pickup' ? 'Takeaway Pickup' : (order.deliveryAddress || 'KPHB Colony, Hyderabad')}</span>
+              </div>
+              <div style="font-size: 0.95rem; font-weight: 800; color: var(--owner-gold);">
+                ₹${order.grandTotal || 515}
+              </div>
+            </div>
+
+            <!-- Quick Status Change Buttons -->
+            <div class="status-buttons-group">
+              <span style="font-size: 0.72rem; color: var(--owner-text-muted); align-self: center; margin-right: 4px;">Update Status:</span>
+              <button class="status-action-btn" onclick="updateOrderStatus('${order.id}', 'Received')">📥 Received</button>
+              <button class="status-action-btn" onclick="updateOrderStatus('${order.id}', 'Kitchen')">🍳 In Kitchen</button>
+              <button class="status-action-btn" onclick="updateOrderStatus('${order.id}', 'Delivery')">🛵 Out for Delivery</button>
+              <button class="status-action-btn" onclick="updateOrderStatus('${order.id}', 'Delivered')" style="color: #4ADE80;">✅ Delivered</button>
+              <button class="status-action-btn" onclick="updateOrderStatus('${order.id}', 'Cancelled')" style="color: #F87171;">✕ Cancel</button>
+            </div>
+          </div>
+        `).join('');
+
+      } catch (err) {
+        console.error('Error fetching orders:', err);
+        container.innerHTML = `<div style="color: #EF4444; padding: 1.5rem;">⚠️ Failed to load live orders: ${err.message}</div>`;
+      }
+    }
+
+    async function updateOrderStatus(orderId, status) {
+      try {
+        const res = await fetch(`/api/orders/${orderId}/status`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`✅ Order #${orderId} status updated to ${status}!`);
+          loadLiveOrders();
+        }
+      } catch (err) {
+        showToast(`⚠️ Error updating order: ${err.message}`);
+      }
+    }
+
+    // 2. MENU & PRICE CONTROLLER
+    async function loadMenuData() {
+      const tbody = document.getElementById('menu-table-body');
+      const badge = document.getElementById('badge-menu-count');
+      try {
+        const res = await fetch('/api/menu');
+        const data = await res.json();
+        activeMenu = data.menu || [];
+        if (badge) badge.textContent = activeMenu.length;
+
+        tbody.innerHTML = activeMenu.map(item => `
+          <tr id="menu-row-${item.id}">
+            <td>
+              <div style="font-weight: 700; color: white;">${item.name}</div>
+              <div style="font-size: 0.78rem; color: var(--owner-gold);">${item.telugu || ''}</div>
+            </td>
+            <td>
+              <span style="font-size: 0.78rem; text-transform: uppercase; color: var(--owner-text-muted);">${item.category}</span>
+            </td>
+            <td>
+              <div style="display: flex; align-items: center;">
+                <input type="number" class="price-input-box" id="price-${item.id}" value="${item.price}" min="10" />
+                <button class="save-price-btn" onclick="saveItemPrice('${item.id}')">Save</button>
+              </div>
+            </td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <label class="stock-toggle-switch">
+                  <input type="checkbox" id="stock-${item.id}" ${item.inStock !== false ? 'checked' : ''} onchange="toggleItemStock('${item.id}', this.checked)" />
+                  <span class="toggle-slider"></span>
+                </label>
+                <span id="stock-label-${item.id}" style="font-size: 0.78rem; font-weight: 700; color: ${item.inStock !== false ? '#4ADE80' : '#EF4444'};">
+                  ${item.inStock !== false ? 'In Stock' : 'Sold Out'}
+                </span>
+              </div>
+            </td>
+            <td>
+              <span style="font-size: 0.75rem; color: var(--owner-text-muted);">Live Sync</span>
+            </td>
+          </tr>
+        `).join('');
+
+      } catch (err) {
+        console.error('Error fetching menu:', err);
+      }
+    }
+
+    async function saveItemPrice(itemId) {
+      const priceInput = document.getElementById(`price-${itemId}`);
+      const newPrice = Number(priceInput.value);
+      if (!newPrice || isNaN(newPrice)) {
+        showToast('⚠️ Please enter a valid price');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/menu/update', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: itemId, price: newPrice })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`🎉 Updated price for ${data.item.name} to ₹${newPrice}!`);
+        }
+      } catch (err) {
+        showToast(`⚠️ Error saving price: ${err.message}`);
+      }
+    }
+
+    async function toggleItemStock(itemId, inStock) {
+      const label = document.getElementById(`stock-label-${itemId}`);
+      if (label) {
+        label.textContent = inStock ? 'In Stock' : 'Sold Out';
+        label.style.color = inStock ? '#4ADE80' : '#EF4444';
+      }
+
+      try {
+        const res = await fetch('/api/menu/update', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: itemId, inStock: inStock })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`⚡ ${data.item.name} is now ${inStock ? 'Available' : 'Marked as Sold Out'} on the customer site!`);
+        }
+      } catch (err) {
+        showToast(`⚠️ Error updating stock: ${err.message}`);
+      }
+    }
+
+    async function restoreDefaultMenu() {
+      if (!confirm('Are you sure you want to reset all menu items and prices to default?')) return;
+      try {
+        const res = await fetch('/api/menu/reset', { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          showToast('↺ Menu catalog reset to defaults!');
+          loadMenuData();
+        }
+      } catch (err) {
+        showToast(`⚠️ Error: ${err.message}`);
+      }
+    }
+
+    // 3. STORE SETTINGS & ANNOUNCEMENT
+    async function loadStoreSettings() {
+      try {
+        const res = await fetch('/api/settings');
+        const data = await res.json();
+        activeSettings = data.settings || {};
+
+        document.getElementById('input-announcement-text').value = activeSettings.announcementText || '';
+        document.getElementById('input-promo-banner').value = activeSettings.promoBanner || '';
+        document.getElementById('input-status-msg').value = activeSettings.statusMessage || '';
+        document.getElementById('input-wait-time').value = activeSettings.kitchenWaitMinutes || 20;
+
+        renderStatusButtons(activeSettings.restaurantStatus || 'open');
+      } catch (err) {
+        console.error('Error loading settings:', err);
+      }
+    }
+
+    function renderStatusButtons(currentStatus) {
+      const openBtn = document.getElementById('btn-status-open');
+      const rushBtn = document.getElementById('btn-status-rush');
+      const closedBtn = document.getElementById('btn-status-closed');
+
+      [openBtn, rushBtn, closedBtn].forEach(b => {
+        b.style.background = 'var(--owner-card)';
+        b.style.color = 'white';
+      });
+
+      if (currentStatus === 'open') {
+        openBtn.style.background = '#16A34A';
+      } else if (currentStatus === 'rush') {
+        rushBtn.style.background = '#D97706';
+      } else if (currentStatus === 'closed') {
+        closedBtn.style.background = '#DC2626';
+      }
+    }
+
+    function setStoreStatus(status) {
+      activeSettings.restaurantStatus = status;
+      renderStatusButtons(status);
+      showToast(`Store status marked as ${status.toUpperCase()}. Click "Push Updates" to save.`);
+    }
+
+    async function saveStoreSettings() {
+      const announcementText = document.getElementById('input-announcement-text').value.trim();
+      const promoBanner = document.getElementById('input-promo-banner').value.trim();
+      const statusMessage = document.getElementById('input-status-msg').value.trim();
+      const kitchenWaitMinutes = Number(document.getElementById('input-wait-time').value) || 20;
+
+      const payload = {
+        restaurantStatus: activeSettings.restaurantStatus || 'open',
+        announcementText,
+        promoBanner,
+        statusMessage,
+        kitchenWaitMinutes
+      };
+
+      try {
+        const res = await fetch('/api/settings/update', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('🚀 Live announcement & settings pushed to Customer Website successfully!');
+        }
+      } catch (err) {
+        showToast(`⚠️ Error pushing settings: ${err.message}`);
+      }
+    }
+
+    // 4. REGISTERED PATRONS
+    async function loadPatrons() {
+      const container = document.getElementById('patrons-list-container');
+      try {
+        const res = await fetch('/api/users');
+        const data = await res.json();
+        const users = data.users || [];
+
+        if (users.length === 0) {
+          container.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--owner-text-muted);">No registered patrons found.</div>';
+          return;
+        }
+
+        container.innerHTML = users.map(u => `
+          <div style="background: var(--owner-card-sub); border: 1px solid var(--owner-border); border-radius: 8px; padding: 0.85rem; margin-bottom: 0.6rem; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-weight: 700; color: white;">${u.name}</div>
+              <div style="font-size: 0.8rem; color: var(--owner-gold);">📱 ${u.phone} &nbsp;|&nbsp; ✉️ ${u.email}</div>
+            </div>
+            <div style="text-align: right; font-size: 0.75rem; color: var(--owner-text-muted);">
+              Registered: ${new Date(u.registeredAt).toLocaleDateString()}
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {
+        container.innerHTML = `<div style="color: #EF4444; padding: 1rem;">⚠️ ${err.message}</div>`;
+      }
+    }
+
+    // Toast notification utility
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(100%)';
+        toast.style.transition = 'all 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      loadLiveOrders();
+      loadMenuData();
+      loadStoreSettings();
+
+      // Auto-poll live orders every 6 seconds
+      setInterval(() => {
+        if (document.getElementById('panel-orders').classList.contains('active')) {
+          loadLiveOrders();
+        }
+      }, 6000);
+    });
+  </script>
+</body>
+</html>

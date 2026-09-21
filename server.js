@@ -46,6 +46,17 @@ app.get('/api/users/check', usersHandler.checkUserHandler);
 app.post('/api/users/register', usersHandler.registerUserHandler);
 app.get('/api/users', usersHandler.getUsersHandler);
 
+// Menu API routes (Live price & stock updates)
+const menuHandler = require('./api/menu');
+app.get('/api/menu', menuHandler.getMenuHandler);
+app.post('/api/menu/update', menuHandler.updateMenuItemHandler);
+app.post('/api/menu/reset', menuHandler.resetMenuHandler);
+
+// Settings API routes (Store status, announcement banner, wait time)
+const settingsHandler = require('./api/settings');
+app.get('/api/settings', settingsHandler.getSettingsHandler);
+app.post('/api/settings/update', settingsHandler.updateSettingsHandler);
+
 // Orders API routes (Customer orders & Owner dashboard sync)
 const ordersHandler = require('./api/orders');
 app.get('/api/orders', ordersHandler.getOrdersHandler);
