@@ -2163,7 +2163,7 @@ function renderCartDrawer() {
     }
 
     if (cartCheckoutBtnText) {
-      cartCheckoutBtnText.textContent = `Send ${orderModeLabel} Order via WhatsApp 🚀`;
+      cartCheckoutBtnText.textContent = `Confirm Your ${orderModeLabel} Order 🚀`;
     }
     if (cartCheckoutBtn) {
       cartCheckoutBtn.classList.remove('btn-outline-gold');
