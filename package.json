@@ -1,0 +1,12 @@
+{
+  "name": "subbayyagar-hotel",
+  "version": "1.0.0",
+  "description": "Subbayya Gari Hotel - Iconic Andhra Pure Veg Butta Bhojanam Since 1950",
+  "main": "app.js",
+  "scripts": {
+    "start": "node -e \"console.log('Static site with Vercel serverless functions')\""
+  },
+  "dependencies": {
+    "nodemailer": "^6.9.13"
+  }
+}

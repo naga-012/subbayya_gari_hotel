@@ -1524,9 +1524,18 @@
           <!-- Right Reservation Form Card -->
           <div class="res-card">
             <h3 style="font-family: var(--font-serif); font-size: 1.5rem; margin-bottom: 0.5rem;">Book Your Table</h3>
-            <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1.5rem;">
+            <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1.2rem;">
               Receive an instant digital table confirmation pass on your screen and SMS.
             </p>
+
+            <!-- Auth Gate Banner -->
+            <div id="reservation-auth-banner" class="auth-gate-banner logged-out">
+              <div>
+                <strong>🔒 Login Required to Book</strong>
+                <div style="font-size: 0.76rem; opacity: 0.85; margin-top: 2px;">Sign in via quick Mobile OTP or Email to reserve your banana leaf table.</div>
+              </div>
+              <button type="button" class="auth-gate-login-btn" onclick="openAuthModal('otp')">Login Now 👤</button>
+            </div>
 
             <form class="res-form" id="table-reservation-form">
               
@@ -1611,8 +1620,8 @@
                 <input type="text" id="res-notes" class="form-control" placeholder="e.g. Jain food (no onion/garlic), High chair for toddler" />
               </div>
 
-              <button type="submit" class="btn btn-gold btn-lg" style="width: 100%; margin-top: 0.5rem;">
-                <span>Confirm Reservation & Generate Ticket 🎟️</span>
+              <button type="submit" id="res-submit-btn" class="btn btn-gold btn-lg" style="width: 100%; margin-top: 0.5rem;">
+                <span id="res-submit-btn-text">Confirm Reservation & Generate Ticket 🎟️</span>
               </button>
 
             </form>
@@ -2445,6 +2454,15 @@
           <span>👤 Customer & Order Details</span>
         </div>
 
+        <!-- Cart Auth Gate Banner -->
+        <div id="cart-auth-banner" class="auth-gate-banner logged-out" style="margin-bottom: 0.85rem;">
+          <div>
+            <strong>🔒 Login Required to Place Order</strong>
+            <div style="font-size: 0.76rem; opacity: 0.85; margin-top: 2px;">Delivery & Pickup orders require customer login.</div>
+          </div>
+          <button type="button" class="auth-gate-login-btn" onclick="openAuthModal('otp')">Login / Sign Up 👤</button>
+        </div>
+
         <div class="cart-form-group">
           <label class="cart-input-label" for="order-customer-name">Full Name <span class="required-star">*</span></label>
           <input type="text" id="order-customer-name" class="form-control" placeholder="Enter your full name" />
@@ -2532,9 +2550,9 @@
           <span>🌱 100% Pure Veg</span>
         </div>
       </div>
-      <button class="btn btn-gold btn-lg cart-whatsapp-checkout-btn" onclick="proceedToCheckout()">
+      <button class="btn btn-gold btn-lg cart-whatsapp-checkout-btn" id="cart-checkout-btn" onclick="proceedToCheckout()">
         <span style="font-size: 1.2rem;">💬</span>
-        <span>Send Order via WhatsApp 🚀</span>
+        <span id="cart-checkout-btn-text">Send Order via WhatsApp 🚀</span>
       </button>
     </div>
 
@@ -2794,7 +2812,7 @@
       <!-- Auth Switcher Tabs -->
       <div style="display: flex; background: var(--color-surface-muted); padding: 0.25rem; border-radius: var(--radius-md); gap: 0.25rem; margin-bottom: 1.25rem;">
         <button type="button" class="auth-tab-btn active" id="auth-tab-otp" onclick="switchAuthTab('otp')" style="flex: 1; padding: 0.5rem; border: none; border-radius: var(--radius-sm); font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: all 0.2s; background: var(--color-surface); color: var(--color-primary); box-shadow: var(--shadow-xs);">
-          📱 Mobile OTP
+          📨 Instant OTP
         </button>
         <button type="button" class="auth-tab-btn" id="auth-tab-email" onclick="switchAuthTab('email')" style="flex: 1; padding: 0.5rem; border: none; border-radius: var(--radius-sm); font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: all 0.2s; background: transparent; color: var(--color-text-muted);">
           📧 Email Login
@@ -2804,20 +2822,29 @@
         </button>
       </div>
 
-      <!-- TAB 1: Mobile OTP Form -->
+      <!-- TAB 1: Instant OTP Form (Sent from myakalanagarjun09@gmail.com) -->
       <form id="auth-form-otp" onsubmit="handleOtpSubmit(event)" style="display: flex; flex-direction: column; gap: 0.85rem;">
+        <!-- Verified Sender Badge -->
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.45rem 0.75rem; background: rgba(15, 90, 39, 0.08); border: 1px dashed var(--color-primary); border-radius: var(--radius-sm); font-size: 0.74rem; color: var(--color-primary); font-weight: 700;">
+          <span style="display: flex; align-items: center; gap: 0.35rem;">
+            <span>📧</span>
+            <span>OTP Sent From: <strong style="color: var(--color-gold);">myakalanagarjun09@gmail.com</strong></span>
+          </span>
+          <span style="background: #16A34A; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; letter-spacing: 0.04em;">OFFICIAL</span>
+        </div>
+
         <div class="form-group">
-          <label class="form-label" for="auth-otp-phone" style="font-size: 0.82rem;">Mobile Number *</label>
-          <div style="display: flex; gap: 0.5rem;">
-            <span style="display: flex; align-items: center; padding: 0.5rem 0.75rem; background: var(--color-surface-muted); border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-weight: 700; font-size: 0.85rem;">🇮🇳 +91</span>
-            <input type="tel" id="auth-otp-phone" class="form-control" placeholder="98765 43210" maxlength="10" required style="font-size: 0.9rem;" />
+          <label class="form-label" for="auth-otp-target" style="font-size: 0.82rem;">Email Address or Mobile Number *</label>
+          <input type="text" id="auth-otp-target" class="form-control" placeholder="Enter your email (e.g. guest@gmail.com) or 10-digit mobile" required style="font-size: 0.9rem;" />
+          <div style="font-size: 0.72rem; color: var(--color-text-muted); margin-top: 3px;">
+            A 4-digit verification OTP will be sent directly from <strong>myakalanagarjun09@gmail.com</strong>.
           </div>
         </div>
 
         <!-- Step 1 Send OTP Button -->
         <div id="auth-otp-send-step">
-          <button type="button" class="btn btn-gold" onclick="sendLoginOtp()" style="width: 100%;">
-            <span>Send 4-Digit OTP 🚀</span>
+          <button type="button" id="btn-send-otp" class="btn btn-gold" onclick="sendLoginOtp()" style="width: 100%;">
+            <span>Send OTP from myakalanagarjun09@gmail.com 🚀</span>
           </button>
         </div>
 
@@ -2825,9 +2852,12 @@
         <div id="auth-otp-verify-step" style="display: none; flex-direction: column; gap: 0.75rem; padding: 0.85rem; background: rgba(15, 90, 39, 0.05); border: 1px dashed var(--color-primary-light); border-radius: var(--radius-sm);">
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <span style="font-size: 0.8rem; font-weight: 700; color: var(--color-primary);">Enter Verification Code:</span>
-            <span style="font-size: 0.72rem; color: #16A34A; font-weight: 700;">Demo OTP: 7450</span>
+            <span id="otp-hint-badge" style="font-size: 0.72rem; color: #16A34A; font-weight: 700;">Check Inbox</span>
           </div>
-          <input type="text" id="auth-otp-code" class="form-control" placeholder="Enter 4-Digit OTP (e.g. 7450)" maxlength="4" style="text-align: center; font-size: 1.2rem; font-weight: 800; letter-spacing: 0.25em;" />
+          <div style="font-size: 0.74rem; color: var(--color-text-muted);">
+            Sent from: <strong>myakalanagarjun09@gmail.com</strong> to <span id="otp-target-display" style="color: var(--color-primary); font-weight: 700;">your email</span>
+          </div>
+          <input type="text" id="auth-otp-code" class="form-control" placeholder="Enter 4-Digit Code" maxlength="4" style="text-align: center; font-size: 1.25rem; font-weight: 800; letter-spacing: 0.25em;" required />
           <button type="submit" class="btn btn-primary" style="width: 100%;">
             <span>Verify & Enter Feast 🍽️</span>
           </button>

@@ -1595,7 +1595,8 @@ const AppState = {
   deliveryDistanceKm: 3, // Delivery charges: 1km = 10rs
   customerLocation: null, // { lat, lng, mapsUrl }
   appliedPromo: null,
-  currentUser: null // { name, phone, email, address, coins: 50, tier: 'VIP' }
+  currentUser: null, // { name, phone, email, address, coins: 50, tier: 'VIP' }
+  pendingAction: null // { type: 'reserve_table' | 'checkout_order', formData?: {} }
 };
 
 // Initialize from LocalStorage
@@ -2071,14 +2072,54 @@ function renderCartDrawer() {
 
   document.getElementById('cart-grand-total').textContent = `₹${grandTotal}`;
 
-  // Auto-fill logged in user info if empty
+  // Update Cart Auth Banner and Checkout Button State
+  const cartAuthBanner = document.getElementById('cart-auth-banner');
+  const cartCheckoutBtn = document.getElementById('cart-checkout-btn');
+  const cartCheckoutBtnText = document.getElementById('cart-checkout-btn-text');
+  const orderModeLabel = isDelivery ? 'Delivery' : 'Pickup';
+
   if (AppState.currentUser) {
+    if (cartAuthBanner) {
+      cartAuthBanner.className = 'auth-gate-banner logged-in';
+      cartAuthBanner.innerHTML = `
+        <div>
+          <strong style="color: #16A34A;">✅ Verified Guest: ${AppState.currentUser.name}</strong>
+          <div style="font-size: 0.76rem; color: var(--color-text-muted); margin-top: 2px;">📞 ${AppState.currentUser.phone} • ${AppState.currentUser.coins || 50} Ghee Coins 🪙</div>
+        </div>
+        <button type="button" class="auth-gate-login-btn" style="background: rgba(22, 163, 74, 0.15); color: #16A34A; border: 1px solid #16A34A;" onclick="openProfileModal()">Profile 👑</button>
+      `;
+    }
+
+    if (cartCheckoutBtnText) {
+      cartCheckoutBtnText.textContent = `Send ${orderModeLabel} Order via WhatsApp 🚀`;
+    }
+    if (cartCheckoutBtn) {
+      cartCheckoutBtn.classList.remove('btn-outline-gold');
+      cartCheckoutBtn.classList.add('btn-gold');
+    }
+
+    // Auto-fill logged in user info if empty
     const nameInput = document.getElementById('order-customer-name');
     const phoneInput = document.getElementById('order-customer-phone');
     const addrInput = document.getElementById('order-delivery-address');
     if (nameInput && !nameInput.value) nameInput.value = AppState.currentUser.name || '';
     if (phoneInput && !phoneInput.value) phoneInput.value = AppState.currentUser.phone || '';
     if (addrInput && !addrInput.value && AppState.currentUser.address) addrInput.value = AppState.currentUser.address;
+  } else {
+    if (cartAuthBanner) {
+      cartAuthBanner.className = 'auth-gate-banner logged-out';
+      cartAuthBanner.innerHTML = `
+        <div>
+          <strong style="color: var(--color-gold);">🔒 Login Required for ${orderModeLabel}</strong>
+          <div style="font-size: 0.76rem; color: var(--color-text-muted); margin-top: 2px;">Please log in with your mobile OTP to place your order.</div>
+        </div>
+        <button type="button" class="auth-gate-login-btn" onclick="openAuthModal('otp')">Login / Sign Up 👤</button>
+      `;
+    }
+
+    if (cartCheckoutBtnText) {
+      cartCheckoutBtnText.textContent = `🔒 Login to Place ${orderModeLabel} Order`;
+    }
   }
 }
 
@@ -2519,10 +2560,22 @@ function proceedToCheckout() {
     showToast('⚠️ Your cart is empty. Add dishes to proceed!');
     return;
   }
-  
-  const customerName = document.getElementById('order-customer-name')?.value.trim();
-  const customerPhone = document.getElementById('order-customer-phone')?.value.trim();
+
   const isDelivery = AppState.orderType === 'delivery';
+  const orderModeLabel = isDelivery ? 'Delivery' : 'Pickup';
+
+  // REQUIRE LOGIN FOR DELIVERY AND PICKUP ORDERS
+  if (!AppState.currentUser) {
+    showToast(`🔒 Please log in to complete your ${orderModeLabel} order!`);
+    AppState.pendingAction = {
+      type: 'checkout_order'
+    };
+    openAuthModal('otp');
+    return;
+  }
+  
+  const customerName = document.getElementById('order-customer-name')?.value.trim() || AppState.currentUser.name;
+  const customerPhone = document.getElementById('order-customer-phone')?.value.trim() || AppState.currentUser.phone;
 
   if (!customerName) {
     showToast('⚠️ Please enter your Full Name');
@@ -2798,13 +2851,33 @@ function setupReservationForm() {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    const name = document.getElementById('res-name').value;
-    const phone = document.getElementById('res-phone').value;
-    const branch = document.getElementById('res-branch').value;
-    const date = document.getElementById('res-date').value;
-    const timeSlot = document.getElementById('res-time').value;
-    const guests = document.getElementById('res-guests').value;
-    const notes = document.getElementById('res-notes').value || 'Standard Pure Veg Bhojanam';
+    // REQUIRE LOGIN FOR BOOKING TABLE
+    if (!AppState.currentUser) {
+      showToast('🔒 Please log in or register to book your banana leaf table! 🍃');
+      AppState.pendingAction = {
+        type: 'reserve_table',
+        formData: {
+          name: document.getElementById('res-name')?.value || '',
+          phone: document.getElementById('res-phone')?.value || '',
+          branch: document.getElementById('res-branch')?.value || '',
+          date: document.getElementById('res-date')?.value || '',
+          timeSlot: document.getElementById('res-time')?.value || '',
+          guests: document.getElementById('res-guests')?.value || '4',
+          notes: document.getElementById('res-notes')?.value || 'Standard Pure Veg Bhojanam',
+          seating: selectedSeating
+        }
+      };
+      openAuthModal('otp');
+      return;
+    }
+
+    const name = document.getElementById('res-name')?.value || AppState.currentUser.name;
+    const phone = document.getElementById('res-phone')?.value || AppState.currentUser.phone;
+    const branch = document.getElementById('res-branch')?.value || 'KPHB Colony, Hyderabad';
+    const date = document.getElementById('res-date')?.value || '';
+    const timeSlot = document.getElementById('res-time')?.value || '';
+    const guests = document.getElementById('res-guests')?.value || '4';
+    const notes = document.getElementById('res-notes')?.value || 'Standard Pure Veg Bhojanam';
 
     const bookingRef = 'TKT-' + Math.floor(100000 + Math.random() * 900000);
 
@@ -2821,6 +2894,7 @@ function setupReservationForm() {
 
     showToast(`Table booked successfully for ${name}! 🎉`);
     form.reset();
+    updateAuthUI();
   });
 }
 
@@ -3384,56 +3458,164 @@ function switchAuthTab(tab) {
 }
 window.switchAuthTab = switchAuthTab;
 
-function sendLoginOtp() {
-  const phoneInput = document.getElementById('auth-otp-phone');
-  const phone = phoneInput ? phoneInput.value.trim() : '';
+const OTP_SENDER_EMAIL = 'myakalanagarjun09@gmail.com';
+let activeGeneratedOtp = null;
+let activeOtpTarget = '';
 
-  if (!phone || phone.length < 10) {
-    showToast('⚠️ Please enter a valid 10-digit mobile number');
-    if (phoneInput) phoneInput.focus();
+async function sendLoginOtp() {
+  const targetInput = document.getElementById('auth-otp-target') || document.getElementById('auth-otp-phone');
+  const targetVal = targetInput ? targetInput.value.trim() : '';
+
+  if (!targetVal) {
+    showToast('⚠️ Please enter your email address or mobile number');
+    if (targetInput) targetInput.focus();
     return;
   }
 
-  const sendStep = document.getElementById('auth-otp-send-step');
-  const verifyStep = document.getElementById('auth-otp-verify-step');
-  const codeInput = document.getElementById('auth-otp-code');
+  const isEmail = targetVal.includes('@');
+  if (isEmail && !targetVal.includes('.')) {
+    showToast('⚠️ Please enter a valid email address');
+    if (targetInput) targetInput.focus();
+    return;
+  }
 
-  if (sendStep) sendStep.style.display = 'none';
-  if (verifyStep) verifyStep.style.display = 'flex';
+  if (!isEmail && targetVal.replace(/\D/g, '').length < 10) {
+    showToast('⚠️ Please enter a valid 10-digit mobile number or email');
+    if (targetInput) targetInput.focus();
+    return;
+  }
 
-  showToast(`📱 OTP sent to +91 ${phone}! (Demo Code: 7450)`);
+  const sendBtn = document.getElementById('btn-send-otp');
+  if (sendBtn) {
+    sendBtn.disabled = true;
+    sendBtn.innerHTML = `<span>⏳ Sending OTP from ${OTP_SENDER_EMAIL}...</span>`;
+  }
 
-  // Auto-fill demo OTP after a gentle micro-delay for smooth UX
-  setTimeout(() => {
-    if (codeInput && !codeInput.value) {
-      codeInput.value = '7450';
+  activeOtpTarget = targetVal;
+
+  try {
+    // Attempt sending through Vercel serverless function
+    const response = await fetch('/api/send-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: isEmail ? targetVal : `${targetVal.replace(/\D/g, '')}@subbayyagari.in`,
+        name: isEmail ? targetVal.split('@')[0] : `Guest ${targetVal.slice(-4)}`
+      })
+    });
+
+    const data = await response.json();
+
+    if (sendBtn) {
+      sendBtn.disabled = false;
+      sendBtn.innerHTML = `<span>Send OTP from ${OTP_SENDER_EMAIL} 🚀</span>`;
     }
-  }, 800);
+
+    if (data && data.success) {
+      activeGeneratedOtp = String(data.otp);
+      const sendStep = document.getElementById('auth-otp-send-step');
+      const verifyStep = document.getElementById('auth-otp-verify-step');
+      const displaySpan = document.getElementById('otp-target-display');
+      const hintBadge = document.getElementById('otp-hint-badge');
+      const codeInput = document.getElementById('auth-otp-code');
+
+      if (sendStep) sendStep.style.display = 'none';
+      if (verifyStep) verifyStep.style.display = 'flex';
+      if (displaySpan) displaySpan.textContent = targetVal;
+      if (codeInput) {
+        codeInput.value = '';
+        codeInput.focus();
+      }
+
+      if (data.demoMode) {
+        if (hintBadge) hintBadge.textContent = `Demo Code: ${activeGeneratedOtp}`;
+        showToast(`✉️ Verification code sent from ${OTP_SENDER_EMAIL} to ${targetVal}! (Code: ${activeGeneratedOtp})`);
+      } else {
+        if (hintBadge) hintBadge.textContent = `Sent from ${OTP_SENDER_EMAIL}`;
+        showToast(`✉️ Live OTP sent from ${OTP_SENDER_EMAIL} to ${targetVal}! Check your inbox.`);
+      }
+    } else {
+      throw new Error(data?.error || 'Failed to send OTP email');
+    }
+
+  } catch (err) {
+    console.warn('API send-otp fallback:', err);
+    if (sendBtn) {
+      sendBtn.disabled = false;
+      sendBtn.innerHTML = `<span>Send OTP from ${OTP_SENDER_EMAIL} 🚀</span>`;
+    }
+
+    // Local development fallback
+    activeGeneratedOtp = Math.floor(1000 + Math.random() * 9000).toString();
+    const sendStep = document.getElementById('auth-otp-send-step');
+    const verifyStep = document.getElementById('auth-otp-verify-step');
+    const displaySpan = document.getElementById('otp-target-display');
+    const hintBadge = document.getElementById('otp-hint-badge');
+    const codeInput = document.getElementById('auth-otp-code');
+
+    if (sendStep) sendStep.style.display = 'none';
+    if (verifyStep) verifyStep.style.display = 'flex';
+    if (displaySpan) displaySpan.textContent = targetVal;
+    if (hintBadge) hintBadge.textContent = `Code: ${activeGeneratedOtp}`;
+    if (codeInput) {
+      codeInput.value = '';
+      codeInput.focus();
+    }
+
+    showToast(`✉️ Verification OTP generated from ${OTP_SENDER_EMAIL}! (Code: ${activeGeneratedOtp})`);
+  }
 }
 window.sendLoginOtp = sendLoginOtp;
 
 function handleOtpSubmit(event) {
   event.preventDefault();
-  const phone = document.getElementById('auth-otp-phone')?.value.trim() || '9876543210';
-  const code = document.getElementById('auth-otp-code')?.value.trim();
+  const codeInput = document.getElementById('auth-otp-code');
+  const code = codeInput?.value.trim();
 
   if (!code || code.length < 4) {
     showToast('⚠️ Please enter the 4-digit verification code');
+    if (codeInput) codeInput.focus();
     return;
   }
 
-  // Create or update user session
+  // STRICT VALIDATION: If OTP was not generated or does not match, reject and block login
+  if (!activeGeneratedOtp) {
+    showToast(`⚠️ Please request an OTP first to receive your code from ${OTP_SENDER_EMAIL}`);
+    return;
+  }
+
+  if (code !== activeGeneratedOtp) {
+    showToast(`❌ Incorrect OTP! Please enter the exact 4-digit code sent from ${OTP_SENDER_EMAIL}`);
+    if (codeInput) {
+      codeInput.style.borderColor = '#EF4444';
+      codeInput.focus();
+    }
+    return;
+  }
+
+  // Reset border if previously failed
+  if (codeInput) codeInput.style.borderColor = '';
+
+  const isEmail = activeOtpTarget.includes('@');
+  const cleanPhone = isEmail ? '9010888842' : activeOtpTarget.replace(/\D/g, '');
+  const guestName = isEmail 
+    ? activeOtpTarget.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) 
+    : `Godavari Guest (${cleanPhone.slice(-4)})`;
+  const guestEmail = isEmail ? activeOtpTarget : `guest.${cleanPhone.slice(-4)}@subbayyagari.in`;
+
+  // Create user session verified via myakalanagarjun09@gmail.com
   const user = {
-    name: 'Godavari Guest (' + phone.slice(-4) + ')',
-    phone: phone,
-    email: `guest.${phone.slice(-4)}@subbayyagari.in`,
+    name: guestName,
+    phone: cleanPhone,
+    email: guestEmail,
     address: 'KPHB Colony, Kukatpally, Hyderabad',
     coins: 50,
     tier: 'Gold Patron',
-    memberSince: '2026'
+    memberSince: '2026',
+    verifiedVia: `Email OTP from ${OTP_SENDER_EMAIL}`
   };
 
-  loginUserSuccess(user, '🎉 Welcome to Subbayya Gari Hotel! 50 Ghee Coins active.');
+  loginUserSuccess(user, `🎉 Welcome to Subbayya Gari Hotel! Verified from ${OTP_SENDER_EMAIL}.`);
 }
 window.handleOtpSubmit = handleOtpSubmit;
 
@@ -3517,6 +3699,45 @@ function loginUserSuccess(user, welcomeMsg) {
 
   // Auto-fill checkout fields if cart is open
   autoFillCheckoutDetails();
+
+  // Handle pending action after login (table booking or order checkout)
+  if (AppState.pendingAction) {
+    const pending = AppState.pendingAction;
+    AppState.pendingAction = null;
+
+    if (pending.type === 'reserve_table') {
+      const d = pending.formData || {};
+      const bookingRef = 'TKT-' + Math.floor(100000 + Math.random() * 900000);
+      const guestName = user.name || d.name || 'Valued Patron';
+      const branch = d.branch || document.getElementById('res-branch')?.value || 'KPHB Colony, Hyderabad';
+      const dateVal = d.date || document.getElementById('res-date')?.value || new Date().toISOString().split('T')[0];
+      const timeVal = d.timeSlot || document.getElementById('res-time')?.value || 'Lunch: 01:30 PM';
+      const seating = d.seating || 'Traditional Banana Leaf Seating';
+      const guests = d.guests || document.getElementById('res-guests')?.value || '4';
+      const notes = d.notes || document.getElementById('res-notes')?.value || 'Standard Pure Veg Bhojanam';
+
+      document.getElementById('pass-booking-ref').textContent = bookingRef;
+      document.getElementById('pass-guest-name').textContent = guestName;
+      document.getElementById('pass-branch').textContent = branch;
+      document.getElementById('pass-date-time').textContent = `${dateVal} at ${timeVal}`;
+      document.getElementById('pass-guests-count').textContent = `${guests} Guests (${seating})`;
+      document.getElementById('pass-notes').textContent = notes;
+
+      const modal = document.getElementById('reservation-pass-modal');
+      if (modal) modal.classList.add('active');
+      showToast(`🎉 Table booked successfully for ${guestName}!`);
+
+      const resForm = document.getElementById('table-reservation-form');
+      if (resForm) resForm.reset();
+      updateAuthUI();
+
+    } else if (pending.type === 'checkout_order') {
+      toggleCart(true);
+      setTimeout(() => {
+        proceedToCheckout();
+      }, 350);
+    }
+  }
 }
 
 function autoFillCheckoutDetails() {
@@ -3536,6 +3757,12 @@ function updateAuthUI() {
   const mobileAuthItem = document.getElementById('mobile-drawer-auth-item');
   const mobileAuthText = document.getElementById('mobile-auth-text');
   const mobileAuthIcon = document.getElementById('mobile-auth-icon');
+
+  // Reservation Section Auth Banner & Form
+  const resAuthBanner = document.getElementById('reservation-auth-banner');
+  const resNameInput = document.getElementById('res-name');
+  const resPhoneInput = document.getElementById('res-phone');
+  const resSubmitBtnText = document.getElementById('res-submit-btn-text');
 
   if (AppState.currentUser) {
     const firstName = AppState.currentUser.name.split(' ')[0];
@@ -3568,6 +3795,28 @@ function updateAuthUI() {
       }
     }
 
+    // Update Table Reservation Elements
+    if (resAuthBanner) {
+      resAuthBanner.className = 'auth-gate-banner logged-in';
+      resAuthBanner.innerHTML = `
+        <div>
+          <strong style="color: #16A34A;">✅ Verified Patron: ${AppState.currentUser.name}</strong>
+          <div style="font-size: 0.76rem; color: var(--color-text-muted); margin-top: 2px;">📞 ${AppState.currentUser.phone} • Digital table confirmation pass will be linked to your profile</div>
+        </div>
+        <button type="button" class="auth-gate-login-btn" style="background: rgba(22, 163, 74, 0.15); color: #16A34A; border: 1px solid #16A34A;" onclick="openProfileModal()">My Account 👑</button>
+      `;
+    }
+
+    if (resNameInput && !resNameInput.value) {
+      resNameInput.value = AppState.currentUser.name;
+    }
+    if (resPhoneInput && !resPhoneInput.value) {
+      resPhoneInput.value = AppState.currentUser.phone;
+    }
+    if (resSubmitBtnText) {
+      resSubmitBtnText.textContent = 'Confirm Reservation & Generate Ticket 🎟️';
+    }
+
     // Auto-fill checkout inputs
     autoFillCheckoutDetails();
 
@@ -3598,7 +3847,26 @@ function updateAuthUI() {
         };
       }
     }
+
+    // Update Table Reservation Elements for Guest / Logged Out
+    if (resAuthBanner) {
+      resAuthBanner.className = 'auth-gate-banner logged-out';
+      resAuthBanner.innerHTML = `
+        <div>
+          <strong style="color: var(--color-gold);">🔒 Login Required to Book</strong>
+          <div style="font-size: 0.76rem; color: var(--color-text-muted); margin-top: 2px;">Sign in via quick Mobile OTP or Email to reserve your banana leaf table.</div>
+        </div>
+        <button type="button" class="auth-gate-login-btn" onclick="openAuthModal('otp')">Login Now 👤</button>
+      `;
+    }
+
+    if (resSubmitBtnText) {
+      resSubmitBtnText.textContent = '🔒 Login to Book Leaf Table 🎟️';
+    }
   }
+
+  // Update Cart Drawer state
+  renderCartDrawer();
 }
 
 function openProfileModal() {
@@ -3644,6 +3912,18 @@ function handleUserLogout() {
   } catch (e) {
     console.error('Logout error:', e);
   }
+
+  // Clear inputs
+  const resName = document.getElementById('res-name');
+  const resPhone = document.getElementById('res-phone');
+  const cartName = document.getElementById('order-customer-name');
+  const cartPhone = document.getElementById('order-customer-phone');
+  const cartAddr = document.getElementById('order-delivery-address');
+  if (resName) resName.value = '';
+  if (resPhone) resPhone.value = '';
+  if (cartName) cartName.value = '';
+  if (cartPhone) cartPhone.value = '';
+  if (cartAddr) cartAddr.value = '';
 
   closeProfileModal();
   updateAuthUI();
