@@ -3198,6 +3198,16 @@ button {
   .hero-section {
     padding: 2.5rem 0 3.5rem;
   }
+
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  /* Hide right hero visual showcase on mobile devices */
+  .hero-visual {
+    display: none !important;
+  }
   
   .hero-title {
     font-size: clamp(2rem, 7.5vw, 2.6rem);
