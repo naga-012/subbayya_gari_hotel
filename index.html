@@ -2935,36 +2935,16 @@
 
       <!-- Dashboard Tabs Switcher -->
       <div style="display: flex; background: var(--color-surface-muted); padding: 0.25rem; border-radius: var(--radius-md); gap: 0.25rem; margin-bottom: 1.15rem;">
-        <button type="button" class="auth-tab-btn active" id="prof-tab-btn-orders" onclick="switchProfileTab('orders')" style="flex: 1; padding: 0.55rem; font-size: 0.82rem; font-weight: 700;">
+        <button type="button" class="auth-tab-btn active" id="prof-tab-btn-account" onclick="switchProfileTab('account')" style="flex: 1; padding: 0.55rem; font-size: 0.82rem; font-weight: 700;">
+          👤 Customer Details
+        </button>
+        <button type="button" class="auth-tab-btn" id="prof-tab-btn-orders" onclick="switchProfileTab('orders')" style="flex: 1; padding: 0.55rem; font-size: 0.82rem; font-weight: 700;">
           📦 My Orders (<span id="prof-orders-count-badge">0</span>)
         </button>
-        <button type="button" class="auth-tab-btn" id="prof-tab-btn-account" onclick="switchProfileTab('account')" style="flex: 1; padding: 0.55rem; font-size: 0.82rem; font-weight: 700;">
-          👑 Ghee Coins & Profile
-        </button>
       </div>
 
-      <!-- TAB 1: CUSTOMER ORDERS LIST -->
-      <div id="prof-tab-orders" style="display: block;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-          <span style="font-size: 0.78rem; font-weight: 700; color: var(--color-primary); text-transform: uppercase;">
-            📋 Recent Order History & Items
-          </span>
-          <button type="button" onclick="fetchAndRenderCustomerOrders()" class="btn btn-outline btn-sm" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;">
-            🔄 Refresh Status
-          </button>
-        </div>
-
-        <!-- Orders Listing Container -->
-        <div id="prof-customer-orders-container" style="max-height: 52vh; overflow-y: auto; padding-right: 2px;">
-          <div style="text-align: center; padding: 2rem 1rem; color: var(--color-text-muted);">
-            <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏳</div>
-            <div>Loading your delicious orders...</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB 2: ACCOUNT & GHEE COINS -->
-      <div id="prof-tab-account" style="display: none;">
+      <!-- TAB 1: CUSTOMER ACCOUNT & PROFILE DETAILS -->
+      <div id="prof-tab-account" style="display: block;">
         
         <!-- Customer Details Card -->
         <div style="background: var(--color-surface-muted); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 1.1rem; margin-bottom: 1rem;">
@@ -3021,6 +3001,26 @@
           <button class="btn btn-outline btn-sm" onclick="handleUserLogout()" style="width: 100%; color: var(--color-spice); border-color: rgba(220, 38, 38, 0.4);">
             <span>🚪 Sign Out / Logout</span>
           </button>
+        </div>
+      </div>
+
+      <!-- TAB 2: CUSTOMER ORDERS LIST -->
+      <div id="prof-tab-orders" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <span style="font-size: 0.78rem; font-weight: 700; color: var(--color-primary); text-transform: uppercase;">
+            📋 Recent Order History & Items
+          </span>
+          <button type="button" onclick="fetchAndRenderCustomerOrders()" class="btn btn-outline btn-sm" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;">
+            🔄 Refresh Status
+          </button>
+        </div>
+
+        <!-- Orders Listing Container -->
+        <div id="prof-customer-orders-container" style="max-height: 52vh; overflow-y: auto; padding-right: 2px;">
+          <div style="text-align: center; padding: 2rem 1rem; color: var(--color-text-muted);">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏳</div>
+            <div>Loading your delicious orders...</div>
+          </div>
         </div>
       </div>
 

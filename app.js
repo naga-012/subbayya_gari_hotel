@@ -3825,7 +3825,7 @@ function autoFillCheckoutDetails() {
 function handleAuthHeaderBtnClick(event) {
   if (AppState.currentUser) {
     if (event) event.preventDefault();
-    openProfileModal('orders');
+    openProfileModal('account');
     return false;
   }
 }
@@ -3855,9 +3855,9 @@ function updateAuthUI() {
       authHeaderBtn.href = 'javascript:void(0)';
       authHeaderBtn.onclick = (e) => {
         if (e) e.preventDefault();
-        openProfileModal('orders');
+        openProfileModal('account');
       };
-      authHeaderBtn.title = 'View My Profile & Ghee Coins';
+      authHeaderBtn.title = 'View My Profile & Customer Details';
       authHeaderBtn.style.background = 'rgba(217, 119, 6, 0.15)';
       authHeaderBtn.style.borderColor = 'var(--color-gold)';
       authHeaderBtn.style.color = 'var(--color-gold)';
@@ -3875,7 +3875,7 @@ function updateAuthUI() {
         link.removeAttribute('href');
         link.onclick = (e) => {
           if (e) e.preventDefault();
-          openProfileModal();
+          openProfileModal('account');
           toggleMobileDrawer(false);
         };
       }
@@ -3889,7 +3889,7 @@ function updateAuthUI() {
           <strong style="color: #16A34A;">✅ Verified Patron: ${AppState.currentUser.name}</strong>
           <div style="font-size: 0.76rem; color: var(--color-text-muted); margin-top: 2px;">📞 ${AppState.currentUser.phone} • Digital table confirmation pass will be linked to your profile</div>
         </div>
-        <button type="button" class="auth-gate-login-btn" style="background: rgba(22, 163, 74, 0.15); color: #16A34A; border: 1px solid #16A34A;" onclick="openProfileModal()">My Account 👑</button>
+        <button type="button" class="auth-gate-login-btn" style="background: rgba(22, 163, 74, 0.15); color: #16A34A; border: 1px solid #16A34A;" onclick="openProfileModal('account')">Customer Details 👑</button>
       `;
     }
 
@@ -4206,7 +4206,7 @@ function reorderCustomerItems(orderId) {
 }
 window.reorderCustomerItems = reorderCustomerItems;
 
-function openProfileModal(initialTab = 'orders') {
+function openProfileModal(initialTab = 'account') {
   const modal = document.getElementById('profile-modal');
   if (!modal) return;
 
@@ -4249,7 +4249,7 @@ function openProfileModal(initialTab = 'orders') {
   switchProfileTab(initialTab);
   modal.classList.add('active');
 
-  // Load orders immediately
+  // Load orders immediately so data is ready when toggled
   fetchAndRenderCustomerOrders();
 }
 window.openProfileModal = openProfileModal;
