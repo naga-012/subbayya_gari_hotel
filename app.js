@@ -2738,6 +2738,7 @@ function proceedToCheckout() {
   message += `_Thank you for ordering with Subbayya Gari Godavari Bhojanam!_`;
 
   const newOrderId = 'SGH-' + Math.floor(100000 + Math.random() * 900000);
+  const nowIso = new Date().toISOString();
   const orderItemsCopy = AppState.cart.map(i => ({
     id: i.id,
     name: i.name,
@@ -2748,9 +2749,12 @@ function proceedToCheckout() {
 
   const orderPayload = {
     id: newOrderId,
+    createdAt: nowIso,
+    timestamp: Date.now(),
+    status: 'Received',
     customerName: customerName,
     customerPhone: customerPhone,
-    customerEmail: AppState.currentUser ? AppState.currentUser.email : '',
+    customerEmail: AppState.currentUser ? (AppState.currentUser.email || '') : '',
     orderType: AppState.orderType,
     branchId: activeBranchObj.id,
     branchName: activeBranchObj.name,
@@ -2769,6 +2773,32 @@ function proceedToCheckout() {
     vehicleNote: vehicleNote,
     paymentStatus: 'Paid Online / Verified'
   };
+
+  // Ensure customer profile is recorded so "My Orders" and profile are accessible
+  if (!AppState.currentUser) {
+    AppState.currentUser = {
+      name: customerName,
+      phone: customerPhone,
+      email: '',
+      coins: 50,
+      tier: '👑 VIP Member',
+      memberSince: new Date().getFullYear().toString()
+    };
+    try {
+      sessionStorage.setItem('sgh_user', JSON.stringify(AppState.currentUser));
+      localStorage.setItem('sgh_user', JSON.stringify(AppState.currentUser));
+    } catch (e) {}
+    updateAuthUI();
+  }
+
+  // Save to customer local orders list immediately for instant access
+  try {
+    const existingOrders = JSON.parse(localStorage.getItem('sgh_customer_orders') || '[]');
+    existingOrders.unshift(orderPayload);
+    localStorage.setItem('sgh_customer_orders', JSON.stringify(existingOrders));
+  } catch (err) {
+    console.warn('Could not save order locally:', err);
+  }
 
   // Asynchronously send to Server Orders Database
   fetch('/api/orders', {
@@ -4138,14 +4168,22 @@ window.switchProfileTab = switchProfileTab;
 // Cache of fetched customer orders
 let currentCustomerOrders = [];
 
-// Fetch customer orders from API and render itemized cards
+// Fetch customer orders from API and local storage, and render itemized cards
 async function fetchAndRenderCustomerOrders() {
   const container = document.getElementById('prof-customer-orders-container');
   const badgeEl = document.getElementById('prof-orders-count-badge');
   if (!container) return;
 
+  // 1. Read locally saved orders
+  let localOrders = [];
+  try {
+    localOrders = JSON.parse(localStorage.getItem('sgh_customer_orders') || '[]');
+  } catch (e) {
+    console.warn('Error reading local orders:', e);
+  }
+
   const user = AppState.currentUser;
-  if (!user) {
+  if (!user && localOrders.length === 0) {
     container.innerHTML = `
       <div style="text-align: center; padding: 2.5rem 1rem; color: var(--color-text-muted);">
         <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔒</div>
@@ -4165,42 +4203,53 @@ async function fetchAndRenderCustomerOrders() {
   `;
 
   try {
-    const cleanPhone = (user.phone || '').replace(/\D/g, '').slice(-10);
-    const email = user.email || '';
+    const cleanPhone = user ? (user.phone || '').replace(/\D/g, '').slice(-10) : '';
+    const email = user ? (user.email || '') : '';
     
-    // Fetch orders matching this user's phone or email
-    let url = `/api/orders?phone=${encodeURIComponent(cleanPhone)}`;
-    if (email && !email.endsWith('@subbayyagari.in')) {
-      url += `&email=${encodeURIComponent(email)}`;
-    }
-
-    let orders = [];
-    const res = await fetch(url);
-    if (res.ok) {
-      const data = await res.json();
-      if (data && data.orders) {
-        orders = data.orders;
-      }
-    }
-
-    // Fallback: If no orders match the specific phone or API is local-only, check all orders in API
-    if (orders.length === 0) {
-      const allRes = await fetch('/api/orders');
-      if (allRes.ok) {
-        const allData = await allRes.json();
-        if (allData && allData.orders) {
-          // If demo user or matching phone
-          orders = allData.orders.filter(o => {
-            const p = (o.customerPhone || '').replace(/\D/g, '').slice(-10);
-            return p === cleanPhone || (o.customerEmail && o.customerEmail.toLowerCase() === email.toLowerCase());
-          });
-          // If still empty and it's a demo/test session, show the active store orders as reference
-          if (orders.length === 0 && allData.orders.length > 0) {
-            orders = allData.orders;
-          }
+    let serverOrders = [];
+    try {
+      let url = `/api/orders`;
+      if (cleanPhone) {
+        url += `?phone=${encodeURIComponent(cleanPhone)}`;
+        if (email && !email.endsWith('@subbayyagari.in')) {
+          url += `&email=${encodeURIComponent(email)}`;
         }
       }
+
+      const res = await fetch(url);
+      if (res.ok) {
+        const data = await res.json();
+        if (data && Array.isArray(data.orders)) {
+          serverOrders = data.orders;
+        }
+      }
+    } catch (apiErr) {
+      console.warn('API fetch orders notice (using local cache if available):', apiErr);
     }
+
+    // Merge server orders and local orders, deduplicating by ID
+    const orderMap = new Map();
+
+    // 1. Add local orders
+    localOrders.forEach(ord => {
+      if (ord && ord.id) {
+        if (!cleanPhone || !ord.customerPhone || ord.customerPhone.replace(/\D/g, '').slice(-10) === cleanPhone) {
+          orderMap.set(ord.id, ord);
+        }
+      }
+    });
+
+    // 2. Add/update with server orders (server has latest status updates)
+    serverOrders.forEach(ord => {
+      if (ord && ord.id) {
+        orderMap.set(ord.id, ord);
+      }
+    });
+
+    let orders = Array.from(orderMap.values());
+
+    // Sort newest first
+    orders.sort((a, b) => new Date(b.createdAt || b.timestamp || 0) - new Date(a.createdAt || a.timestamp || 0));
 
     currentCustomerOrders = orders;
     if (badgeEl) badgeEl.textContent = orders.length;
