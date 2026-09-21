@@ -3550,12 +3550,26 @@ function advanceOrderStatus(orderId, newStatus) {
 
 function openAuthModal(initialTab = 'otp') {
   const modal = document.getElementById('auth-modal');
-  if (!modal) return;
-  if (!initialTab || initialTab === 'login' || !['otp', 'email', 'signup'].includes(initialTab)) {
-    initialTab = 'otp';
+  if (!modal) {
+    window.location.href = 'login.html';
+    return;
   }
-  switchAuthTab(initialTab);
+  switchAuthTab(initialTab || 'otp');
+
+  // Reset steps so user can enter email cleanly
+  const sendStep = document.getElementById('auth-otp-send-step');
+  const verifyStep = document.getElementById('auth-otp-verify-step');
+  const codeInput = document.getElementById('auth-otp-code');
+  if (sendStep) sendStep.style.display = 'block';
+  if (verifyStep) verifyStep.style.display = 'none';
+  if (codeInput) codeInput.value = '';
+
   modal.classList.add('active');
+
+  setTimeout(() => {
+    const targetInput = document.getElementById('auth-otp-target');
+    if (targetInput && targetInput.offsetParent !== null) targetInput.focus();
+  }, 100);
 }
 window.openAuthModal = openAuthModal;
 
@@ -3566,48 +3580,47 @@ function closeAuthModal() {
 window.closeAuthModal = closeAuthModal;
 
 function switchAuthTab(tab) {
-  if (!tab || tab === 'login' || !['otp', 'signup'].includes(tab)) {
-    tab = 'otp';
-  }
-
   const tabOtp = document.getElementById('auth-tab-otp');
   const tabSignup = document.getElementById('auth-tab-signup');
   const formOtp = document.getElementById('auth-form-otp');
   const formSignup = document.getElementById('auth-form-signup');
 
-  // Reset tab button styles
-  [tabOtp, tabSignup].forEach(t => {
-    if (t) {
-      t.style.background = 'transparent';
-      t.style.color = 'var(--color-text-muted)';
-      t.style.boxShadow = 'none';
-      t.classList.remove('active');
-    }
-  });
+  // Reset tab button styles if tabs exist
+  if (tabOtp && tabSignup) {
+    [tabOtp, tabSignup].forEach(t => {
+      if (t) {
+        t.style.background = 'transparent';
+        t.style.color = 'var(--color-text-muted)';
+        t.style.boxShadow = 'none';
+        t.classList.remove('active');
+      }
+    });
+  }
 
-  // Hide all forms
-  if (formOtp) formOtp.style.display = 'none';
-  if (formSignup) formSignup.style.display = 'none';
-
-  if (tab === 'otp' && tabOtp && formOtp) {
-    tabOtp.style.background = 'var(--color-surface)';
-    tabOtp.style.color = 'var(--color-primary)';
-    tabOtp.style.boxShadow = 'var(--shadow-xs)';
-    tabOtp.classList.add('active');
-    formOtp.style.display = 'flex';
-    setTimeout(() => {
-      const targetInput = document.getElementById('auth-otp-target');
-      if (targetInput && targetInput.offsetParent !== null) targetInput.focus();
-    }, 50);
-  } else if (tab === 'signup' && tabSignup && formSignup) {
-    tabSignup.style.background = 'var(--color-surface)';
-    tabSignup.style.color = 'var(--color-primary)';
-    tabSignup.style.boxShadow = 'var(--shadow-xs)';
-    tabSignup.classList.add('active');
+  if (tab === 'signup' && formSignup) {
+    if (formOtp) formOtp.style.display = 'none';
     formSignup.style.display = 'flex';
+    if (tabSignup) {
+      tabSignup.style.background = 'var(--color-surface)';
+      tabSignup.style.color = 'var(--color-primary)';
+      tabSignup.classList.add('active');
+    }
     setTimeout(() => {
       const regNameInput = document.getElementById('auth-reg-name');
       if (regNameInput && regNameInput.offsetParent !== null) regNameInput.focus();
+    }, 50);
+  } else {
+    // Default to OTP form
+    if (formSignup) formSignup.style.display = 'none';
+    if (formOtp) formOtp.style.display = 'flex';
+    if (tabOtp) {
+      tabOtp.style.background = 'var(--color-surface)';
+      tabOtp.style.color = 'var(--color-primary)';
+      tabOtp.classList.add('active');
+    }
+    setTimeout(() => {
+      const targetInput = document.getElementById('auth-otp-target');
+      if (targetInput && targetInput.offsetParent !== null) targetInput.focus();
     }, 50);
   }
 }
