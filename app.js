@@ -2987,6 +2987,22 @@ function setupReservationForm() {
   const form = document.getElementById('table-reservation-form');
   if (!form) return;
 
+  // Set default date to today
+  const resDateInput = document.getElementById('res-date');
+  if (resDateInput && !resDateInput.value) {
+    const today = new Date().toISOString().split('T')[0];
+    resDateInput.value = today;
+    resDateInput.min = today;
+  }
+
+  // Pre-fill user details if logged in
+  if (AppState.currentUser) {
+    const resName = document.getElementById('res-name');
+    const resPhone = document.getElementById('res-phone');
+    if (resName && !resName.value) resName.value = AppState.currentUser.name || '';
+    if (resPhone && !resPhone.value) resPhone.value = AppState.currentUser.phone || '';
+  }
+
   const seatingOptions = document.querySelectorAll('.seating-option');
   let selectedSeating = 'Traditional Banana Leaf Seating';
 
@@ -3017,39 +3033,64 @@ function setupReservationForm() {
           seating: selectedSeating
         }
       };
-      showToast('🔒 Please log in to confirm your table reservation');
       setTimeout(() => {
         window.location.href = 'login.html?redirect=reservations';
       }, 350);
       return;
     }
 
-    const name = document.getElementById('res-name')?.value || AppState.currentUser.name;
-    const phone = document.getElementById('res-phone')?.value || AppState.currentUser.phone;
+    const name = document.getElementById('res-name')?.value || AppState.currentUser.name || 'Valued Patron';
+    const phone = document.getElementById('res-phone')?.value || AppState.currentUser.phone || '9010888842';
     const branch = document.getElementById('res-branch')?.value || 'KPHB Colony, Hyderabad';
-    const date = document.getElementById('res-date')?.value || '';
-    const timeSlot = document.getElementById('res-time')?.value || '';
+    const date = document.getElementById('res-date')?.value || new Date().toISOString().split('T')[0];
+    const timeSlot = document.getElementById('res-time')?.value || 'Lunch Slot: 01:30 PM';
     const guests = document.getElementById('res-guests')?.value || '4';
     const notes = document.getElementById('res-notes')?.value || 'Standard Pure Veg Bhojanam';
 
     const bookingRef = 'TKT-' + Math.floor(100000 + Math.random() * 900000);
 
     // Show Confirmation Ticket Modal
-    document.getElementById('pass-booking-ref').textContent = bookingRef;
-    document.getElementById('pass-guest-name').textContent = name;
-    document.getElementById('pass-branch').textContent = branch;
-    document.getElementById('pass-date-time').textContent = `${date} at ${timeSlot}`;
-    document.getElementById('pass-guests-count').textContent = `${guests} Guests (${selectedSeating})`;
-    document.getElementById('pass-notes').textContent = notes;
+    const passRefEl = document.getElementById('pass-booking-ref');
+    const passNameEl = document.getElementById('pass-guest-name');
+    const passBranchEl = document.getElementById('pass-branch');
+    const passDateTimeEl = document.getElementById('pass-date-time');
+    const passGuestsEl = document.getElementById('pass-guests-count');
+    const passNotesEl = document.getElementById('pass-notes');
+
+    if (passRefEl) passRefEl.textContent = bookingRef;
+    if (passNameEl) passNameEl.textContent = name;
+    if (passBranchEl) passBranchEl.textContent = branch;
+    if (passDateTimeEl) passDateTimeEl.textContent = `${date} at ${timeSlot}`;
+    if (passGuestsEl) passGuestsEl.textContent = `${guests} Guests (${selectedSeating})`;
+    if (passNotesEl) passNotesEl.textContent = notes;
 
     const modal = document.getElementById('reservation-pass-modal');
-    if (modal) modal.classList.add('active');
+    if (modal) {
+      modal.classList.add('active');
+      modal.style.display = 'flex';
+      modal.style.visibility = 'visible';
+      modal.style.opacity = '1';
+      modal.style.pointerEvents = 'auto';
+      modal.style.zIndex = '9999';
+    }
 
-    showToast(`Table booked successfully for ${name}! 🎉`);
+    showToast(`Table booked successfully for ${name}! 🎟️`);
     form.reset();
     updateAuthUI();
   });
 }
+
+function closeReservationPassModal() {
+  const modal = document.getElementById('reservation-pass-modal');
+  if (modal) {
+    modal.classList.remove('active');
+    modal.style.display = 'none';
+    modal.style.visibility = 'hidden';
+    modal.style.opacity = '0';
+    modal.style.pointerEvents = 'none';
+  }
+}
+window.closeReservationPassModal = closeReservationPassModal;
 
 // ==========================================================================
 // 11. BRANCH DIRECTORY RENDER
@@ -5138,7 +5179,7 @@ window.handleUserLogout = handleUserLogout;
 
 // Modal Backdrop and Escape Key Listeners
 document.addEventListener('DOMContentLoaded', () => {
-  ['auth-modal', 'profile-modal', 'order-details-modal', 'order-confirmation-modal', 'review-modal'].forEach(id => {
+  ['auth-modal', 'profile-modal', 'order-details-modal', 'order-confirmation-modal', 'review-modal', 'reservation-pass-modal', 'delivery-location-modal'].forEach(id => {
     const modal = document.getElementById(id);
     if (modal) {
       modal.addEventListener('click', (e) => {
@@ -5158,8 +5199,13 @@ document.addEventListener('DOMContentLoaded', () => {
       closeAuthModal();
       closeProfileModal();
       closeOrderDetailsModal();
+      closeReservationPassModal();
+      closeDeliveryLocationModal();
       const confModal = document.getElementById('order-confirmation-modal');
-      if (confModal) confModal.classList.remove('active');
+      if (confModal) {
+        confModal.classList.remove('active');
+        confModal.style.display = 'none';
+      }
     }
   });
 });
