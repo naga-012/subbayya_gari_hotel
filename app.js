@@ -4056,6 +4056,14 @@ function updateAuthUI() {
       resSubmitBtnText.textContent = 'Confirm Reservation & Generate Ticket 🎟️';
     }
 
+    // Show "My Orders" buttons only after customer has logged in
+    const navMyOrders = document.getElementById('nav-item-my-orders');
+    const btnHeaderMyOrders = document.getElementById('btn-header-my-orders');
+    const mobileDrawerMyOrders = document.getElementById('mobile-drawer-my-orders');
+    if (navMyOrders) navMyOrders.style.display = 'block';
+    if (btnHeaderMyOrders) btnHeaderMyOrders.style.display = 'inline-flex';
+    if (mobileDrawerMyOrders) mobileDrawerMyOrders.style.display = 'block';
+
     // Auto-fill checkout inputs
     autoFillCheckoutDetails();
 
@@ -4071,6 +4079,14 @@ function updateAuthUI() {
       authHeaderBtn.style.borderColor = 'var(--color-gold)';
       authHeaderBtn.style.color = 'var(--color-gold)';
     }
+
+    // Hide "My Orders" buttons before customer logs in
+    const navMyOrders = document.getElementById('nav-item-my-orders');
+    const btnHeaderMyOrders = document.getElementById('btn-header-my-orders');
+    const mobileDrawerMyOrders = document.getElementById('mobile-drawer-my-orders');
+    if (navMyOrders) navMyOrders.style.display = 'none';
+    if (btnHeaderMyOrders) btnHeaderMyOrders.style.display = 'none';
+    if (mobileDrawerMyOrders) mobileDrawerMyOrders.style.display = 'none';
 
     const dockLoginText = document.getElementById('dock-login-text');
     const dockLoginItem = document.getElementById('dock-item-login');
