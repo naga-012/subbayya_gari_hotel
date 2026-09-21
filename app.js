@@ -2860,6 +2860,11 @@ function showOrderConfirmationModal(orderId, name, phone, whatsappMsg, details =
   }
 
   modal.classList.add('active');
+  modal.style.display = 'flex';
+  modal.style.visibility = 'visible';
+  modal.style.opacity = '1';
+  modal.style.pointerEvents = 'auto';
+  modal.style.zIndex = '9999';
   
   // Clear cart
   AppState.cart = [];
@@ -2870,7 +2875,13 @@ function showOrderConfirmationModal(orderId, name, phone, whatsappMsg, details =
 
 function openOrderDetailsFromConfirmation() {
   const confModal = document.getElementById('order-confirmation-modal');
-  if (confModal) confModal.classList.remove('active');
+  if (confModal) {
+    confModal.classList.remove('active');
+    confModal.style.display = 'none';
+    confModal.style.visibility = 'hidden';
+    confModal.style.opacity = '0';
+    confModal.style.pointerEvents = 'none';
+  }
   if (lastPlacedOrderData && lastPlacedOrderData.id) {
     openOrderDetailsModal(lastPlacedOrderData.id);
   }
@@ -3194,11 +3205,24 @@ function setupEventListeners() {
     });
   }
 
+  // My Orders header button listener
+  const btnHeaderMyOrders = document.getElementById('btn-header-my-orders');
+  if (btnHeaderMyOrders) {
+    btnHeaderMyOrders.addEventListener('click', (e) => {
+      e.preventDefault();
+      openProfileModal('orders');
+    });
+  }
+
   // Close modals on overlay click or close button
   document.querySelectorAll('.modal-overlay').forEach(modal => {
     modal.addEventListener('click', (e) => {
       if (e.target === modal || e.target.classList.contains('modal-close-btn')) {
         modal.classList.remove('active');
+        modal.style.display = 'none';
+        modal.style.visibility = 'hidden';
+        modal.style.opacity = '0';
+        modal.style.pointerEvents = 'none';
       }
     });
   });
@@ -4067,12 +4091,20 @@ function updateAuthUI() {
       resSubmitBtnText.textContent = 'Confirm Reservation & Generate Ticket 🎟️';
     }
 
-    // Show "My Orders" buttons only after customer has logged in
-    const navMyOrders = document.getElementById('nav-item-my-orders');
+    // Manage "My Orders" buttons
     const btnHeaderMyOrders = document.getElementById('btn-header-my-orders');
     const mobileDrawerMyOrders = document.getElementById('mobile-drawer-my-orders');
-    if (navMyOrders) navMyOrders.style.display = 'block';
-    if (btnHeaderMyOrders) btnHeaderMyOrders.style.display = 'inline-flex';
+    const localOrders = (() => {
+      try {
+        return JSON.parse(localStorage.getItem('sgh_customer_orders') || '[]');
+      } catch (e) {
+        return [];
+      }
+    })();
+    if (btnHeaderMyOrders) {
+      btnHeaderMyOrders.style.display = 'inline-flex';
+      btnHeaderMyOrders.innerHTML = `<span>📦</span><span>My Orders (${localOrders.length})</span>`;
+    }
     if (mobileDrawerMyOrders) mobileDrawerMyOrders.style.display = 'block';
 
     // Auto-fill checkout inputs
@@ -4100,15 +4132,15 @@ function updateAuthUI() {
       }
     })();
 
-    const navMyOrders = document.getElementById('nav-item-my-orders');
     const btnHeaderMyOrders = document.getElementById('btn-header-my-orders');
     const mobileDrawerMyOrders = document.getElementById('mobile-drawer-my-orders');
     if (localOrdersCount > 0) {
-      if (navMyOrders) navMyOrders.style.display = 'block';
-      if (btnHeaderMyOrders) btnHeaderMyOrders.style.display = 'inline-flex';
+      if (btnHeaderMyOrders) {
+        btnHeaderMyOrders.style.display = 'inline-flex';
+        btnHeaderMyOrders.innerHTML = `<span>📦</span><span>My Orders (${localOrdersCount})</span>`;
+      }
       if (mobileDrawerMyOrders) mobileDrawerMyOrders.style.display = 'block';
     } else {
-      if (navMyOrders) navMyOrders.style.display = 'none';
       if (btnHeaderMyOrders) btnHeaderMyOrders.style.display = 'none';
       if (mobileDrawerMyOrders) mobileDrawerMyOrders.style.display = 'none';
     }
@@ -4656,12 +4688,23 @@ async function openOrderDetailsModal(orderId) {
   }
 
   modal.classList.add('active');
+  modal.style.display = 'flex';
+  modal.style.visibility = 'visible';
+  modal.style.opacity = '1';
+  modal.style.pointerEvents = 'auto';
+  modal.style.zIndex = '9999';
 }
 window.openOrderDetailsModal = openOrderDetailsModal;
 
 function closeOrderDetailsModal() {
   const modal = document.getElementById('order-details-modal');
-  if (modal) modal.classList.remove('active');
+  if (modal) {
+    modal.classList.remove('active');
+    modal.style.display = 'none';
+    modal.style.visibility = 'hidden';
+    modal.style.opacity = '0';
+    modal.style.pointerEvents = 'none';
+  }
 }
 window.closeOrderDetailsModal = closeOrderDetailsModal;
 
@@ -4834,6 +4877,7 @@ function openProfileModal(initialTab = 'account') {
   modal.style.display = 'flex';
   modal.style.visibility = 'visible';
   modal.style.opacity = '1';
+  modal.style.pointerEvents = 'auto';
   modal.style.zIndex = '9999';
 
   fetchAndRenderCustomerOrders();
@@ -4847,6 +4891,7 @@ function closeProfileModal() {
     modal.style.display = 'none';
     modal.style.visibility = 'hidden';
     modal.style.opacity = '0';
+    modal.style.pointerEvents = 'none';
   }
 }
 window.closeProfileModal = closeProfileModal;
@@ -4886,6 +4931,10 @@ document.addEventListener('DOMContentLoaded', () => {
       modal.addEventListener('click', (e) => {
         if (e.target === modal) {
           modal.classList.remove('active');
+          modal.style.display = 'none';
+          modal.style.visibility = 'hidden';
+          modal.style.opacity = '0';
+          modal.style.pointerEvents = 'none';
         }
       });
     }
