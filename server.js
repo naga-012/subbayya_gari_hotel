@@ -22,6 +22,12 @@ app.get('/healthz', (req, res) => {
 const sendOtpHandler = require('./api/send-otp');
 app.all('/api/send-otp', sendOtpHandler);
 
+// Users API routes (Customer Registration & Authentication check)
+const usersHandler = require('./api/users');
+app.get('/api/users/check', usersHandler.checkUserHandler);
+app.post('/api/users/register', usersHandler.registerUserHandler);
+app.get('/api/users', usersHandler.getUsersHandler);
+
 // Orders API routes (Customer orders & Owner dashboard sync)
 const ordersHandler = require('./api/orders');
 app.get('/api/orders', ordersHandler.getOrdersHandler);

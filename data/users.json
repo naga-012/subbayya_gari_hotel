@@ -1,0 +1,35 @@
+[
+  {
+    "id": "USR-1001",
+    "name": "Myakalanagarjun",
+    "phone": "9010888842",
+    "email": "myakalanagarjun09@gmail.com",
+    "address": "Road No. 4, KPHB Colony, Kukatpally, Hyderabad",
+    "coins": 50,
+    "tier": "VIP Patron",
+    "memberSince": "2026",
+    "registeredAt": "2026-09-21T06:00:00.000Z"
+  },
+  {
+    "id": "USR-1002",
+    "name": "Srinivas Varma",
+    "phone": "9876543210",
+    "email": "srinivas.varma@gmail.com",
+    "address": "MIG 295, Rd No. 4, KPHB Colony, Kukatpally, Hyderabad",
+    "coins": 50,
+    "tier": "VIP Patron",
+    "memberSince": "2026",
+    "registeredAt": "2026-09-21T06:30:00.000Z"
+  },
+  {
+    "id": "USR-1003",
+    "name": "Anand Godavari",
+    "phone": "9121234567",
+    "email": "anand.godavari@wa.me",
+    "address": "Road No. 36, Jubilee Hills, Hyderabad",
+    "coins": 50,
+    "tier": "VIP Patron",
+    "memberSince": "2026",
+    "registeredAt": "2026-09-21T07:00:00.000Z"
+  }
+]

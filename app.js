@@ -3560,6 +3560,104 @@ window.switchAuthTab = switchAuthTab;
 const OTP_SENDER_EMAIL = 'myakalanagarjun09@gmail.com';
 let activeGeneratedOtp = null;
 let activeOtpTarget = '';
+let activeRegisteredUser = null;
+
+// Default Seed Registered Patrons
+const DEFAULT_REGISTERED_USERS = [
+  {
+    id: 'USR-1001',
+    name: 'Myakalanagarjun',
+    phone: '9010888842',
+    email: 'myakalanagarjun09@gmail.com',
+    address: 'Road No. 4, KPHB Colony, Kukatpally, Hyderabad',
+    coins: 50,
+    tier: 'VIP Patron',
+    memberSince: '2026'
+  },
+  {
+    id: 'USR-1002',
+    name: 'Srinivas Varma',
+    phone: '9876543210',
+    email: 'srinivas.varma@gmail.com',
+    address: 'MIG 295, Rd No. 4, KPHB Colony, Kukatpally, Hyderabad',
+    coins: 50,
+    tier: 'VIP Patron',
+    memberSince: '2026'
+  },
+  {
+    id: 'USR-1003',
+    name: 'Anand Godavari',
+    phone: '9121234567',
+    email: 'anand.godavari@wa.me',
+    address: 'Road No. 36, Jubilee Hills, Hyderabad',
+    coins: 50,
+    tier: 'VIP Patron',
+    memberSince: '2026'
+  }
+];
+
+function getLocalRegisteredUsers() {
+  try {
+    const stored = localStorage.getItem('sgh_registered_users');
+    if (stored) {
+      const list = JSON.parse(stored);
+      return Array.isArray(list) ? list : DEFAULT_REGISTERED_USERS;
+    }
+  } catch (e) {
+    console.warn('Error reading registered users:', e);
+  }
+  return DEFAULT_REGISTERED_USERS;
+}
+
+function saveLocalRegisteredUser(user) {
+  try {
+    const list = getLocalRegisteredUsers();
+    const cleanPhone = (user.phone || '').replace(/\D/g, '').slice(-10);
+    const cleanEmail = (user.email || '').toLowerCase().trim();
+    const exists = list.some(u => {
+      const uPhone = (u.phone || '').replace(/\D/g, '').slice(-10);
+      const uEmail = (u.email || '').toLowerCase().trim();
+      return (cleanPhone && uPhone === cleanPhone) || (cleanEmail && uEmail === cleanEmail);
+    });
+    if (!exists) {
+      list.unshift(user);
+      localStorage.setItem('sgh_registered_users', JSON.stringify(list));
+    }
+  } catch (e) {
+    console.warn('Error saving registered user locally:', e);
+  }
+}
+
+async function checkUserRegistration(target) {
+  const cleanTarget = (target || '').trim();
+  const cleanPhone = cleanTarget.replace(/\D/g, '').slice(-10);
+  const isEmail = cleanTarget.includes('@');
+
+  // 1. Check API first
+  try {
+    const res = await fetch(`/api/users/check?target=${encodeURIComponent(cleanTarget)}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.registered && data.user) {
+        return data.user;
+      }
+    }
+  } catch (err) {
+    console.warn('API check fallback to local database:', err.message);
+  }
+
+  // 2. Check Local Registered Users Database
+  const localUsers = getLocalRegisteredUsers();
+  const found = localUsers.find(u => {
+    const uPhone = (u.phone || '').replace(/\D/g, '').slice(-10);
+    const uEmail = (u.email || '').toLowerCase().trim();
+    if (cleanPhone && cleanPhone.length >= 10 && uPhone === cleanPhone) return true;
+    if (isEmail && uEmail === cleanTarget.toLowerCase()) return true;
+    return false;
+  });
+
+  return found || null;
+}
 
 async function sendLoginOtp() {
   const targetInput = document.getElementById('auth-otp-target') || document.getElementById('auth-otp-phone');
@@ -3584,6 +3682,26 @@ async function sendLoginOtp() {
     return;
   }
 
+  // STRICT CHECK: Customer must register first before logging in!
+  const regUser = await checkUserRegistration(targetVal);
+  if (!regUser) {
+    showToast('⚠️ No account found for this Mobile/Email! Please Register first.');
+
+    // Auto-fill into registration form for smooth onboarding
+    if (isEmail) {
+      const regEmail = document.getElementById('auth-reg-email');
+      if (regEmail) regEmail.value = targetVal;
+    } else {
+      const regPhone = document.getElementById('auth-reg-phone');
+      if (regPhone) regPhone.value = targetVal.replace(/\D/g, '').slice(-10);
+    }
+
+    // Switch to registration form automatically
+    switchAuthTab('signup');
+    return;
+  }
+
+  activeRegisteredUser = regUser;
   activeOtpTarget = targetVal;
   activeGeneratedOtp = Math.floor(1000 + Math.random() * 9000).toString();
 
@@ -3614,7 +3732,7 @@ async function sendLoginOtp() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         email: isEmail ? targetVal : `${targetVal.replace(/\D/g, '')}@subbayyagari.in`,
-        name: isEmail ? targetVal.split('@')[0] : `Guest ${targetVal.slice(-4)}`
+        name: regUser.name || (isEmail ? targetVal.split('@')[0] : `Guest ${targetVal.slice(-4)}`)
       }),
       signal: controller.signal
     });
@@ -3668,53 +3786,25 @@ function handleOtpSubmit(event) {
 
   const isEmail = activeOtpTarget.includes('@');
   const cleanPhone = isEmail ? '9010888842' : activeOtpTarget.replace(/\D/g, '');
-  const guestName = isEmail 
-    ? activeOtpTarget.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) 
-    : `Godavari Guest (${cleanPhone.slice(-4)})`;
-  const guestEmail = isEmail ? activeOtpTarget : `guest.${cleanPhone.slice(-4)}@subbayyagari.in`;
 
-  // Create user session verified via myakalanagarjun09@gmail.com
-  const user = {
-    name: guestName,
+  // Load verified registered user
+  const user = activeRegisteredUser || {
+    name: isEmail ? activeOtpTarget.split('@')[0] : `Patron ${cleanPhone.slice(-4)}`,
     phone: cleanPhone,
-    email: guestEmail,
-    address: 'KPHB Colony, Kukatpally, Hyderabad',
+    email: isEmail ? activeOtpTarget : `${cleanPhone}@subbayyagari.in`,
+    address: 'Road No. 4, KPHB Colony, Kukatpally, Hyderabad',
     coins: 50,
-    tier: 'Gold Patron',
+    tier: 'VIP Patron',
     memberSince: '2026',
     verifiedVia: `Email OTP from ${OTP_SENDER_EMAIL}`
   };
 
-  loginUserSuccess(user, `🎉 Welcome to Subbayya Gari Hotel! Verified from ${OTP_SENDER_EMAIL}.`);
+  loginUserSuccess(user, `🎉 Welcome back, ${user.name}! Login successful.`);
 }
 window.handleOtpSubmit = handleOtpSubmit;
 
-function handleEmailLogin(event) {
-  event.preventDefault();
-  const email = document.getElementById('auth-login-email')?.value.trim() || '';
-  const password = document.getElementById('auth-login-password')?.value || '';
-
-  if (!email || !password) {
-    showToast('⚠️ Please provide both email and password');
-    return;
-  }
-
-  const name = email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-  const user = {
-    name: name,
-    phone: '9876543210',
-    email: email,
-    address: 'Jubilee Hills, Road No. 36, Hyderabad',
-    coins: 50,
-    tier: 'Gold Patron',
-    memberSince: '2026'
-  };
-
-  loginUserSuccess(user, `🎉 Welcome back, ${name}!`);
-}
-window.handleEmailLogin = handleEmailLogin;
-
-function handleSignup(event) {
+// Registration handler (Register first, then login)
+async function handleSignup(event) {
   event.preventDefault();
   const name = document.getElementById('auth-reg-name')?.value.trim();
   const phone = document.getElementById('auth-reg-phone')?.value.trim();
@@ -3722,38 +3812,44 @@ function handleSignup(event) {
   const address = document.getElementById('auth-reg-address')?.value.trim() || 'Hyderabad, Telangana';
 
   if (!name || !phone) {
-    showToast('⚠️ Please fill in all required fields');
+    showToast('⚠️ Full Name and Mobile Number are required for registration');
     return;
   }
 
-  const user = {
+  const cleanPhone = phone.replace(/\D/g, '').slice(-10);
+  if (cleanPhone.length < 10) {
+    showToast('⚠️ Please enter a valid 10-digit mobile number');
+    return;
+  }
+
+  const newUser = {
+    id: 'USR-' + Math.floor(1000 + Math.random() * 9000),
     name: name,
-    phone: phone,
+    phone: cleanPhone,
     email: email,
     address: address,
     coins: 50, // Welcome bonus
     tier: 'VIP Patron',
-    memberSince: '2026'
+    memberSince: new Date().getFullYear().toString()
   };
 
-  loginUserSuccess(user, `🎉 Welcome to Godavari Family, ${name}! 🪙 50 Ghee Coins credited.`);
+  // Save to local storage
+  saveLocalRegisteredUser(newUser);
+
+  // Sync with API backend
+  try {
+    await fetch('/api/users/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newUser)
+    });
+  } catch (err) {
+    console.warn('Backend user registration sync error (saved locally):', err.message);
+  }
+
+  loginUserSuccess(newUser, `🎉 Welcome to Godavari Family, ${name}! Registered successfully & 🪙 50 Coins credited.`);
 }
 window.handleSignup = handleSignup;
-
-function quickSocialLogin(provider) {
-  const user = {
-    name: provider === 'Google' ? 'Srinivas Varma' : 'Anand Godavari',
-    phone: '9010888842',
-    email: provider === 'Google' ? 'srinivas.varma@gmail.com' : 'anand.godavari@wa.me',
-    address: 'MIG 295, Rd No. 4, KPHB Colony, Hyderabad',
-    coins: 50,
-    tier: 'VIP Patron',
-    memberSince: '2026'
-  };
-
-  loginUserSuccess(user, `🎉 Connected seamlessly via ${provider}!`);
-}
-window.quickSocialLogin = quickSocialLogin;
 
 function loginUserSuccess(user, welcomeMsg) {
   AppState.currentUser = user;
