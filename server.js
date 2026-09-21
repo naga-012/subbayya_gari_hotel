@@ -27,10 +27,15 @@ app.get(['/login', '/login.html'], (req, res) => {
   res.sendFile(path.join(__dirname, 'login.html'));
 });
 
-// Serve static assets from project root
+// Serve static assets from project root (fresh updates without stale browser caching)
 app.use(express.static(path.join(__dirname), {
-  maxAge: '1h',
-  etag: true
+  maxAge: 0,
+  etag: true,
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.html') || filePath.endsWith('.js') || filePath.endsWith('.css')) {
+      res.setHeader('Cache-Control', 'no-cache, must-revalidate');
+    }
+  }
 }));
 
 // Fallback all unmatched requests to index.html (SPA routing)
