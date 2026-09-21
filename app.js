@@ -1718,6 +1718,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('openCart') === 'true') {
     setTimeout(() => toggleCart(true), 350);
+  } else if (urlParams.get('showOrders') === 'true' || urlParams.get('orders') === 'true') {
+    setTimeout(() => {
+      openProfileModal('orders');
+    }, 400);
   }
 });
 
@@ -2677,9 +2681,53 @@ function proceedToCheckout() {
   message += `_Packing: Authentic Traditional Banana Leaf & Eco Butta_%0A`;
   message += `_Thank you for ordering with Subbayya Gari Godavari Bhojanam!_`;
 
+  const newOrderId = 'SGH-' + Math.floor(100000 + Math.random() * 900000);
+  const orderItemsCopy = AppState.cart.map(i => ({
+    id: i.id,
+    name: i.name,
+    price: i.price,
+    qty: i.qty,
+    total: i.price * i.qty
+  }));
+
+  const orderPayload = {
+    id: newOrderId,
+    customerName: customerName,
+    customerPhone: customerPhone,
+    customerEmail: AppState.currentUser ? AppState.currentUser.email : '',
+    orderType: AppState.orderType,
+    branchId: activeBranchObj.id,
+    branchName: activeBranchObj.name,
+    branchAddress: activeBranchObj.address,
+    items: orderItemsCopy,
+    itemCount: orderItemsCopy.reduce((s, i) => s + i.qty, 0),
+    subtotal: subtotal,
+    packagingFee: packagingFee,
+    deliveryFee: deliveryFee,
+    discount: discount,
+    grandTotal: grandTotal,
+    deliveryAddress: deliveryAddress,
+    deliveryLandmark: deliveryLandmark,
+    gpsMapUrl: gpsMapUrl,
+    pickupSlot: pickupSlot,
+    vehicleNote: vehicleNote,
+    paymentStatus: 'Paid Online / Verified'
+  };
+
+  // Asynchronously send to Server Orders Database
+  fetch('/api/orders', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(orderPayload)
+  }).then(r => r.json()).then(resData => {
+    console.log('[Order Sync] Saved successfully to backend database:', resData);
+  }).catch(err => {
+    console.warn('[Order Sync] Backend sync failed, kept locally:', err);
+  });
+
   // Close Cart and show simulated live order ticket
   toggleCart(false);
-  showOrderConfirmationModal(customerName, customerPhone, message, {
+  showOrderConfirmationModal(newOrderId, customerName, customerPhone, message, {
     orderType: AppState.orderType,
     branchName: activeBranchObj.name,
     branchAddress: activeBranchObj.address,
@@ -2687,19 +2735,20 @@ function proceedToCheckout() {
     vehicleNote: vehicleNote,
     address: deliveryAddress,
     landmark: deliveryLandmark,
-    locationUrl: gpsMapUrl
+    locationUrl: gpsMapUrl,
+    items: orderItemsCopy,
+    grandTotal: grandTotal
   });
 }
 
-function showOrderConfirmationModal(name, phone, whatsappMsg, details = {}) {
+function showOrderConfirmationModal(orderId, name, phone, whatsappMsg, details = {}) {
   const modal = document.getElementById('order-confirmation-modal');
   if (!modal) return;
 
-  const orderId = 'SGH-' + Math.floor(100000 + Math.random() * 900000);
   document.getElementById('conf-order-id').textContent = orderId;
   document.getElementById('conf-customer-name').textContent = name;
   document.getElementById('conf-branch').textContent = (details.branchName || AppState.selectedBranch).toUpperCase();
-  document.getElementById('conf-total-items').textContent = AppState.cart.reduce((s, i) => s + i.qty, 0) + ' Items';
+  document.getElementById('conf-total-items').textContent = (details.items ? details.items.reduce((s, i) => s + i.qty, 0) : AppState.cart.reduce((s, i) => s + i.qty, 0)) + ' Items';
   
   const orderTypeEl = document.getElementById('conf-order-type');
   if (orderTypeEl) {
@@ -3869,7 +3918,259 @@ function updateAuthUI() {
   renderCartDrawer();
 }
 
-function openProfileModal() {
+// Switch between 'orders' and 'account' in customer profile modal
+function switchProfileTab(tab) {
+  const btnOrders = document.getElementById('prof-tab-btn-orders');
+  const btnAccount = document.getElementById('prof-tab-btn-account');
+  const tabOrders = document.getElementById('prof-tab-orders');
+  const tabAccount = document.getElementById('prof-tab-account');
+
+  if (btnOrders) btnOrders.classList.remove('active');
+  if (btnAccount) btnAccount.classList.remove('active');
+  if (tabOrders) tabOrders.style.display = 'none';
+  if (tabAccount) tabAccount.style.display = 'none';
+
+  if (tab === 'account') {
+    if (btnAccount) btnAccount.classList.add('active');
+    if (tabAccount) tabAccount.style.display = 'block';
+  } else {
+    if (btnOrders) btnOrders.classList.add('active');
+    if (tabOrders) tabOrders.style.display = 'block';
+  }
+}
+window.switchProfileTab = switchProfileTab;
+
+// Cache of fetched customer orders
+let currentCustomerOrders = [];
+
+// Fetch customer orders from API and render itemized cards
+async function fetchAndRenderCustomerOrders() {
+  const container = document.getElementById('prof-customer-orders-container');
+  const badgeEl = document.getElementById('prof-orders-count-badge');
+  if (!container) return;
+
+  const user = AppState.currentUser;
+  if (!user) {
+    container.innerHTML = `
+      <div style="text-align: center; padding: 2.5rem 1rem; color: var(--color-text-muted);">
+        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔒</div>
+        <p style="font-weight: 700; margin-bottom: 0.75rem;">Please log in to view your orders</p>
+        <button class="btn btn-gold btn-sm" onclick="closeProfileModal(); openAuthModal('otp');">Sign In Now 🔑</button>
+      </div>
+    `;
+    if (badgeEl) badgeEl.textContent = '0';
+    return;
+  }
+
+  container.innerHTML = `
+    <div style="text-align: center; padding: 2rem 1rem; color: var(--color-text-muted);">
+      <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏳</div>
+      <div>Loading your feast orders...</div>
+    </div>
+  `;
+
+  try {
+    const cleanPhone = (user.phone || '').replace(/\D/g, '').slice(-10);
+    const email = user.email || '';
+    
+    // Fetch orders matching this user's phone or email
+    let url = `/api/orders?phone=${encodeURIComponent(cleanPhone)}`;
+    if (email && !email.endsWith('@subbayyagari.in')) {
+      url += `&email=${encodeURIComponent(email)}`;
+    }
+
+    let orders = [];
+    const res = await fetch(url);
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.orders) {
+        orders = data.orders;
+      }
+    }
+
+    // Fallback: If no orders match the specific phone or API is local-only, check all orders in API
+    if (orders.length === 0) {
+      const allRes = await fetch('/api/orders');
+      if (allRes.ok) {
+        const allData = await allRes.json();
+        if (allData && allData.orders) {
+          // If demo user or matching phone
+          orders = allData.orders.filter(o => {
+            const p = (o.customerPhone || '').replace(/\D/g, '').slice(-10);
+            return p === cleanPhone || (o.customerEmail && o.customerEmail.toLowerCase() === email.toLowerCase());
+          });
+          // If still empty and it's a demo/test session, show the active store orders as reference
+          if (orders.length === 0 && allData.orders.length > 0) {
+            orders = allData.orders;
+          }
+        }
+      }
+    }
+
+    currentCustomerOrders = orders;
+    if (badgeEl) badgeEl.textContent = orders.length;
+
+    if (orders.length === 0) {
+      container.innerHTML = `
+        <div style="text-align: center; padding: 2.5rem 1rem; color: var(--color-text-muted); background: var(--color-surface-muted); border-radius: var(--radius-md); border: 1px dashed var(--color-border);">
+          <div style="font-size: 2.8rem; margin-bottom: 0.5rem;">🍃</div>
+          <h4 style="color: var(--color-primary); margin-bottom: 0.35rem; font-size: 1.05rem;">No Orders Yet!</h4>
+          <p style="font-size: 0.8rem; margin-bottom: 1.25rem;">Experience the iconic Andhra Royal Butta Bhojanam with hot flowing pure ghee!</p>
+          <button class="btn btn-gold btn-sm" onclick="closeProfileModal(); toggleCart(true);">
+            <span>Order Royal Butta Feast 🧺</span>
+          </button>
+        </div>
+      `;
+      return;
+    }
+
+    // Render Order Cards with Items Breakdown
+    container.innerHTML = orders.map(ord => {
+      let statusClass = 'cust-status-preparing';
+      let statusIcon = '👨‍🍳';
+      const s = (ord.status || 'Received').toLowerCase();
+      if (s === 'delivered') {
+        statusClass = 'cust-status-delivered';
+        statusIcon = '✅';
+      } else if (s === 'out for delivery' || s === 'ready') {
+        statusClass = 'cust-status-out';
+        statusIcon = '🛵';
+      } else if (s === 'received') {
+        statusClass = 'cust-status-received';
+        statusIcon = '📥';
+      }
+
+      const formattedDate = ord.createdAt 
+        ? new Date(ord.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+        : 'Recent Order';
+
+      const isDelivery = ord.orderType === 'delivery';
+
+      // Build Items List HTML
+      const itemsListHtml = (ord.items || []).map(item => `
+        <div class="cust-order-item-row">
+          <div style="display: flex; align-items: center; gap: 0.4rem;">
+            <span style="color: #16A34A; font-size: 0.75rem;">🟢</span>
+            <span style="font-weight: 600; color: var(--color-text);">${item.name || 'Bhojanam Specialty'}</span>
+            <span style="background: rgba(15, 90, 39, 0.08); color: var(--color-primary); font-weight: 700; padding: 1px 6px; border-radius: 4px; font-size: 0.72rem;">x${item.qty || 1}</span>
+          </div>
+          <div style="font-weight: 700; color: var(--color-primary);">
+            ₹${(item.price || 0) * (item.qty || 1)}
+          </div>
+        </div>
+      `).join('');
+
+      return `
+        <div class="cust-order-card">
+          <!-- Header -->
+          <div class="cust-order-header">
+            <div>
+              <div class="cust-order-id">#${ord.id}</div>
+              <div style="font-size: 0.72rem; color: var(--color-text-muted); margin-top: 2px;">📅 ${formattedDate}</div>
+            </div>
+            <span class="cust-status-badge ${statusClass}">
+              <span>${statusIcon}</span>
+              <span>${ord.status || 'Received'}</span>
+            </span>
+          </div>
+
+          <!-- Order Type & Branch Destination -->
+          <div style="font-size: 0.78rem; color: var(--color-text-muted); margin-bottom: 0.65rem; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+              <strong>${isDelivery ? '🛵 Home Delivery' : '🥡 Takeaway / Curbside'}</strong>
+              <span style="color: var(--color-border-hover);"> • </span>
+              <span>${ord.branchName || 'KPHB Colony, Hyderabad'}</span>
+            </div>
+            <span style="color: var(--color-gold); font-weight: 700; font-size: 0.74rem;">${ord.paymentStatus || 'Paid Online'}</span>
+          </div>
+
+          <!-- What are ordered: Itemized Breakdown -->
+          <div class="cust-order-items-box">
+            <div style="font-size: 0.72rem; font-weight: 700; color: var(--color-gold); text-transform: uppercase; margin-bottom: 0.35rem; letter-spacing: 0.04em;">
+              🍽️ Dishes Ordered (${ord.itemCount || (ord.items ? ord.items.length : 0)} items)
+            </div>
+            ${itemsListHtml || '<div style="font-size: 0.78rem; color: var(--color-text-muted);">Royal Butta Feast Selection</div>'}
+          </div>
+
+          <!-- Address or Pickup Note if available -->
+          ${ord.deliveryAddress ? `
+            <div style="font-size: 0.74rem; color: var(--color-text-muted); background: rgba(0,0,0,0.02); padding: 0.4rem 0.6rem; border-radius: 4px; margin-bottom: 0.65rem;">
+              🏠 <strong>Address:</strong> ${ord.deliveryAddress}
+            </div>
+          ` : ''}
+
+          ${ord.pickupSlot ? `
+            <div style="font-size: 0.74rem; color: #16A34A; font-weight: 600; margin-bottom: 0.65rem;">
+              ⏰ <strong>Pickup Time:</strong> ${ord.pickupSlot}
+            </div>
+          ` : ''}
+
+          <!-- Order Total & Actions -->
+          <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--color-border); padding-top: 0.75rem; margin-top: 0.4rem;">
+            <div>
+              <span style="font-size: 0.72rem; color: var(--color-text-muted);">Grand Total:</span>
+              <span style="font-size: 1.15rem; font-weight: 800; color: var(--color-primary); margin-left: 0.25rem;">₹${ord.grandTotal || ord.subtotal || 0}</span>
+            </div>
+            <div style="display: flex; gap: 0.4rem;">
+              <button type="button" class="btn btn-outline btn-sm" onclick="reorderCustomerItems('${ord.id}')" style="font-size: 0.74rem; padding: 0.3rem 0.65rem; border-color: var(--color-gold); color: var(--color-gold);">
+                🔄 Reorder
+              </button>
+              <a href="https://api.whatsapp.com/send?phone=919010888842&text=${encodeURIComponent('Hi Subbayya Gari Hotel, checking live status for my order #' + ord.id)}" target="_blank" class="btn btn-outline btn-sm" style="font-size: 0.74rem; padding: 0.3rem 0.65rem; color: #16A34A; border-color: #16A34A;">
+                💬 Track
+              </a>
+            </div>
+          </div>
+
+        </div>
+      `;
+    }).join('');
+
+  } catch (err) {
+    console.error('Error fetching customer orders:', err);
+    container.innerHTML = `
+      <div style="text-align: center; padding: 2rem 1rem; color: var(--color-spice);">
+        <p>⚠️ Unable to sync orders right now. Please try again.</p>
+        <button class="btn btn-outline btn-sm" onclick="fetchAndRenderCustomerOrders()">Retry 🔄</button>
+      </div>
+    `;
+  }
+}
+window.fetchAndRenderCustomerOrders = fetchAndRenderCustomerOrders;
+
+// Re-add items from a past order into the customer cart
+function reorderCustomerItems(orderId) {
+  const ord = currentCustomerOrders.find(o => o.id === orderId);
+  if (!ord || !ord.items || ord.items.length === 0) {
+    showToast('⚠️ No items found in this order to reorder');
+    return;
+  }
+
+  ord.items.forEach(item => {
+    // Find matching menu item or reconstruct
+    const menuItem = MENU_DATA.find(m => m.id === item.id || m.name === item.name);
+    if (menuItem) {
+      for (let i = 0; i < (item.qty || 1); i++) {
+        addToCart(menuItem.id, true);
+      }
+    } else {
+      AppState.cart.push({
+        id: item.id || 'dish-' + Date.now(),
+        name: item.name,
+        price: item.price,
+        qty: item.qty || 1,
+        image: 'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?auto=format&fit=crop&w=400&q=80'
+      });
+    }
+  });
+
+  saveCart();
+  closeProfileModal();
+  toggleCart(true);
+  showToast(`🛒 ${ord.items.length} dishes added back to your cart! Ready to feast.`);
+}
+window.reorderCustomerItems = reorderCustomerItems;
+
+function openProfileModal(initialTab = 'orders') {
   const modal = document.getElementById('profile-modal');
   if (!modal) return;
 
@@ -3895,7 +4196,11 @@ function openProfileModal() {
   if (addrEl) addrEl.textContent = user.address || 'KPHB Colony, Kukatpally, Hyderabad';
   if (avatarLetter) avatarLetter.textContent = user.name.charAt(0).toUpperCase();
 
+  switchProfileTab(initialTab);
   modal.classList.add('active');
+
+  // Load orders immediately
+  fetchAndRenderCustomerOrders();
 }
 window.openProfileModal = openProfileModal;
 

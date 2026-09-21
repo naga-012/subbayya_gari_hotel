@@ -22,7 +22,17 @@ app.get('/healthz', (req, res) => {
 const sendOtpHandler = require('./api/send-otp');
 app.all('/api/send-otp', sendOtpHandler);
 
-// Dedicated Login Page Route
+// Orders API routes (Customer orders & Owner dashboard sync)
+const ordersHandler = require('./api/orders');
+app.get('/api/orders', ordersHandler.getOrdersHandler);
+app.post('/api/orders', ordersHandler.createOrderHandler);
+app.all('/api/orders/:id/status', ordersHandler.updateOrderStatusHandler);
+
+// Dedicated Pages Routes
+app.get(['/owner', '/owner.html', '/admin', '/crm'], (req, res) => {
+  res.sendFile(path.join(__dirname, 'owner.html'));
+});
+
 app.get(['/login', '/login.html'], (req, res) => {
   res.sendFile(path.join(__dirname, 'login.html'));
 });

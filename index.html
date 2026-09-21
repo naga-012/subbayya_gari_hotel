@@ -2941,51 +2941,87 @@
        MODAL: CUSTOMER PROFILE & DASHBOARD
        ========================================================================== -->
   <div class="modal-overlay" id="profile-modal">
-    <div class="modal-card" style="max-width: 480px; padding: 1.75rem;">
+    <div class="modal-card" style="max-width: 560px; padding: 1.75rem;">
       <button class="modal-close-btn" onclick="closeProfileModal()" aria-label="Close Profile Modal">✕</button>
 
-      <div style="display: flex; align-items: center; gap: 1rem; border-bottom: 1px solid var(--color-border); padding-bottom: 1rem; margin-bottom: 1rem;">
-        <div style="width: 52px; height: 52px; border-radius: 50%; background: var(--color-primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800;">
-          <span id="prof-avatar-letter">S</span>
-        </div>
-        <div>
-          <div style="display: flex; align-items: center; gap: 0.4rem;">
-            <h3 style="font-size: 1.15rem; font-weight: 700; margin: 0;" id="prof-user-name">Guest User</h3>
-            <span class="badge badge-gold" style="font-size: 0.65rem;">👑 VIP Member</span>
+      <!-- Customer Profile Header -->
+      <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--color-border); padding-bottom: 0.85rem; margin-bottom: 1rem;">
+        <div style="display: flex; align-items: center; gap: 0.85rem;">
+          <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--color-primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: 800; box-shadow: var(--shadow-sm);">
+            <span id="prof-avatar-letter">S</span>
           </div>
-          <div style="font-size: 0.78rem; color: var(--color-text-muted);" id="prof-user-phone">+91 9876543210</div>
-          <div style="font-size: 0.72rem; color: var(--color-text-muted);" id="prof-user-email">guest@subbayyagari.in</div>
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.4rem;">
+              <h3 style="font-size: 1.1rem; font-weight: 700; margin: 0;" id="prof-user-name">Guest User</h3>
+              <span class="badge badge-gold" style="font-size: 0.65rem;">👑 VIP Member</span>
+            </div>
+            <div style="font-size: 0.78rem; color: var(--color-text-muted);" id="prof-user-phone">+91 9876543210</div>
+            <div style="font-size: 0.72rem; color: var(--color-text-muted);" id="prof-user-email">guest@subbayyagari.in</div>
+          </div>
         </div>
-      </div>
-
-      <!-- Loyalty Coins Card -->
-      <div style="background: linear-gradient(135deg, rgba(217, 119, 6, 0.12), rgba(15, 90, 39, 0.08)); border: 1px solid var(--color-gold); border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between;">
-        <div>
-          <div style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700; color: var(--color-gold);">Godavari Ghee Balance</div>
-          <div style="font-size: 1.4rem; font-weight: 800; color: var(--color-primary);" id="prof-coins-count">50 🪙</div>
-          <div style="font-size: 0.7rem; color: var(--color-text-muted);">Worth ₹50 on any Butta Feast</div>
-        </div>
-        <button class="btn btn-gold btn-sm" onclick="closeProfileModal(); toggleCart(true);">
-          <span>Redeem 🛍️</span>
+        <button type="button" class="btn btn-outline btn-sm" onclick="handleUserLogout()" style="font-size: 0.74rem; padding: 0.3rem 0.65rem; color: var(--color-spice); border-color: rgba(220, 38, 38, 0.4);" title="Log out of account">
+          🚪 Logout
         </button>
       </div>
 
-      <!-- Saved Delivery Address -->
-      <div style="margin-bottom: 1rem;">
-        <span style="font-size: 0.78rem; font-weight: 700; color: var(--color-primary); text-transform: uppercase;">🏠 Saved Delivery Address</span>
-        <div style="background: var(--color-surface-muted); padding: 0.75rem; border-radius: var(--radius-sm); border: 1px solid var(--color-border); margin-top: 0.35rem; font-size: 0.82rem;" id="prof-saved-address">
-          Road No. 4, KPHB Colony, Kukatpally, Hyderabad
+      <!-- Dashboard Tabs Switcher -->
+      <div style="display: flex; background: var(--color-surface-muted); padding: 0.25rem; border-radius: var(--radius-md); gap: 0.25rem; margin-bottom: 1.15rem;">
+        <button type="button" class="auth-tab-btn active" id="prof-tab-btn-orders" onclick="switchProfileTab('orders')" style="flex: 1; padding: 0.55rem; font-size: 0.82rem; font-weight: 700;">
+          📦 My Orders (<span id="prof-orders-count-badge">0</span>)
+        </button>
+        <button type="button" class="auth-tab-btn" id="prof-tab-btn-account" onclick="switchProfileTab('account')" style="flex: 1; padding: 0.55rem; font-size: 0.82rem; font-weight: 700;">
+          👑 Ghee Coins & Profile
+        </button>
+      </div>
+
+      <!-- TAB 1: CUSTOMER ORDERS LIST -->
+      <div id="prof-tab-orders" style="display: block;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <span style="font-size: 0.78rem; font-weight: 700; color: var(--color-primary); text-transform: uppercase;">
+            📋 Recent Order History & Items
+          </span>
+          <button type="button" onclick="fetchAndRenderCustomerOrders()" class="btn btn-outline btn-sm" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;">
+            🔄 Refresh Status
+          </button>
+        </div>
+
+        <!-- Orders Listing Container -->
+        <div id="prof-customer-orders-container" style="max-height: 52vh; overflow-y: auto; padding-right: 2px;">
+          <div style="text-align: center; padding: 2rem 1rem; color: var(--color-text-muted);">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏳</div>
+            <div>Loading your delicious orders...</div>
+          </div>
         </div>
       </div>
 
-      <!-- Quick Actions -->
-      <div style="display: flex; flex-direction: column; gap: 0.6rem;">
-        <button class="btn btn-outline btn-sm" onclick="closeProfileModal(); toggleCart(true);" style="width: 100%;">
-          <span>🧺 View Plate / Cart</span>
-        </button>
-        <button class="btn btn-outline btn-sm" onclick="handleUserLogout()" style="width: 100%; color: var(--color-spice); border-color: var(--color-spice);">
-          <span>🚪 Sign Out / Logout</span>
-        </button>
+      <!-- TAB 2: ACCOUNT & GHEE COINS -->
+      <div id="prof-tab-account" style="display: none;">
+        <!-- Loyalty Coins Card -->
+        <div style="background: linear-gradient(135deg, rgba(217, 119, 6, 0.12), rgba(15, 90, 39, 0.08)); border: 1px solid var(--color-gold); border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            <div style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700; color: var(--color-gold);">Godavari Ghee Balance</div>
+            <div style="font-size: 1.4rem; font-weight: 800; color: var(--color-primary);" id="prof-coins-count">50 🪙</div>
+            <div style="font-size: 0.7rem; color: var(--color-text-muted);">Worth ₹50 on any Butta Feast</div>
+          </div>
+          <button class="btn btn-gold btn-sm" onclick="closeProfileModal(); toggleCart(true);">
+            <span>Redeem 🛍️</span>
+          </button>
+        </div>
+
+        <!-- Saved Delivery Address -->
+        <div style="margin-bottom: 1rem;">
+          <span style="font-size: 0.78rem; font-weight: 700; color: var(--color-primary); text-transform: uppercase;">🏠 Saved Delivery Address</span>
+          <div style="background: var(--color-surface-muted); padding: 0.75rem; border-radius: var(--radius-sm); border: 1px solid var(--color-border); margin-top: 0.35rem; font-size: 0.82rem;" id="prof-saved-address">
+            Road No. 4, KPHB Colony, Kukatpally, Hyderabad
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+          <button class="btn btn-primary btn-sm" onclick="closeProfileModal(); toggleCart(true);" style="width: 100%;">
+            <span>🧺 View Plate / Cart</span>
+          </button>
+        </div>
       </div>
 
     </div>

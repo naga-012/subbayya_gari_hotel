@@ -1,0 +1,70 @@
+[
+  {
+    "id": "SGH-782419",
+    "createdAt": "2026-09-21T07:15:00.000Z",
+    "timestamp": 1790061300000,
+    "customerName": "Srinivas Varma",
+    "customerPhone": "9010888842",
+    "customerEmail": "srinivas.varma@gmail.com",
+    "orderType": "delivery",
+    "branchId": "kphb",
+    "branchName": "KPHB Colony, Hyderabad",
+    "branchAddress": "MIG 295, Rd No. 4, Kukatpally, Hyderabad",
+    "items": [
+      { "id": "butta-royal", "name": "Subbayya Gari Royal Butta Bhojanam", "price": 499, "qty": 2, "total": 998 },
+      { "id": "curry-gutti-vankaya", "name": "Godavari Gutti Vankaya Kura", "price": 180, "qty": 1, "total": 180 },
+      { "id": "sweet-pootharekulu", "name": "Atreyapuram Bellam Pootharekulu (4 Pcs)", "price": 160, "qty": 1, "total": 160 }
+    ],
+    "itemCount": 4,
+    "subtotal": 1338,
+    "packagingFee": 30,
+    "deliveryFee": 40,
+    "discount": 0,
+    "grandTotal": 1408,
+    "deliveryAddress": "MIG 295, Rd No. 4, KPHB Colony, Kukatpally, Hyderabad",
+    "deliveryLandmark": "Near Forum Sujana Mall Cross",
+    "gpsMapUrl": "https://maps.google.com/?q=17.4938,78.3995",
+    "pickupSlot": "",
+    "vehicleNote": "",
+    "status": "Preparing",
+    "paymentStatus": "Paid Online / UPI",
+    "statusHistory": [
+      { "status": "Received", "time": "2026-09-21T07:15:00.000Z", "note": "Order confirmed by customer" },
+      { "status": "Preparing", "time": "2026-09-21T07:18:00.000Z", "note": "Chef started packaging hot Butta feast with fresh banana leaves" }
+    ]
+  },
+  {
+    "id": "SGH-639104",
+    "createdAt": "2026-09-21T06:45:00.000Z",
+    "timestamp": 1790059500000,
+    "customerName": "Anand Godavari",
+    "customerPhone": "9876543210",
+    "customerEmail": "anand.godavari@wa.me",
+    "orderType": "pickup",
+    "branchId": "jubilee-hills",
+    "branchName": "Jubilee Hills, Hyderabad",
+    "branchAddress": "Road No. 36, Near Peddamma Temple, Hyderabad",
+    "items": [
+      { "id": "butta-mini", "name": "Traditional Mini Butta Bhojanam", "price": 299, "qty": 1, "total": 299 },
+      { "id": "sweet-nethi-bobbatlu", "name": "Nethi Bobbatlu with Pure Ghee (2 Pcs)", "price": 140, "qty": 2, "total": 280 }
+    ],
+    "itemCount": 3,
+    "subtotal": 579,
+    "packagingFee": 30,
+    "deliveryFee": 0,
+    "discount": 50,
+    "grandTotal": 559,
+    "deliveryAddress": "",
+    "deliveryLandmark": "",
+    "gpsMapUrl": "",
+    "pickupSlot": "Lunch: 01:15 PM",
+    "vehicleNote": "White Creta TS09AB1234 - Curbside pickup",
+    "status": "Out for Delivery",
+    "paymentStatus": "Paid / Ghee Coins Applied",
+    "statusHistory": [
+      { "status": "Received", "time": "2026-09-21T06:45:00.000Z", "note": "Takeaway order received" },
+      { "status": "Preparing", "time": "2026-09-21T06:50:00.000Z", "note": "Packaged in eco-bamboo basket" },
+      { "status": "Out for Delivery", "time": "2026-09-21T07:05:00.000Z", "note": "Order packed and waiting at takeaway counter" }
+    ]
+  }
+]
