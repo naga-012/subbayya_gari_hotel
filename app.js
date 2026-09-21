@@ -1613,7 +1613,8 @@ function initStorage() {
     if (savedBranch) {
       AppState.selectedBranch = savedBranch;
     }
-    const savedUser = localStorage.getItem('sgh_user');
+    localStorage.removeItem('sgh_user');
+    const savedUser = sessionStorage.getItem('sgh_user');
     if (savedUser) {
       AppState.currentUser = JSON.parse(savedUser);
     }
@@ -2555,7 +2556,7 @@ function saveDeliveryLocationModal(e) {
   // Save to user profile if logged in
   if (AppState.currentUser) {
     AppState.currentUser.address = fullAddress;
-    localStorage.setItem('sgh_user', JSON.stringify(AppState.currentUser));
+    sessionStorage.setItem('sgh_user', JSON.stringify(AppState.currentUser));
   }
 
   closeDeliveryLocationModal();
@@ -3770,7 +3771,8 @@ window.quickSocialLogin = quickSocialLogin;
 function loginUserSuccess(user, welcomeMsg) {
   AppState.currentUser = user;
   try {
-    localStorage.setItem('sgh_user', JSON.stringify(user));
+    sessionStorage.setItem('sgh_user', JSON.stringify(user));
+    localStorage.removeItem('sgh_user');
   } catch (e) {
     console.error('User save error:', e);
   }
@@ -4226,7 +4228,9 @@ function openProfileModal(initialTab = 'orders') {
     phone: '+91 9876543210',
     email: 'guest@subbayyagari.in',
     address: 'KPHB Colony, Kukatpally, Hyderabad',
-    coins: 50
+    coins: 50,
+    tier: 'VIP Patron',
+    memberSince: '2026'
   };
 
   const nameEl = document.getElementById('prof-user-name');
@@ -4236,12 +4240,24 @@ function openProfileModal(initialTab = 'orders') {
   const addrEl = document.getElementById('prof-saved-address');
   const avatarLetter = document.getElementById('prof-avatar-letter');
 
+  const detailNameEl = document.getElementById('prof-detail-name');
+  const detailPhoneEl = document.getElementById('prof-detail-phone');
+  const detailEmailEl = document.getElementById('prof-detail-email');
+  const detailTierEl = document.getElementById('prof-detail-tier');
+  const detailSinceEl = document.getElementById('prof-detail-since');
+
   if (nameEl) nameEl.textContent = user.name;
   if (phoneEl) phoneEl.textContent = user.phone;
   if (emailEl) emailEl.textContent = user.email || 'guest@subbayyagari.in';
   if (coinsEl) coinsEl.textContent = `${user.coins || 50} 🪙`;
-  if (addrEl) addrEl.textContent = user.address || 'KPHB Colony, Kukatpally, Hyderabad';
-  if (avatarLetter) avatarLetter.textContent = user.name.charAt(0).toUpperCase();
+  if (addrEl) addrEl.textContent = user.address || 'Road No. 4, KPHB Colony, Kukatpally, Hyderabad';
+  if (avatarLetter) avatarLetter.textContent = (user.name || 'G').charAt(0).toUpperCase();
+
+  if (detailNameEl) detailNameEl.textContent = user.name;
+  if (detailPhoneEl) detailPhoneEl.textContent = user.phone;
+  if (detailEmailEl) detailEmailEl.textContent = user.email || 'guest@subbayyagari.in';
+  if (detailTierEl) detailTierEl.textContent = user.tier || '👑 VIP Member';
+  if (detailSinceEl) detailSinceEl.textContent = user.memberSince || '2026';
 
   switchProfileTab(initialTab);
   modal.classList.add('active');
@@ -4260,6 +4276,7 @@ window.closeProfileModal = closeProfileModal;
 function handleUserLogout() {
   AppState.currentUser = null;
   try {
+    sessionStorage.removeItem('sgh_user');
     localStorage.removeItem('sgh_user');
   } catch (e) {
     console.error('Logout error:', e);

@@ -3002,6 +3002,42 @@
 
       <!-- TAB 2: ACCOUNT & GHEE COINS -->
       <div id="prof-tab-account" style="display: none;">
+        
+        <!-- Customer Details Card -->
+        <div style="background: var(--color-surface-muted); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 1.1rem; margin-bottom: 1rem;">
+          <div style="font-size: 0.76rem; font-weight: 800; color: var(--color-primary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem; border-bottom: 1px dashed var(--color-border); padding-bottom: 0.4rem;">
+            👤 Patron Account Information
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.84rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="color: var(--color-text-muted);">Full Name:</span>
+              <strong style="color: var(--color-text);" id="prof-detail-name">Guest User</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="color: var(--color-text-muted);">Mobile Number:</span>
+              <strong style="color: var(--color-primary);" id="prof-detail-phone">+91 9876543210</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="color: var(--color-text-muted);">Email Address:</span>
+              <strong style="color: var(--color-text);" id="prof-detail-email">guest@subbayyagari.in</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="color: var(--color-text-muted);">Patron Tier:</span>
+              <span class="badge badge-gold" style="font-size: 0.7rem;" id="prof-detail-tier">👑 VIP Member</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="color: var(--color-text-muted);">Member Since:</span>
+              <span style="color: var(--color-text); font-weight: 600;" id="prof-detail-since">2026</span>
+            </div>
+            <div style="border-top: 1px dotted var(--color-border); padding-top: 0.5rem; margin-top: 0.25rem;">
+              <div style="color: var(--color-text-muted); font-size: 0.78rem; margin-bottom: 0.2rem;">Saved Delivery Destination:</div>
+              <div style="font-size: 0.82rem; font-weight: 600; color: var(--color-text);" id="prof-saved-address">
+                Road No. 4, KPHB Colony, Kukatpally, Hyderabad
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Loyalty Coins Card -->
         <div style="background: linear-gradient(135deg, rgba(217, 119, 6, 0.12), rgba(15, 90, 39, 0.08)); border: 1px solid var(--color-gold); border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between;">
           <div>
@@ -3014,18 +3050,13 @@
           </button>
         </div>
 
-        <!-- Saved Delivery Address -->
-        <div style="margin-bottom: 1rem;">
-          <span style="font-size: 0.78rem; font-weight: 700; color: var(--color-primary); text-transform: uppercase;">🏠 Saved Delivery Address</span>
-          <div style="background: var(--color-surface-muted); padding: 0.75rem; border-radius: var(--radius-sm); border: 1px solid var(--color-border); margin-top: 0.35rem; font-size: 0.82rem;" id="prof-saved-address">
-            Road No. 4, KPHB Colony, Kukatpally, Hyderabad
-          </div>
-        </div>
-
         <!-- Quick Actions -->
         <div style="display: flex; flex-direction: column; gap: 0.6rem;">
           <button class="btn btn-primary btn-sm" onclick="closeProfileModal(); toggleCart(true);" style="width: 100%;">
             <span>🧺 View Plate / Cart</span>
+          </button>
+          <button class="btn btn-outline btn-sm" onclick="handleUserLogout()" style="width: 100%; color: var(--color-spice); border-color: rgba(220, 38, 38, 0.4);">
+            <span>🚪 Sign Out / Logout</span>
           </button>
         </div>
       </div>

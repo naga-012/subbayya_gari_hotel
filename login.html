@@ -595,7 +595,8 @@
     // Save session and redirect back to index.html
     function finishLoginAndRedirect(user, message) {
       try {
-        localStorage.setItem('sgh_user', JSON.stringify(user));
+        sessionStorage.setItem('sgh_user', JSON.stringify(user));
+        localStorage.removeItem('sgh_user'); // Ensure persistent storage doesn't persist across closed sessions
       } catch (e) {
         console.error('Storage error:', e);
       }
