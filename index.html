@@ -251,7 +251,7 @@
 
         <!-- User Account / Login Button -->
         <div id="auth-header-container" style="display: flex; align-items: center;">
-          <button class="btn btn-outline-gold btn-sm" id="auth-header-btn" onclick="openAuthModal('login')" style="padding: 0.4rem 0.8rem; font-size: 0.82rem; font-weight: 700; display: flex; align-items: center; gap: 0.35rem; border-radius: 50px;">
+          <button class="btn btn-outline-gold btn-sm" id="auth-header-btn" onclick="openAuthModal('otp')" style="padding: 0.4rem 0.8rem; font-size: 0.82rem; font-weight: 700; display: flex; align-items: center; gap: 0.35rem; border-radius: 50px;">
             <span>👤</span>
             <span id="auth-header-btn-text">Login</span>
           </button>
@@ -2839,7 +2839,7 @@
 
         <div class="form-group">
           <label class="form-label" for="auth-otp-target" style="font-size: 0.82rem;">Email Address or Mobile Number *</label>
-          <input type="text" id="auth-otp-target" class="form-control" placeholder="Enter your email (e.g. guest@gmail.com) or 10-digit mobile" required style="font-size: 0.9rem;" />
+          <input type="text" id="auth-otp-target" class="form-control" placeholder="Enter your email (e.g. guest@gmail.com) or 10-digit mobile" required style="font-size: 0.9rem;" onkeydown="if(event.key==='Enter'){event.preventDefault();sendLoginOtp();}" />
           <div style="font-size: 0.72rem; color: var(--color-text-muted); margin-top: 3px;">
             A 4-digit verification OTP will be sent directly from <strong>myakalanagarjun09@gmail.com</strong>.
           </div>
@@ -2861,7 +2861,7 @@
           <div style="font-size: 0.74rem; color: var(--color-text-muted);">
             Sent from: <strong>myakalanagarjun09@gmail.com</strong> to <span id="otp-target-display" style="color: var(--color-primary); font-weight: 700;">your email</span>
           </div>
-          <input type="text" id="auth-otp-code" class="form-control" placeholder="Enter 4-Digit Code" maxlength="4" style="text-align: center; font-size: 1.25rem; font-weight: 800; letter-spacing: 0.25em;" required />
+          <input type="text" id="auth-otp-code" class="form-control" placeholder="Enter 4-Digit Code" maxlength="4" style="text-align: center; font-size: 1.25rem; font-weight: 800; letter-spacing: 0.25em;" onkeydown="if(event.key==='Enter'){event.preventDefault();handleOtpSubmit(event);}" />
           <button type="submit" class="btn btn-primary" style="width: 100%;">
             <span>Verify & Enter Feast 🍽️</span>
           </button>
@@ -3112,7 +3112,7 @@
 
     <ul class="mobile-drawer-links">
       <li id="mobile-drawer-auth-item">
-        <a href="javascript:void(0)" class="mobile-drawer-link" onclick="openAuthModal('login'); toggleMobileDrawer(false);" style="background: rgba(217, 119, 6, 0.1); color: var(--color-gold); font-weight: 700; border-radius: var(--radius-md);">
+        <a href="javascript:void(0)" class="mobile-drawer-link" onclick="openAuthModal('otp'); toggleMobileDrawer(false);" style="background: rgba(217, 119, 6, 0.1); color: var(--color-gold); font-weight: 700; border-radius: var(--radius-md);">
           <span id="mobile-auth-icon">👤</span> 
           <span id="mobile-auth-text">Login / Guest Sign In</span>
         </a>

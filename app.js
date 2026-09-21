@@ -3402,6 +3402,9 @@ function advanceOrderStatus(orderId, newStatus) {
 function openAuthModal(initialTab = 'otp') {
   const modal = document.getElementById('auth-modal');
   if (!modal) return;
+  if (!initialTab || initialTab === 'login' || !['otp', 'email', 'signup'].includes(initialTab)) {
+    initialTab = 'otp';
+  }
   switchAuthTab(initialTab);
   modal.classList.add('active');
 }
@@ -3414,6 +3417,10 @@ function closeAuthModal() {
 window.closeAuthModal = closeAuthModal;
 
 function switchAuthTab(tab) {
+  if (!tab || tab === 'login' || !['otp', 'email', 'signup'].includes(tab)) {
+    tab = 'otp';
+  }
+
   const tabOtp = document.getElementById('auth-tab-otp');
   const tabEmail = document.getElementById('auth-tab-email');
   const tabSignup = document.getElementById('auth-tab-signup');
@@ -3442,18 +3449,30 @@ function switchAuthTab(tab) {
     tabOtp.style.boxShadow = 'var(--shadow-xs)';
     tabOtp.classList.add('active');
     formOtp.style.display = 'flex';
+    setTimeout(() => {
+      const targetInput = document.getElementById('auth-otp-target');
+      if (targetInput && targetInput.offsetParent !== null) targetInput.focus();
+    }, 50);
   } else if (tab === 'email' && tabEmail && formEmail) {
     tabEmail.style.background = 'var(--color-surface)';
     tabEmail.style.color = 'var(--color-primary)';
     tabEmail.style.boxShadow = 'var(--shadow-xs)';
     tabEmail.classList.add('active');
     formEmail.style.display = 'flex';
+    setTimeout(() => {
+      const emailInput = document.getElementById('auth-login-email');
+      if (emailInput && emailInput.offsetParent !== null) emailInput.focus();
+    }, 50);
   } else if (tab === 'signup' && tabSignup && formSignup) {
     tabSignup.style.background = 'var(--color-surface)';
     tabSignup.style.color = 'var(--color-primary)';
     tabSignup.style.boxShadow = 'var(--shadow-xs)';
     tabSignup.classList.add('active');
     formSignup.style.display = 'flex';
+    setTimeout(() => {
+      const regNameInput = document.getElementById('auth-reg-name');
+      if (regNameInput && regNameInput.offsetParent !== null) regNameInput.focus();
+    }, 50);
   }
 }
 window.switchAuthTab = switchAuthTab;
@@ -3503,6 +3522,10 @@ async function sendLoginOtp() {
         name: isEmail ? targetVal.split('@')[0] : `Guest ${targetVal.slice(-4)}`
       })
     });
+
+    if (!response.ok) {
+      throw new Error(`Server returned ${response.status}`);
+    }
 
     const data = await response.json();
 
@@ -3825,7 +3848,7 @@ function updateAuthUI() {
       authBtnText.textContent = 'Login';
     }
     if (authHeaderBtn) {
-      authHeaderBtn.onclick = () => openAuthModal('login');
+      authHeaderBtn.onclick = () => openAuthModal('otp');
       authHeaderBtn.title = 'Customer Login / Sign In';
       authHeaderBtn.style.background = 'transparent';
       authHeaderBtn.style.borderColor = 'var(--color-gold)';
@@ -3842,7 +3865,7 @@ function updateAuthUI() {
       const link = mobileAuthItem.querySelector('a');
       if (link) {
         link.onclick = () => {
-          openAuthModal('login');
+          openAuthModal('otp');
           toggleMobileDrawer(false);
         };
       }
@@ -3930,4 +3953,26 @@ function handleUserLogout() {
   showToast('👋 Successfully logged out from Subbayya Gari Hotel');
 }
 window.handleUserLogout = handleUserLogout;
+
+// Modal Backdrop and Escape Key Listeners
+document.addEventListener('DOMContentLoaded', () => {
+  ['auth-modal', 'profile-modal'].forEach(id => {
+    const modal = document.getElementById(id);
+    if (modal) {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.classList.remove('active');
+        }
+      });
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeAuthModal();
+      closeProfileModal();
+    }
+  });
+});
+
 
