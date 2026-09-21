@@ -122,7 +122,7 @@ module.exports = async (req, res) => {
       });
 
     } else {
-      // If GMAIL_APP_PASSWORD is not set yet in Vercel environment variables,
+      // If GMAIL_APP_PASSWORD is not set yet in Render environment variables,
       // return a graceful response with the OTP so users can test immediately.
       return res.status(200).json({
         success: true,
@@ -130,7 +130,7 @@ module.exports = async (req, res) => {
         recipient: email,
         otp: otp,
         demoMode: true,
-        message: `OTP generated for ${email}. To deliver live emails from ${SENDER_EMAIL}, add GMAIL_APP_PASSWORD to your Vercel Project Environment Variables.`
+        message: `OTP generated for ${email}. To deliver live emails from ${SENDER_EMAIL}, add GMAIL_APP_PASSWORD to your Render Environment Variables.`
       });
     }
 
