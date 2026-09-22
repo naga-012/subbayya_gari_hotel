@@ -168,25 +168,42 @@
       <div id="panel-otp" style="display: block;">
         <form id="page-otp-form" onsubmit="handlePageOtpSubmit(event)" style="display: flex; flex-direction: column; gap: 0.95rem;">
 
-          <!-- Step 1: Input Customer Email or Phone -->
-          <div class="form-group" id="page-otp-send-wrap">
-            <label class="form-label" for="page-otp-target" style="font-size: 0.86rem; font-weight: 700; color: var(--color-text);">
-              Enter Email Address OR Mobile Number *
-            </label>
-            <input 
-              type="text" 
-              id="page-otp-target" 
-              class="form-control" 
-              placeholder="e.g. yourname@gmail.com or 9876543210" 
-              required 
-              style="font-size: 0.95rem; padding: 0.7rem 0.85rem;"
-              onkeydown="if(event.key==='Enter'){event.preventDefault();sendPageOtp();}"
-            />
-            <div style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 5px;">
-              Enter your email address or 10-digit mobile number to receive a 4-digit login code.
+          <!-- Step 1: Input Customer Name & Email/Phone -->
+          <div id="page-otp-send-wrap" style="display: flex; flex-direction: column; gap: 0.85rem;">
+            
+            <div class="form-group" style="margin: 0;">
+              <label class="form-label" for="page-otp-name" style="font-size: 0.86rem; font-weight: 700; color: var(--color-text);">
+                Enter Your Full Name *
+              </label>
+              <input 
+                type="text" 
+                id="page-otp-name" 
+                class="form-control" 
+                placeholder="e.g. Nagarjun Myakala" 
+                required 
+                style="font-size: 0.95rem; padding: 0.7rem 0.85rem;"
+              />
             </div>
 
-            <button type="button" id="btn-page-send-otp" class="btn btn-gold btn-lg" onclick="sendPageOtp()" style="width: 100%; margin-top: 0.75rem;">
+            <div class="form-group" style="margin: 0;">
+              <label class="form-label" for="page-otp-target" style="font-size: 0.86rem; font-weight: 700; color: var(--color-text);">
+                Enter Email Address OR Mobile Number *
+              </label>
+              <input 
+                type="text" 
+                id="page-otp-target" 
+                class="form-control" 
+                placeholder="e.g. yourname@gmail.com or 9876543210" 
+                required 
+                style="font-size: 0.95rem; padding: 0.7rem 0.85rem;"
+                onkeydown="if(event.key==='Enter'){event.preventDefault();sendPageOtp();}"
+              />
+              <div style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 4px;">
+                Enter your email address or 10-digit mobile number to receive a 4-digit login code.
+              </div>
+            </div>
+
+            <button type="button" id="btn-page-send-otp" class="btn btn-gold btn-lg" onclick="sendPageOtp()" style="width: 100%; margin-top: 0.25rem;">
               <span>Send Verification Code ✉️</span>
             </button>
 
@@ -259,14 +276,24 @@
     const OTP_SENDER_EMAIL = 'myakalanagarjun09@gmail.com';
     let currentGeneratedOtp = null;
     let currentOtpTarget = '';
+    let currentCustomerName = '';
     let isOtpSending = false;
 
     // Step 1: Send OTP to Customer Email or Mobile
     async function sendPageOtp(isResend = false) {
       if (isOtpSending) return;
 
+      const nameInput = document.getElementById('page-otp-name');
       const targetInput = document.getElementById('page-otp-target');
+      
+      const enteredName = currentCustomerName || (nameInput ? nameInput.value.trim() : '');
       const targetVal = currentOtpTarget || (targetInput ? targetInput.value.trim() : '');
+
+      if (!enteredName) {
+        showToast('⚠️ Please enter your full name');
+        if (nameInput) nameInput.focus();
+        return;
+      }
 
       if (!targetVal) {
         showToast('⚠️ Please enter your email address or mobile number');
@@ -274,7 +301,9 @@
         return;
       }
 
+      currentCustomerName = enteredName;
       currentOtpTarget = targetVal;
+      
       // Generate a fresh 4-digit OTP
       const newOtp = Math.floor(1000 + Math.random() * 9000).toString();
       currentGeneratedOtp = newOtp;
@@ -303,7 +332,7 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               email: targetVal,
-              name: targetVal.split('@')[0].replace(/[._]/g, ' '),
+              name: currentCustomerName,
               otp: newOtp
             })
           });
@@ -353,7 +382,7 @@
 
       if (sendWrap) sendWrap.style.display = 'none';
       if (verifyWrap) verifyWrap.style.display = 'flex';
-      if (targetDisplay) targetDisplay.textContent = targetVal;
+      if (targetDisplay) targetDisplay.textContent = `${currentCustomerName} (${targetVal})`;
       updateOtpHelper(code);
 
       if (codeInput) {
@@ -368,7 +397,7 @@
     function resetOtpStep() {
       const sendWrap = document.getElementById('page-otp-send-wrap');
       const verifyWrap = document.getElementById('page-otp-verify-wrap');
-      if (sendWrap) sendWrap.style.display = 'block';
+      if (sendWrap) sendWrap.style.display = 'flex';
       if (verifyWrap) verifyWrap.style.display = 'none';
       document.getElementById('page-otp-target')?.focus();
     }
@@ -400,11 +429,11 @@
 
       const target = currentOtpTarget;
       const isEmail = target.includes('@');
-      const rawName = isEmail ? target.split('@')[0].replace(/[._]/g, ' ') : `Patron ${target.slice(-4)}`;
-      const guestName = rawName.charAt(0).toUpperCase() + rawName.slice(1);
+      const fallbackName = isEmail ? target.split('@')[0].replace(/[._]/g, ' ') : `Patron ${target.slice(-4)}`;
+      const finalName = currentCustomerName || (fallbackName.charAt(0).toUpperCase() + fallbackName.slice(1));
 
       const user = {
-        name: guestName || 'Valued Patron',
+        name: finalName,
         phone: isEmail ? '9010888842' : target.replace(/\D/g, '').slice(-10),
         email: isEmail ? target : `${target.replace(/\D/g, '').slice(-10)}@subbayyagari.in`,
         address: 'Road No. 4, KPHB Colony, Kukatpally, Hyderabad',

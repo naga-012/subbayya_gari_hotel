@@ -4004,9 +4004,20 @@ async function checkUserRegistration(target) {
   return found || null;
 }
 
+let activeCustomerName = '';
+
 async function sendLoginOtp() {
+  const nameInput = document.getElementById('auth-otp-name');
   const targetInput = document.getElementById('auth-otp-target') || document.getElementById('auth-otp-phone');
-  const targetVal = targetInput ? targetInput.value.trim() : '';
+  
+  const enteredName = activeCustomerName || (nameInput ? nameInput.value.trim() : '');
+  const targetVal = activeOtpTarget || (targetInput ? targetInput.value.trim() : '');
+
+  if (!enteredName) {
+    showToast('⚠️ Please enter your full name');
+    if (nameInput) nameInput.focus();
+    return;
+  }
 
   if (!targetVal) {
     showToast('⚠️ Please enter your email address or mobile number');
@@ -4014,6 +4025,7 @@ async function sendLoginOtp() {
     return;
   }
 
+  activeCustomerName = enteredName;
   activeOtpTarget = targetVal;
   const newOtp = Math.floor(1000 + Math.random() * 9000).toString();
   activeGeneratedOtp = newOtp;
@@ -4027,7 +4039,7 @@ async function sendLoginOtp() {
 
   if (sendStep) sendStep.style.display = 'none';
   if (verifyStep) verifyStep.style.display = 'flex';
-  if (displaySpan) displaySpan.textContent = targetVal;
+  if (displaySpan) displaySpan.textContent = `${activeCustomerName} (${targetVal})`;
   if (chipCode) chipCode.textContent = newOtp;
 
   if (codeInput) {
@@ -4046,7 +4058,7 @@ async function sendLoginOtp() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: targetVal,
-          name: targetVal.split('@')[0].replace(/[._]/g, ' '),
+          name: activeCustomerName,
           otp: newOtp
         })
       });
@@ -4084,7 +4096,7 @@ function resetModalOtpStep() {
   const verifyStep = document.getElementById('auth-otp-verify-step');
   if (sendStep) sendStep.style.display = 'flex';
   if (verifyStep) verifyStep.style.display = 'none';
-  document.getElementById('auth-otp-target')?.focus();
+  document.getElementById('auth-otp-name')?.focus();
 }
 window.resetModalOtpStep = resetModalOtpStep;
 
@@ -4127,11 +4139,11 @@ function handleOtpSubmit(event) {
 
   const target = activeOtpTarget || 'Guest Patron';
   const isEmail = target.includes('@');
-  const rawName = isEmail ? target.split('@')[0].replace(/[._]/g, ' ') : `Patron ${target.slice(-4)}`;
-  const guestName = rawName.charAt(0).toUpperCase() + rawName.slice(1);
+  const fallbackName = isEmail ? target.split('@')[0].replace(/[._]/g, ' ') : `Patron ${target.slice(-4)}`;
+  const finalName = activeCustomerName || (fallbackName.charAt(0).toUpperCase() + fallbackName.slice(1));
 
   const user = {
-    name: guestName || 'Valued Patron',
+    name: finalName,
     phone: isEmail ? '9010888842' : target.replace(/\D/g, '').slice(-10),
     email: isEmail ? target : `${target.replace(/\D/g, '').slice(-10)}@subbayyagari.in`,
     address: 'Road No. 4, KPHB Colony, Kukatpally, Hyderabad',
