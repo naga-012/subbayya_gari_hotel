@@ -2156,17 +2156,31 @@ function filterRateBoard(category) {
 // 7. CART SYSTEM & DRAWER LOGIC
 // ==========================================================================
 function addToCart(itemId) {
-  const item = MENU_DATA.find(m => m.id === itemId);
+  // Common alias mappings
+  const idAliases = {
+    'bb-01': 'meal-butta',
+    'butta': 'meal-butta',
+    'butta-bojanam': 'meal-butta',
+    'butta-bhojanam': 'meal-butta'
+  };
+  const targetId = idAliases[itemId] || itemId;
+  let item = MENU_DATA.find(m => m.id === targetId || m.id === itemId);
+  if (!item && typeof activeMenu !== 'undefined' && Array.isArray(activeMenu)) {
+    item = activeMenu.find(m => m.id === targetId || m.id === itemId);
+  }
+  if (!item) {
+    item = MENU_DATA.find(m => m.id.includes(itemId) || (typeof itemId === 'string' && itemId.includes(m.id))) || MENU_DATA[0];
+  }
   if (!item) return;
 
-  const existing = AppState.cart.find(c => c.id === itemId);
+  const existing = AppState.cart.find(c => c.id === item.id);
   if (existing) {
     existing.qty += 1;
   } else {
     AppState.cart.push({
       id: item.id,
       name: item.name,
-      telugu: item.telugu,
+      telugu: item.telugu || '',
       price: item.price,
       image: item.image,
       qty: 1
@@ -2175,6 +2189,9 @@ function addToCart(itemId) {
 
   saveCart();
   renderMenuGrid();
+  renderCartDrawer();
+  updateCartBadge();
+  toggleCart(true);
   showToast(`Added "${item.name}" to your plate! 🌿`);
 }
 
