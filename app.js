@@ -2013,6 +2013,7 @@ function renderMenuGrid() {
           </div>
 
           <h3 class="food-card-title">${item.name}</h3>
+          <span class="food-portion-badge">${item.category === 'meals' ? '1 Royal Meal' : (item.category === 'sweets' ? '4 Pcs Pack' : (item.category === 'pickles' ? '250g Jar' : '1 Handi'))}</span>
           <p class="food-card-desc">${item.description}</p>
 
           <div class="food-card-footer">
