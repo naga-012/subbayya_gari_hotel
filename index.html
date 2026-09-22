@@ -2693,92 +2693,227 @@
   </div>
 
   <!-- ==========================================================================
-       MODAL: DEDICATED ONLINE UPI PAYMENT GATEWAY / PAYMENT PAGE
+       MODAL: SWIGGY-STYLE PAYMENT OPTIONS PAGE
        ========================================================================== -->
   <div class="modal-overlay" id="online-payment-modal">
-    <div class="modal-card payment-gateway-card" style="max-width: 480px; padding: 1.5rem; max-height: 92vh; overflow-y: auto;">
-      <button class="modal-close-btn" onclick="closeOnlinePaymentModal()">✕</button>
-
-      <div style="text-align: center; margin-bottom: 1rem;">
-        <div style="display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(22, 163, 74, 0.1); color: #16A34A; font-weight: 800; font-size: 0.75rem; padding: 0.3rem 0.75rem; border-radius: var(--radius-full); margin-bottom: 0.4rem;">
-          <span>🛡️ 100% Secure UPI Payment</span>
-        </div>
-        <h3 style="font-family: var(--font-serif); font-size: 1.45rem; color: var(--color-primary); margin: 0;">Complete Your Payment</h3>
-        <p style="font-size: 0.8rem; color: var(--color-text-muted); margin: 3px 0 0;">Pay via UPI App or Scan QR code to place your order directly</p>
-      </div>
-
-      <!-- Order Summary Card -->
-      <div class="payment-order-summary-box" style="background: var(--color-surface-muted); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 0.85rem; margin-bottom: 1rem;">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
-          <span style="font-size: 0.8rem; color: var(--color-text-muted);">Customer:</span>
-          <span style="font-weight: 700; font-size: 0.85rem; color: var(--color-text);" id="pay-summary-name">Guest</span>
-        </div>
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
-          <span style="font-size: 0.8rem; color: var(--color-text-muted);">Order Mode:</span>
-          <span style="font-weight: 700; font-size: 0.85rem; color: var(--color-gold);" id="pay-summary-type">🥡 Store Pickup</span>
-        </div>
-        <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px dashed var(--color-border); padding-top: 0.5rem; margin-top: 0.35rem;">
-          <span style="font-weight: 800; font-size: 0.95rem; color: var(--color-text);">Total Payable:</span>
-          <span style="font-weight: 900; font-size: 1.4rem; color: var(--color-primary); font-family: var(--font-brand);" id="pay-summary-amount">₹0</span>
-        </div>
-      </div>
-
-      <!-- UPI ID Display Card -->
-      <div class="upi-id-highlight-box">
-        <div class="upi-id-label-row">
-          <span class="upi-tag">OFFICIAL UPI ID</span>
-          <span class="upi-verified-badge">🛡️ Verified Merchant</span>
-        </div>
-        <div class="upi-id-row">
-          <span class="upi-id-text" id="merchant-upi-id">9121792433@ybl</span>
-          <button type="button" class="btn-copy-upi" onclick="copyUpiId('9121792433@ybl')" id="btn-copy-upi" title="Copy UPI ID">
-            <span id="copy-upi-btn-text">📋 Copy</span>
+    <div class="modal-card swiggy-payment-modal" style="max-width: 480px; padding: 0; max-height: 94vh; display: flex; flex-direction: column; overflow: hidden; background: #f8f9fa;">
+      
+      <!-- Top Navigation Header -->
+      <div class="swiggy-pay-header">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <button type="button" class="swiggy-back-btn" onclick="closeOnlinePaymentModal(); toggleCart(true);" title="Back to Cart">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
           </button>
-        </div>
-      </div>
-
-      <!-- Direct Pay via UPI App for Mobile -->
-      <a id="direct-upi-pay-btn" href="#" class="btn btn-gold btn-upi-app-pay" style="width: 100%; margin-top: 0.75rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; text-decoration: none; font-weight: 800; font-size: 0.95rem; padding: 0.8rem;">
-        <span>📱 Pay ₹<span id="upi-pay-amount">0</span> via UPI App</span>
-      </a>
-
-      <!-- QR Code Section -->
-      <div class="upi-qr-wrapper" style="margin-top: 0.85rem;">
-        <div class="upi-qr-card" style="width: 100%; max-width: 220px; padding: 0.75rem; margin: 0 auto;">
-          <img id="upi-qr-image" src="" alt="UPI Payment QR Code" class="upi-qr-img" style="width: 160px; height: 160px; margin: 0 auto; display: block;" />
-          <div class="upi-qr-caption" style="margin-top: 0.45rem; font-size: 0.72rem;">
-            <span>Scan with GPay, PhonePe, Paytm or BHIM</span>
+          <div>
+            <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800; color: var(--color-text); font-family: var(--font-sans);">Payment Options</h3>
+            <div style="font-size: 0.74rem; color: var(--color-text-muted); margin-top: 1px;">
+              <span id="pay-header-items-count">1 item</span> • Total: <strong style="color: var(--color-text);" id="pay-header-total">₹0</strong> • <span style="color: #16A34A; font-weight: 700;">Savings of <span id="pay-header-savings">₹0</span></span>
+            </div>
           </div>
         </div>
+        <button class="modal-close-btn" style="position: static; font-size: 1.1rem; padding: 4px 8px;" onclick="closeOnlinePaymentModal()">✕</button>
       </div>
 
-      <div class="upi-apps-icons-row" style="margin-top: 0.5rem;">
-        <span class="upi-app-badge">GPay</span>
-        <span class="upi-app-badge">PhonePe</span>
-        <span class="upi-app-badge">Paytm</span>
-        <span class="upi-app-badge">BHIM</span>
-        <span class="upi-app-badge">Amazon Pay</span>
+      <!-- Route / Destination Ribbon -->
+      <div class="swiggy-route-bar">
+        <div class="swiggy-route-icon">📍</div>
+        <div class="swiggy-route-text" id="pay-header-route">
+          Serving from KPHB Colony • Estimated Ready: 15-20 mins
+        </div>
       </div>
 
-      <!-- Transaction Reference Input & Confirm Button -->
-      <div style="margin-top: 1rem; background: rgba(15, 90, 39, 0.04); padding: 0.85rem; border-radius: var(--radius-md); border: 1px solid var(--color-border);">
-        <div class="cart-form-group" style="margin-bottom: 0.75rem;">
-          <label class="cart-input-label" for="upi-utr-input" style="font-size: 0.75rem;">
-            UPI Ref / UTR No. <span style="font-weight: normal; color: var(--color-text-muted);">(Optional if paid)</span>
-          </label>
-          <input type="text" id="upi-utr-input" class="form-control" placeholder="e.g. 423456789012" style="font-size: 0.82rem;" />
+      <!-- Scrollable Payment Content -->
+      <div class="swiggy-pay-body" style="flex: 1; overflow-y: auto; padding: 1rem;">
+        
+        <!-- Save More Banner -->
+        <div class="swiggy-offer-banner">
+          <span style="font-size: 1.1rem;">🏷️</span>
+          <div style="flex: 1; font-size: 0.78rem; font-weight: 700; color: #047857;">
+            100% Authentic Pure Ghee Godavari Bhojanam • Zero Extra Fees
+          </div>
         </div>
 
-        <button type="button" class="btn btn-primary btn-lg" id="btn-complete-payment-order" onclick="finalizePaymentAndPlaceOrder()" style="width: 100%; font-size: 0.95rem; font-weight: 800; padding: 0.85rem; box-shadow: 0 4px 14px rgba(15, 90, 39, 0.35);">
-          <span>✅ I Have Paid — Place Order 🚀</span>
+        <!-- 3X Faster UPI Promotional Card -->
+        <div class="swiggy-fast-upi-card">
+          <div style="flex: 1;">
+            <div class="fast-upi-title">UPI payments, now 3X Faster</div>
+            <div class="fast-upi-sub">Direct one-tap checkout to your favorite UPI app</div>
+            <div class="fast-upi-badge">Official Merchant: 9121792433@ybl</div>
+          </div>
+          <div class="swiggy-upi-logo-box">
+            <span style="font-size: 1.6rem;">⚡</span>
+          </div>
+        </div>
+
+        <!-- Section: Preferred UPI Apps -->
+        <div class="swiggy-pay-section-title">Pay by any UPI App</div>
+
+        <div class="swiggy-upi-apps-list">
+          
+          <!-- PhonePe Option -->
+          <div class="swiggy-app-item active" id="swiggy-app-phonepe" onclick="selectPaymentApp('phonepe')">
+            <div class="swiggy-app-main-row">
+              <div class="swiggy-app-icon-wrap" style="background: #5f259f;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="#ffffff"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14.5h-2V13h2v3.5zm2.07-6.25c-.24.78-.73 1.41-1.42 1.83l1.52 3.92h-2.1l-1.12-3H11v3H9V7h4.25c1.23 0 2.19.33 2.73.95.53.62.65 1.4.09 2.3zm-3.07-.25h1.8c.45 0 .8-.1.97-.3.17-.2.2-.47.07-.82-.12-.35-.35-.53-.78-.53H12v1.65z"/></svg>
+              </div>
+              <div class="swiggy-app-info">
+                <div class="swiggy-app-name">PhonePe UPI</div>
+                <div class="swiggy-app-sub">Tap to open PhonePe app directly</div>
+              </div>
+              <div class="swiggy-radio-circle" id="radio-phonepe">
+                <div class="swiggy-radio-dot"></div>
+              </div>
+            </div>
+            <div class="swiggy-app-action-box" id="action-phonepe">
+              <a href="#" class="swiggy-pay-now-btn" id="btn-pay-phonepe" onclick="launchUpiApp('phonepe', event)">
+                <span>Pay ₹<span class="pay-app-amount-val">0</span> via PhonePe</span>
+                <span>➔</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Google Pay Option -->
+          <div class="swiggy-app-item" id="swiggy-app-gpay" onclick="selectPaymentApp('gpay')">
+            <div class="swiggy-app-main-row">
+              <div class="swiggy-app-icon-wrap" style="background: #ffffff; border: 1px solid #e2e8f0;">
+                <svg width="22" height="22" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/></svg>
+              </div>
+              <div class="swiggy-app-info">
+                <div class="swiggy-app-name">Google Pay (GPay)</div>
+                <div class="swiggy-app-sub">Tap to launch Google Pay</div>
+              </div>
+              <div class="swiggy-radio-circle" id="radio-gpay">
+                <div class="swiggy-radio-dot"></div>
+              </div>
+            </div>
+            <div class="swiggy-app-action-box" id="action-gpay" style="display: none;">
+              <a href="#" class="swiggy-pay-now-btn" id="btn-pay-gpay" onclick="launchUpiApp('gpay', event)">
+                <span>Pay ₹<span class="pay-app-amount-val">0</span> via Google Pay</span>
+                <span>➔</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Paytm UPI Option -->
+          <div class="swiggy-app-item" id="swiggy-app-paytm" onclick="selectPaymentApp('paytm')">
+            <div class="swiggy-app-main-row">
+              <div class="swiggy-app-icon-wrap" style="background: #002970;">
+                <span style="color: #00baf2; font-weight: 900; font-size: 0.68rem; letter-spacing: -0.5px;">Paytm</span>
+              </div>
+              <div class="swiggy-app-info">
+                <div class="swiggy-app-name">Paytm UPI</div>
+                <div class="swiggy-app-sub">Pay directly with Paytm App</div>
+              </div>
+              <div class="swiggy-radio-circle" id="radio-paytm">
+                <div class="swiggy-radio-dot"></div>
+              </div>
+            </div>
+            <div class="swiggy-app-action-box" id="action-paytm" style="display: none;">
+              <a href="#" class="swiggy-pay-now-btn" id="btn-pay-paytm" onclick="launchUpiApp('paytm', event)">
+                <span>Pay ₹<span class="pay-app-amount-val">0</span> via Paytm</span>
+                <span>➔</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- BHIM UPI Option -->
+          <div class="swiggy-app-item" id="swiggy-app-bhim" onclick="selectPaymentApp('bhim')">
+            <div class="swiggy-app-main-row">
+              <div class="swiggy-app-icon-wrap" style="background: #008233;">
+                <span style="color: #ffffff; font-weight: 900; font-size: 0.65rem;">BHIM</span>
+              </div>
+              <div class="swiggy-app-info">
+                <div class="swiggy-app-name">BHIM UPI</div>
+                <div class="swiggy-app-sub">Pay via BHIM or Govt UPI App</div>
+              </div>
+              <div class="swiggy-radio-circle" id="radio-bhim">
+                <div class="swiggy-radio-dot"></div>
+              </div>
+            </div>
+            <div class="swiggy-app-action-box" id="action-bhim" style="display: none;">
+              <a href="#" class="swiggy-pay-now-btn" id="btn-pay-bhim" onclick="launchUpiApp('bhim', event)">
+                <span>Pay ₹<span class="pay-app-amount-val">0</span> via BHIM</span>
+                <span>➔</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Any Other UPI / CRED -->
+          <div class="swiggy-app-item" id="swiggy-app-other" onclick="selectPaymentApp('other')">
+            <div class="swiggy-app-main-row">
+              <div class="swiggy-app-icon-wrap" style="background: #000000;">
+                <span style="color: #ffffff; font-weight: 900; font-size: 0.65rem;">UPI</span>
+              </div>
+              <div class="swiggy-app-info">
+                <div class="swiggy-app-name">CRED / Any Other UPI App</div>
+                <div class="swiggy-app-sub">Amazon Pay, CRED, Jupiter, Navi, Slice</div>
+              </div>
+              <div class="swiggy-radio-circle" id="radio-other">
+                <div class="swiggy-radio-dot"></div>
+              </div>
+            </div>
+            <div class="swiggy-app-action-box" id="action-other" style="display: none;">
+              <a href="#" class="swiggy-pay-now-btn" id="btn-pay-other" onclick="launchUpiApp('other', event)">
+                <span>Pay ₹<span class="pay-app-amount-val">0</span> via Any UPI App</span>
+                <span>➔</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Section: Scan QR Code & UPI ID Card -->
+        <div class="swiggy-qr-card-container">
+          <div class="swiggy-qr-card-header" onclick="toggleQrSection()">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span style="font-size: 1.1rem;">📷</span>
+              <span style="font-weight: 700; font-size: 0.85rem; color: var(--color-text);">Scan QR Code / Copy UPI ID</span>
+            </div>
+            <span id="qr-expand-icon" style="font-size: 0.8rem; color: var(--color-text-muted);">▼</span>
+          </div>
+
+          <div id="swiggy-qr-body" class="swiggy-qr-body-content">
+            <!-- UPI ID copy line -->
+            <div class="upi-id-highlight-box" style="margin-bottom: 0.75rem;">
+              <div class="upi-id-label-row">
+                <span class="upi-tag">SUBBAYYA GARI UPI ID</span>
+                <span class="upi-verified-badge">🛡️ Verified</span>
+              </div>
+              <div class="upi-id-row">
+                <span class="upi-id-text">9121792433@ybl</span>
+                <button type="button" class="btn-copy-upi" onclick="copyUpiId('9121792433@ybl')" id="btn-copy-upi">
+                  <span id="copy-upi-btn-text">📋 Copy</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Dynamic QR Image -->
+            <div style="text-align: center; background: #ffffff; padding: 0.75rem; border-radius: var(--radius-sm); border: 1px solid #e2e8f0;">
+              <img id="upi-qr-image" src="" alt="UPI QR Code" style="width: 150px; height: 150px; display: block; margin: 0 auto;" />
+              <div style="font-size: 0.72rem; color: #4b5563; font-weight: 700; margin-top: 0.35rem;">
+                Scan with any mobile camera / UPI app to pay ₹<span class="pay-app-amount-val">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Optional UTR Input Box -->
+        <div style="margin-top: 0.85rem; background: #ffffff; border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: 0.75rem 0.85rem;">
+          <label class="cart-input-label" for="upi-utr-input" style="font-size: 0.75rem; margin-bottom: 0.25rem;">
+            UPI Ref / UTR No. <span style="font-weight: normal; color: var(--color-text-muted);">(Optional if already paid)</span>
+          </label>
+          <input type="text" id="upi-utr-input" class="form-control" placeholder="e.g. 423456789012" style="font-size: 0.82rem; padding: 0.4rem 0.65rem;" />
+        </div>
+
+      </div>
+
+      <!-- Bottom Sticky Finalize Order Bar -->
+      <div class="swiggy-pay-footer">
+        <button type="button" class="btn btn-primary btn-lg" id="btn-complete-payment-order" onclick="finalizePaymentAndPlaceOrder()" style="width: 100%; font-size: 1rem; font-weight: 800; padding: 0.9rem; box-shadow: 0 4px 14px rgba(15, 90, 39, 0.35); display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+          <span>✅ I Have Completed Payment — Place Order 🚀</span>
         </button>
       </div>
 
-      <div style="text-align: center; margin-top: 0.75rem;">
-        <button type="button" onclick="closeOnlinePaymentModal(); toggleCart(true);" style="background: none; border: none; color: var(--color-text-muted); font-size: 0.8rem; cursor: pointer; text-decoration: underline;">
-          ← Back to Cart & Edit Details
-        </button>
-      </div>
     </div>
   </div>
 

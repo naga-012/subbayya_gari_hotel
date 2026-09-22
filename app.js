@@ -2946,6 +2946,132 @@ function proceedToCheckout() {
 window.proceedToCheckout = proceedToCheckout;
 window.proceedToPaymentPage = proceedToCheckout;
 
+let selectedPaymentAppKey = 'phonepe';
+
+function selectPaymentApp(appKey) {
+  selectedPaymentAppKey = appKey;
+  const appKeys = ['phonepe', 'gpay', 'paytm', 'bhim', 'other'];
+  
+  appKeys.forEach(k => {
+    const itemEl = document.getElementById(`swiggy-app-${k}`);
+    const actionEl = document.getElementById(`action-${k}`);
+    const radioEl = document.getElementById(`radio-${k}`);
+    
+    if (k === appKey) {
+      if (itemEl) itemEl.classList.add('active');
+      if (actionEl) actionEl.style.display = 'block';
+      if (radioEl) radioEl.classList.add('active');
+    } else {
+      if (itemEl) itemEl.classList.remove('active');
+      if (actionEl) actionEl.style.display = 'none';
+      if (radioEl) radioEl.classList.remove('active');
+    }
+  });
+}
+window.selectPaymentApp = selectPaymentApp;
+
+function getUpiDeepLink(appKey, amount) {
+  const upiId = '9121792433@ybl';
+  const name = 'Subbayya%20Gari%20Hotel';
+  const note = 'Subbayya%20Food%20Order';
+  const generic = `upi://pay?pa=${upiId}&pn=${name}&am=${amount}&cu=INR&tn=${note}`;
+  
+  switch (appKey) {
+    case 'phonepe':
+      return `phonepe://pay?pa=${upiId}&pn=${name}&am=${amount}&cu=INR&tn=${note}`;
+    case 'gpay':
+      return `gpay://upi/pay?pa=${upiId}&pn=${name}&am=${amount}&cu=INR&tn=${note}`;
+    case 'paytm':
+      return `paytmmp://pay?pa=${upiId}&pn=${name}&am=${amount}&cu=INR&tn=${note}`;
+    case 'bhim':
+      return `bhim://pay?pa=${upiId}&pn=${name}&am=${amount}&cu=INR&tn=${note}`;
+    case 'other':
+    default:
+      return generic;
+  }
+}
+
+function launchUpiApp(appKey, event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  
+  if (!pendingCheckoutData) {
+    showToast('⚠️ No active order found.');
+    return;
+  }
+  
+  const amount = pendingCheckoutData.grandTotal;
+  const specificUrl = getUpiDeepLink(appKey, amount);
+  
+  const appNames = {
+    phonepe: 'PhonePe',
+    gpay: 'Google Pay',
+    paytm: 'Paytm',
+    bhim: 'BHIM UPI',
+    other: 'UPI App'
+  };
+
+  showToast(`⚡ Launching ${appNames[appKey] || 'UPI'} for ₹${amount}...`);
+
+  // Direct app trigger
+  window.location.href = specificUrl;
+
+  setTimeout(() => {
+    // If user is on desktop or app protocol isn't registered, reveal QR code
+    const qrBody = document.getElementById('swiggy-qr-body');
+    if (qrBody && qrBody.style.display !== 'block') {
+      qrBody.style.display = 'block';
+    }
+  }, 1200);
+}
+window.launchUpiApp = launchUpiApp;
+
+function toggleQrSection() {
+  const qrBody = document.getElementById('swiggy-qr-body');
+  const icon = document.getElementById('qr-expand-icon');
+  if (!qrBody) return;
+
+  const isCurrentlyOpen = qrBody.style.display === 'block';
+  if (isCurrentlyOpen) {
+    qrBody.style.display = 'none';
+    if (icon) icon.textContent = '▼';
+  } else {
+    qrBody.style.display = 'block';
+    if (icon) icon.textContent = '▲';
+  }
+}
+window.toggleQrSection = toggleQrSection;
+
+function copyUpiId(id = '9121792433@ybl') {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(id).then(() => {
+      showToast('📋 UPI ID (9121792433@ybl) copied to clipboard!');
+      const btn = document.getElementById('copy-upi-btn-text');
+      if (btn) {
+        btn.textContent = '✅ Copied!';
+        setTimeout(() => { btn.textContent = '📋 Copy'; }, 2500);
+      }
+    }).catch(() => {
+      fallbackCopyText(id);
+    });
+  } else {
+    fallbackCopyText(id);
+  }
+}
+window.copyUpiId = copyUpiId;
+
+function fallbackCopyText(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  document.body.appendChild(ta);
+  ta.select();
+  document.execCommand('copy');
+  document.body.removeChild(ta);
+  showToast('📋 UPI ID (9121792433@ybl) copied!');
+}
+
 function openOnlinePaymentModal() {
   if (!pendingCheckoutData) {
     showToast('⚠️ Please fill your order details in cart');
@@ -2957,29 +3083,59 @@ function openOnlinePaymentModal() {
   if (!modal) return;
 
   const data = pendingCheckoutData;
-  const nameEl = document.getElementById('pay-summary-name');
-  const typeEl = document.getElementById('pay-summary-type');
-  const amountEl = document.getElementById('pay-summary-amount');
-  const upiPayAmount = document.getElementById('upi-pay-amount');
-  const directUpiBtn = document.getElementById('direct-upi-pay-btn');
-  const qrImg = document.getElementById('upi-qr-image');
+  const totalItemCount = (AppState.cart || []).reduce((s, i) => s + (i.qty || 1), 0);
+  const totalDishesLabel = `${totalItemCount} ${totalItemCount === 1 ? 'item' : 'items'}`;
+  
+  // Header summaries
+  const headerCountEl = document.getElementById('pay-header-items-count');
+  const headerTotalEl = document.getElementById('pay-header-total');
+  const headerSavingsEl = document.getElementById('pay-header-savings');
+  const headerRouteEl = document.getElementById('pay-header-route');
 
-  if (nameEl) nameEl.textContent = `${data.customerName} (${data.customerPhone})`;
-  if (typeEl) {
-    typeEl.textContent = data.isDelivery ? `🛵 Home Delivery (${data.exactKm} km)` : `🥡 Pickup from ${data.activeBranchObj.name.split(',')[0]}`;
+  if (headerCountEl) headerCountEl.textContent = totalDishesLabel;
+  if (headerTotalEl) headerTotalEl.textContent = `₹${data.grandTotal}`;
+  const savingsAmt = data.discount > 0 ? data.discount : 40;
+  if (headerSavingsEl) headerSavingsEl.textContent = `₹${savingsAmt}`;
+
+  const branchName = data.activeBranchObj ? data.activeBranchObj.name.split(',')[0] : 'KPHB Colony';
+  if (headerRouteEl) {
+    if (data.isDelivery) {
+      headerRouteEl.textContent = `Delivering to ${data.deliveryAddress || 'Your Address'} from ${branchName} • 25-35 mins`;
+    } else {
+      headerRouteEl.textContent = `Self-Pickup from ${branchName} • Ready in 15-20 mins`;
+    }
   }
-  if (amountEl) amountEl.textContent = `₹${data.grandTotal}`;
-  if (upiPayAmount) upiPayAmount.textContent = data.grandTotal;
+
+  // Update all amount labels on app pay buttons
+  const amountEls = document.querySelectorAll('.pay-app-amount-val');
+  amountEls.forEach(el => {
+    el.textContent = data.grandTotal;
+  });
 
   const upiId = '9121792433@ybl';
   const upiUrl = `upi://pay?pa=${upiId}&pn=Subbayya%20Gari%20Hotel&am=${data.grandTotal}&cu=INR&tn=Subbayya%20Order`;
-  
-  if (directUpiBtn) {
-    directUpiBtn.href = upiUrl;
-  }
+
+  // Deep links for each app
+  const btnPhonePe = document.getElementById('btn-pay-phonepe');
+  const btnGpay = document.getElementById('btn-pay-gpay');
+  const btnPaytm = document.getElementById('btn-pay-paytm');
+  const btnBhim = document.getElementById('btn-pay-bhim');
+  const btnOther = document.getElementById('btn-pay-other');
+
+  if (btnPhonePe) btnPhonePe.href = `phonepe://pay?pa=${upiId}&pn=Subbayya%20Gari%20Hotel&am=${data.grandTotal}&cu=INR&tn=Subbayya%20Order`;
+  if (btnGpay) btnGpay.href = `gpay://upi/pay?pa=${upiId}&pn=Subbayya%20Gari%20Hotel&am=${data.grandTotal}&cu=INR&tn=Subbayya%20Order`;
+  if (btnPaytm) btnPaytm.href = `paytmmp://pay?pa=${upiId}&pn=Subbayya%20Gari%20Hotel&am=${data.grandTotal}&cu=INR&tn=Subbayya%20Order`;
+  if (btnBhim) btnBhim.href = `bhim://pay?pa=${upiId}&pn=Subbayya%20Gari%20Hotel&am=${data.grandTotal}&cu=INR&tn=Subbayya%20Order`;
+  if (btnOther) btnOther.href = upiUrl;
+
+  // Set dynamic QR code image
+  const qrImg = document.getElementById('upi-qr-image');
   if (qrImg) {
-    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(upiUrl)}`;
+    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(upiUrl)}`;
   }
+
+  // Select PhonePe by default
+  selectPaymentApp('phonepe');
 
   modal.classList.add('active');
   modal.style.display = 'flex';
