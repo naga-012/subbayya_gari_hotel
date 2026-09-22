@@ -2950,7 +2950,7 @@ let selectedPaymentAppKey = 'phonepe';
 
 function selectPaymentApp(appKey) {
   selectedPaymentAppKey = appKey;
-  const appKeys = ['phonepe', 'gpay', 'paytm', 'bhim', 'other'];
+  const appKeys = ['phonepe', 'gpay', 'paytm', 'bhim', 'other', 'card'];
   
   appKeys.forEach(k => {
     const itemEl = document.getElementById(`swiggy-app-${k}`);
@@ -2969,6 +2969,83 @@ function selectPaymentApp(appKey) {
   });
 }
 window.selectPaymentApp = selectPaymentApp;
+
+function formatCardNumber(input) {
+  let val = input.value.replace(/\D/g, '');
+  val = val.substring(0, 16);
+  const formatted = val.match(/.{1,4}/g)?.join(' ') || val;
+  input.value = formatted;
+
+  const iconEl = document.getElementById('card-type-icon');
+  if (iconEl) {
+    if (val.startsWith('4')) {
+      iconEl.textContent = '💳 Visa';
+      iconEl.style.color = '#1a1f71';
+    } else if (val.startsWith('5') || val.startsWith('2')) {
+      iconEl.textContent = '💳 MC';
+      iconEl.style.color = '#eb001b';
+    } else if (val.startsWith('6')) {
+      iconEl.textContent = '💳 RuPay';
+      iconEl.style.color = '#097939';
+    } else {
+      iconEl.textContent = '💳';
+      iconEl.style.color = '#1e40af';
+    }
+  }
+}
+window.formatCardNumber = formatCardNumber;
+
+function formatCardExpiry(input) {
+  let val = input.value.replace(/\D/g, '');
+  if (val.length >= 2) {
+    input.value = val.substring(0, 2) + '/' + val.substring(2, 4);
+  } else {
+    input.value = val;
+  }
+}
+window.formatCardExpiry = formatCardExpiry;
+
+function processCardPayment() {
+  if (!pendingCheckoutData) {
+    showToast('⚠️ No pending order found.');
+    return;
+  }
+
+  const cardNum = document.getElementById('card-number-input')?.value.replace(/\s+/g, '') || '';
+  const cardExp = document.getElementById('card-expiry-input')?.value.trim() || '';
+  const cardCvv = document.getElementById('card-cvv-input')?.value.trim() || '';
+  const cardName = document.getElementById('card-holder-input')?.value.trim() || '';
+
+  if (cardNum.length < 15) {
+    showToast('⚠️ Please enter a valid 16-digit card number');
+    document.getElementById('card-number-input')?.focus();
+    return;
+  }
+  if (!/^\d{2}\/\d{2}$/.test(cardExp)) {
+    showToast('⚠️ Please enter card expiry as MM/YY');
+    document.getElementById('card-expiry-input')?.focus();
+    return;
+  }
+  if (cardCvv.length < 3) {
+    showToast('⚠️ Please enter a 3 or 4 digit CVV');
+    document.getElementById('card-cvv-input')?.focus();
+    return;
+  }
+  if (!cardName) {
+    showToast('⚠️ Please enter the cardholder name');
+    document.getElementById('card-holder-input')?.focus();
+    return;
+  }
+
+  const last4 = cardNum.slice(-4);
+  showToast('🔒 Contacting Secure Banking Gateway...');
+
+  setTimeout(() => {
+    showToast('✅ 3D-Secure Authorization Successful!');
+    finalizePaymentAndPlaceOrder(`Card (•••• ${last4})`, `Paid Online (Card •••• ${last4})`);
+  }, 1000);
+}
+window.processCardPayment = processCardPayment;
 
 function getUpiDeepLink(appKey, amount) {
   const upiId = '9121792433@ybl';
@@ -3158,7 +3235,7 @@ function closeOnlinePaymentModal() {
 }
 window.closeOnlinePaymentModal = closeOnlinePaymentModal;
 
-function finalizePaymentAndPlaceOrder() {
+function finalizePaymentAndPlaceOrder(customMethod, customStatus) {
   if (!pendingCheckoutData) {
     showToast('⚠️ No pending order found. Please add dishes to cart.');
     return;
@@ -3166,8 +3243,8 @@ function finalizePaymentAndPlaceOrder() {
 
   const data = pendingCheckoutData;
   const upiUtr = document.getElementById('upi-utr-input')?.value.trim() || '';
-  const paymentMethodLabel = 'Online UPI (9121792433@ybl)';
-  const paymentStatusLabel = upiUtr ? `Paid via UPI (Ref: ${upiUtr})` : 'Paid Online (UPI: 9121792433@ybl)';
+  const paymentMethodLabel = customMethod || 'Online UPI (9121792433@ybl)';
+  const paymentStatusLabel = customStatus || (upiUtr ? `Paid via UPI (Ref: ${upiUtr})` : 'Paid Online (UPI: 9121792433@ybl)');
 
   const newOrderId = 'SGH-' + Math.floor(100000 + Math.random() * 900000);
   const nowIso = new Date().toISOString();
