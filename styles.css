@@ -2098,17 +2098,17 @@ button {
    CART SLIDEOVER DRAWER
    ========================================================================== */
 /* ==========================================================================
-   CART SLIDEOVER DRAWER (MODERN SCROLLABLE ARCHITECTURE)
+   CART CENTERED MODAL POPUP (MODERN SCROLLABLE ARCHITECTURE)
    ========================================================================== */
 .cart-drawer-overlay {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(6px);
   z-index: 1000;
   opacity: 0;
   visibility: hidden;
-  transition: all var(--transition-normal);
+  transition: opacity 0.25s ease, visibility 0.25s ease;
 }
 
 .cart-drawer-overlay.active {
@@ -2118,23 +2118,32 @@ button {
 
 .cart-drawer {
   position: fixed;
-  top: 0;
-  right: 0;
-  width: 100%;
-  max-width: 480px;
-  height: 100%;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  width: calc(100% - 2rem);
+  max-width: 540px;
+  max-height: calc(100vh - 3rem);
+  height: min(860px, calc(100vh - 3rem));
   background: var(--color-surface);
-  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35), 0 0 0 1px var(--color-border);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
   z-index: 1001;
-  transform: translateX(100%);
-  transition: transform var(--transition-smooth);
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, -46%) scale(0.96);
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s ease;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
 
 .cart-drawer.active {
-  transform: translateX(0);
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1);
 }
 
 /* Header */
@@ -4534,7 +4543,11 @@ button {
   }
 
   .cart-drawer {
-    max-width: 100%;
+    width: calc(100% - 1.5rem);
+    max-width: 480px;
+    max-height: calc(100vh - 2rem);
+    height: min(840px, calc(100vh - 2rem));
+    border-radius: var(--radius-lg);
   }
 
   .floating-badge {
