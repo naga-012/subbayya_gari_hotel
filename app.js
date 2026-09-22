@@ -238,7 +238,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['jain-available', 'chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/butta_bhojanam.jpg',
     description: 'The legendary bamboo basket feast packed with 20+ authentic Godavari items: Sona Masoori Rice, Pure Ghee, Kandi Podi, Gongura, Gutti Vankaya, Majjiga Pulusu, Perugu Garelu, Bobbatlu & more.'
   },
   {
@@ -491,7 +491,7 @@ const MENU_DATA = [
     spiceLevel: 'spicy',
     dietary: ['chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/gutti_vankaya.jpg',
     description: 'Rich Godavari Gutti Vankaya stuffed brinjal gravy cooked with roasted peanut and sesame masala.'
   },
   {
@@ -829,7 +829,7 @@ const MENU_DATA = [
     spiceLevel: 'spicy',
     dietary: ['chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/gutti_vankaya.jpg',
     description: 'Small purple brinjals stuffed with roasted peanut, sesame, and dry-coconut masala.'
   },
   {
@@ -1015,7 +1015,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['jain-available', 'chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_karam_podi.jpg',
     description: 'Our world-famous roasted lentils gunpowder made with toor dal, chana dal, cumin, and dry red chillies. The soul of hot rice and ghee!'
   },
   {
@@ -1057,7 +1057,7 @@ const MENU_DATA = [
     spiceLevel: 'spicy',
     dietary: [],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_karam_podi.jpg',
     description: 'Classic rustic Godavari dark roasted spice powder made with whole coriander seeds, cumin, tamarind, garlic, and sun-dried chillies.'
   },
   {
@@ -1071,7 +1071,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['jain-available'],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_karam_podi.jpg',
     description: 'Golden roasted groundnuts blended with dry red chillies, roasted garlic, and cumin. Creamy, nutty, and irresistibly aromatic with ghee.'
   },
   {
@@ -1397,7 +1397,7 @@ const MENU_DATA = [
     spiceLevel: 'mild',
     dietary: ['jain-available', 'chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/kakinada_kaja.jpg',
     description: 'Melt-in-mouth sweet flatbreads filled with cardamom-spiced organic jaggery puran, roasted generously with warm Godavari pure ghee.'
   },
   {
@@ -1425,7 +1425,7 @@ const MENU_DATA = [
     spiceLevel: 'mild',
     dietary: ['jain-available'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/kakinada_kaja.jpg',
     description: 'World-famous Kakinada Gottam Kaja! Crisp cylindrical pastry with delicious, warm caramelized syrup bursting inside every bite.'
   },
   {
