@@ -241,9 +241,9 @@
 
   <!-- Client-side script for login page -->
   <script>
-    const BACKEND_BASE = (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port === '5000')
-  ? window.location.origin
-  : 'https://subbayya-gari-hotel.onrender.com';
+    const BACKEND_BASE = (typeof window !== 'undefined' && window.location.protocol.startsWith('http'))
+      ? window.location.origin
+      : 'https://subbayya-gari-hotel.onrender.com';
 
     const OTP_SENDER_EMAIL = 'myakalanagarjun09@gmail.com';
     let currentGeneratedOtp = null;

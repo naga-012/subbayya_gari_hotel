@@ -9,9 +9,9 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Yatra+One&display=swap" rel="stylesheet" />
-
   <link rel="stylesheet" href="styles.css" />
+  <!-- Real-Time Socket.IO Client -->
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 
   <style>
     :root {
@@ -644,16 +644,80 @@
 
   </main>
 
+  <!-- Edit Order Details Modal -->
+  <div class="owner-modal-overlay" id="edit-order-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 9999; align-items: center; justify-content: center; padding: 1rem;">
+    <div style="background: var(--owner-card); border: 1px solid var(--owner-border); border-radius: 16px; width: 100%; max-width: 540px; padding: 1.75rem; box-shadow: 0 20px 40px rgba(0,0,0,0.5); max-height: 90vh; overflow-y: auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; border-bottom: 1px solid var(--owner-border); padding-bottom: 0.85rem;">
+        <div>
+          <h3 id="modal-order-title" style="margin: 0; color: var(--owner-gold); font-size: 1.25rem; font-family: 'Playfair Display', serif;">✏️ Update Order Details</h3>
+          <span id="modal-order-subtitle" style="font-size: 0.8rem; color: var(--owner-text-muted);">Syncs live to customer website instantly</span>
+        </div>
+        <button onclick="closeEditOrderModal()" style="background: none; border: none; color: var(--owner-text-muted); font-size: 1.5rem; cursor: pointer; line-height: 1;">&times;</button>
+      </div>
+
+      <form id="edit-order-form" onsubmit="event.preventDefault(); saveOrderDetailsFromModal();">
+        <input type="hidden" id="edit-order-id" />
+
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #D1D5DB; margin-bottom: 0.4rem;">Order Status</label>
+          <select id="edit-order-status" style="width: 100%; padding: 0.65rem 0.85rem; background: var(--owner-bg); border: 1px solid var(--owner-border); color: white; border-radius: 8px; font-size: 0.9rem;">
+            <option value="Received">📥 Received / Confirmed</option>
+            <option value="In Kitchen">🍳 In Kitchen (Cooking with Pure Ghee)</option>
+            <option value="Out for Delivery">🛵 Out for Delivery / Food Ready</option>
+            <option value="Delivered">✅ Delivered / Completed</option>
+            <option value="Cancelled">❌ Cancelled</option>
+          </select>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-bottom: 1rem;">
+          <div>
+            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #D1D5DB; margin-bottom: 0.4rem;">Estimated Prep / Delivery Time</label>
+            <input type="text" id="edit-order-time" placeholder="e.g. 15-20 Mins" style="width: 100%; padding: 0.65rem 0.85rem; background: var(--owner-bg); border: 1px solid var(--owner-border); color: white; border-radius: 8px; font-size: 0.9rem;" />
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #D1D5DB; margin-bottom: 0.4rem;">Table Number (Dine-in / Hall)</label>
+            <input type="text" id="edit-order-table" placeholder="e.g. Table #4" style="width: 100%; padding: 0.65rem 0.85rem; background: var(--owner-bg); border: 1px solid var(--owner-border); color: white; border-radius: 8px; font-size: 0.9rem;" />
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-bottom: 1rem;">
+          <div>
+            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #D1D5DB; margin-bottom: 0.4rem;">Delivery Boy / Rider Name</label>
+            <input type="text" id="edit-order-rider-name" placeholder="e.g. Suresh Kumar" style="width: 100%; padding: 0.65rem 0.85rem; background: var(--owner-bg); border: 1px solid var(--owner-border); color: white; border-radius: 8px; font-size: 0.9rem;" />
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #D1D5DB; margin-bottom: 0.4rem;">Rider Phone Number</label>
+            <input type="text" id="edit-order-rider-phone" placeholder="e.g. 9876543210" style="width: 100%; padding: 0.65rem 0.85rem; background: var(--owner-bg); border: 1px solid var(--owner-border); color: white; border-radius: 8px; font-size: 0.9rem;" />
+          </div>
+        </div>
+
+        <div style="margin-bottom: 1.25rem;">
+          <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #D1D5DB; margin-bottom: 0.4rem;">Message / Kitchen Note to Customer</label>
+          <textarea id="edit-order-note" rows="2" placeholder="e.g. Order packed piping hot with extra Gunpowder Podi & Nethi flow!" style="width: 100%; padding: 0.65rem 0.85rem; background: var(--owner-bg); border: 1px solid var(--owner-border); color: white; border-radius: 8px; font-size: 0.88rem; resize: vertical;"></textarea>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; justify-content: flex-end; border-top: 1px solid var(--owner-border); padding-top: 1rem;">
+          <button type="button" onclick="closeEditOrderModal()" style="padding: 0.6rem 1.25rem; background: rgba(255,255,255,0.08); border: 1px solid var(--owner-border); color: white; border-radius: 8px; font-weight: 600; cursor: pointer;">Cancel</button>
+          <button type="submit" id="btn-save-order-modal" style="padding: 0.6rem 1.5rem; background: var(--owner-gold); border: none; color: #1B3527; border-radius: 8px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+            <span>⚡ Push Update to Customer Site</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Toast Notification Container -->
   <div class="toast-container" id="toast-container"></div>
 
   <script>
-    const BACKEND_BASE = (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port === '5000')
-  ? window.location.origin
-  : 'https://subbayya-gari-hotel.onrender.com';
+    const BACKEND_BASE = (typeof window !== 'undefined' && window.location.protocol.startsWith('http'))
+      ? window.location.origin
+      : 'https://subbayya-gari-hotel.onrender.com';
 
     let activeSettings = {};
     let activeMenu = [];
+    let currentOrdersList = [];
+    let ownerSocket = null;
 
     // Tab switcher
     function switchOwnerTab(tabName) {
@@ -679,56 +743,87 @@
       try {
         const res = await fetch(`${BACKEND_BASE}/api/orders`);
         const data = await res.json();
-        const orders = data.orders || [];
+        const orders = data.orders || data.data || [];
+        currentOrdersList = orders;
         if (badge) badge.textContent = orders.length;
 
         if (orders.length === 0) {
           container.innerHTML = `
-            <div style="text-align: center; padding: 3rem; color: var(--owner-text-muted);">
-              🍃 No live orders yet. Orders placed by customers on the website will stream here instantly!
+            <div style="text-align: center; padding: 3.5rem 1.5rem; color: var(--owner-text-muted);">
+              <div style="font-size: 3rem; margin-bottom: 0.5rem;">🍃</div>
+              <h4 style="color: var(--owner-gold); margin: 0 0 0.5rem;">No live orders right now</h4>
+              <p style="font-size: 0.85rem; margin: 0;">Orders placed by customers on the website will stream here in real time!</p>
             </div>
           `;
           return;
         }
 
-        container.innerHTML = orders.map(order => `
-          <div class="order-item-card" id="order-card-${order.id}">
-            <div class="order-top">
-              <div style="display: flex; align-items: center; gap: 0.75rem;">
-                <span class="order-id-badge">#${order.id}</span>
-                <span style="font-weight: 700; color: white;">${order.customerName}</span>
-                <span style="font-size: 0.8rem; color: var(--owner-text-muted);">📱 ${order.customerPhone}</span>
+        container.innerHTML = orders.map(order => {
+          const status = order.status || order.orderStatus || 'Received';
+          let statusColor = '#F59E0B';
+          if (status === 'Delivered' || status === 'Completed') statusColor = '#10B981';
+          if (status === 'Cancelled') statusColor = '#EF4444';
+          if (status === 'In Kitchen' || status === 'Kitchen') statusColor = '#3B82F6';
+          if (status === 'Out for Delivery' || status === 'Delivery') statusColor = '#8B5CF6';
+
+          const formattedTime = order.createdAt 
+            ? new Date(order.createdAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })
+            : 'Just now';
+
+          return `
+          <div class="order-item-card" id="order-card-${order.id}" style="background: var(--owner-card); border: 1px solid var(--owner-border); border-radius: 12px; padding: 1.15rem; margin-bottom: 1rem; transition: all 0.2s ease;">
+            <div class="order-top" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.65rem;">
+              <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+                <span class="order-id-badge" style="background: rgba(245, 158, 11, 0.15); color: var(--owner-gold); font-weight: 800; padding: 3px 8px; border-radius: 6px; font-family: monospace;">#${order.id}</span>
+                <span style="font-weight: 700; color: white; font-size: 1rem;">${order.customerName}</span>
+                <a href="tel:${order.customerPhone}" style="font-size: 0.82rem; color: var(--owner-text-muted); text-decoration: none;">📱 ${order.customerPhone}</a>
+                <span style="font-size: 0.75rem; color: var(--owner-text-muted);">🕒 ${formattedTime}</span>
               </div>
-              <div>
-                <span class="order-status-tag status-${order.status || 'Received'}">${order.status || 'Received'}</span>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span class="order-status-tag" style="background: ${statusColor}22; color: ${statusColor}; border: 1px solid ${statusColor}44; font-weight: 800; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem;">
+                  ${status}
+                </span>
+                <button onclick="openEditOrderModal('${order.id}')" class="status-action-btn" style="background: var(--owner-card-sub); border: 1px solid var(--owner-border); color: #F3F4F6; padding: 3px 10px; font-size: 0.75rem; border-radius: 6px; cursor: pointer;">
+                  ✏️ Edit Details
+                </button>
               </div>
             </div>
 
-            <div style="font-size: 0.84rem; color: #D1D5DB; margin: 0.5rem 0; line-height: 1.5;">
-              <strong>Items (${order.itemCount || 1}):</strong> 
-              ${(order.items || []).map(i => `${i.name} (x${i.qty || 1})`).join(', ') || '1x Butta Bhojanam'}
+            <!-- Items Ordered -->
+            <div style="font-size: 0.86rem; color: #E5E7EB; margin: 0.65rem 0; line-height: 1.5; background: rgba(0,0,0,0.2); padding: 0.5rem 0.75rem; border-radius: 8px;">
+              <strong style="color: var(--owner-gold);">🍽️ Items (${order.itemCount || (order.items ? order.items.length : 1)}):</strong> 
+              ${(order.items || []).map(i => `${i.name || 'Specialty'} (x${i.qty || i.quantity || 1})`).join(', ') || '1x Butta Bhojanam'}
             </div>
 
-            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--owner-text-muted); border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 0.5rem; margin-top: 0.5rem;">
+            <!-- Live Metadata Badges: Table / Prep Time / Rider / Note -->
+            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.65rem; font-size: 0.78rem;">
+              ${order.tableNumber ? `<span style="background: rgba(16, 185, 129, 0.15); color: #34D399; padding: 2px 8px; border-radius: 4px; font-weight: 700;">🪑 Table: ${order.tableNumber}</span>` : ''}
+              ${order.estimatedPrepTime ? `<span style="background: rgba(59, 130, 246, 0.15); color: #60A5FA; padding: 2px 8px; border-radius: 4px; font-weight: 700;">⏱️ Est. Time: ${order.estimatedPrepTime}</span>` : ''}
+              ${order.riderName ? `<span style="background: rgba(139, 92, 246, 0.15); color: #A78BFA; padding: 2px 8px; border-radius: 4px; font-weight: 700;">🛵 Rider: ${order.riderName} (${order.riderPhone || 'Assigned'})</span>` : ''}
+              ${order.kitchenNote ? `<span style="background: rgba(245, 158, 11, 0.15); color: #FCD34D; padding: 2px 8px; border-radius: 4px; font-style: italic;">📝 "${order.kitchenNote}"</span>` : ''}
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--owner-text-muted); border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 0.5rem; margin-top: 0.4rem;">
               <div>
-                <span>📍 ${order.orderType === 'pickup' ? 'Takeaway Pickup' : (order.deliveryAddress || 'KPHB Colony, Hyderabad')}</span>
+                <span>📍 ${order.orderType === 'pickup' ? '🥡 Takeaway Pickup' : (order.orderType === 'dine-in' ? '🍽️ Dine-in Booking' : (order.deliveryAddress || 'KPHB Colony, Hyderabad'))}</span>
               </div>
-              <div style="font-size: 0.95rem; font-weight: 800; color: var(--owner-gold);">
-                ₹${order.grandTotal || 515}
+              <div style="font-size: 1rem; font-weight: 800; color: var(--owner-gold);">
+                ₹${order.grandTotal || order.totalAmount || 515}
               </div>
             </div>
 
             <!-- Quick Status Change Buttons -->
-            <div class="status-buttons-group">
-              <span style="font-size: 0.72rem; color: var(--owner-text-muted); align-self: center; margin-right: 4px;">Update Status:</span>
+            <div class="status-buttons-group" style="display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; padding-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.05);">
+              <span style="font-size: 0.72rem; color: var(--owner-text-muted); align-self: center; margin-right: 4px;">⚡ Instant Status:</span>
               <button class="status-action-btn" onclick="updateOrderStatus('${order.id}', 'Received')">📥 Received</button>
-              <button class="status-action-btn" onclick="updateOrderStatus('${order.id}', 'Kitchen')">🍳 In Kitchen</button>
-              <button class="status-action-btn" onclick="updateOrderStatus('${order.id}', 'Delivery')">🛵 Out for Delivery</button>
-              <button class="status-action-btn" onclick="updateOrderStatus('${order.id}', 'Delivered')" style="color: #4ADE80;">✅ Delivered</button>
-              <button class="status-action-btn" onclick="updateOrderStatus('${order.id}', 'Cancelled')" style="color: #F87171;">✕ Cancel</button>
+              <button class="status-action-btn" onclick="updateOrderStatus('${order.id}', 'In Kitchen', 'Kitchen is freshly preparing Butta Bhojanam')">🍳 In Kitchen</button>
+              <button class="status-action-btn" onclick="updateOrderStatus('${order.id}', 'Out for Delivery', 'Rider is on the way with piping hot food')">🛵 Out for Delivery</button>
+              <button class="status-action-btn" onclick="updateOrderStatus('${order.id}', 'Delivered', 'Order handed over to customer')" style="color: #4ADE80;">✅ Delivered</button>
+              <button class="status-action-btn" onclick="updateOrderStatus('${order.id}', 'Cancelled', 'Cancelled by restaurant')" style="color: #F87171;">✕ Cancel</button>
             </div>
           </div>
-        `).join('');
+        `;
+        }).join('');
 
       } catch (err) {
         console.error('Error fetching orders:', err);
@@ -736,20 +831,117 @@
       }
     }
 
-    async function updateOrderStatus(orderId, status) {
+    // Modal controls for editing full order details
+    function openEditOrderModal(orderId) {
+      const order = currentOrdersList.find(o => (o.id || '').toString() === orderId.toString());
+      if (!order) return;
+
+      document.getElementById('edit-order-id').value = order.id;
+      document.getElementById('modal-order-title').textContent = `✏️ Update Order #${order.id} (${order.customerName})`;
+      document.getElementById('edit-order-status').value = order.status || order.orderStatus || 'Received';
+      document.getElementById('edit-order-time').value = order.estimatedPrepTime || '20-25 Mins';
+      document.getElementById('edit-order-table').value = order.tableNumber || '';
+      document.getElementById('edit-order-rider-name').value = order.riderName || '';
+      document.getElementById('edit-order-rider-phone').value = order.riderPhone || '';
+      document.getElementById('edit-order-note').value = order.kitchenNote || '';
+
+      const modal = document.getElementById('edit-order-modal');
+      modal.style.display = 'flex';
+    }
+
+    function closeEditOrderModal() {
+      const modal = document.getElementById('edit-order-modal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    async function saveOrderDetailsFromModal() {
+      const orderId = document.getElementById('edit-order-id').value;
+      if (!orderId) return;
+
+      const payload = {
+        status: document.getElementById('edit-order-status').value,
+        estimatedPrepTime: document.getElementById('edit-order-time').value.trim(),
+        tableNumber: document.getElementById('edit-order-table').value.trim(),
+        riderName: document.getElementById('edit-order-rider-name').value.trim(),
+        riderPhone: document.getElementById('edit-order-rider-phone').value.trim(),
+        kitchenNote: document.getElementById('edit-order-note').value.trim()
+      };
+
+      const btn = document.getElementById('btn-save-order-modal');
+      if (btn) btn.innerHTML = `<span>⏳ Syncing...</span>`;
+
+      try {
+        const res = await fetch(`${BACKEND_BASE}/api/orders/${orderId}/update`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`✅ Order #${orderId} details updated & streamed to customer site!`);
+          closeEditOrderModal();
+          loadLiveOrders();
+        } else {
+          showToast(`⚠️ ${data.error || 'Failed to update order'}`);
+        }
+      } catch (err) {
+        showToast(`⚠️ Error updating order: ${err.message}`);
+      } finally {
+        if (btn) btn.innerHTML = `<span>⚡ Push Update to Customer Site</span>`;
+      }
+    }
+
+    async function updateOrderStatus(orderId, status, note) {
       try {
         const res = await fetch(`${BACKEND_BASE}/api/orders/${orderId}/status`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ status })
+          body: JSON.stringify({ status, note })
         });
         const data = await res.json();
         if (data.success) {
-          showToast(`✅ Order #${orderId} status updated to ${status}!`);
+          showToast(`✅ Order #${orderId} status set to "${status}" & broadcasted live!`);
           loadLiveOrders();
         }
       } catch (err) {
         showToast(`⚠️ Error updating order: ${err.message}`);
+      }
+    }
+
+    // Setup Owner Live Real-Time WebSockets & SSE
+    function initOwnerLiveSync() {
+      if (typeof io !== 'undefined') {
+        try {
+          ownerSocket = io(BACKEND_BASE, { transports: ['websocket', 'polling'] });
+          ownerSocket.on('connect', () => {
+            console.log('[Owner Live Sync] Socket connected');
+          });
+          const handleLiveEvent = (payload) => {
+            console.log('[Owner Live Sync] Real-time event received:', payload);
+            loadLiveOrders();
+          };
+          ownerSocket.on('order_created', handleLiveEvent);
+          ownerSocket.on('order_status_updated', handleLiveEvent);
+          ownerSocket.on('order_updated', handleLiveEvent);
+          ownerSocket.on('orders_updated', handleLiveEvent);
+        } catch (e) {
+          console.warn('[Owner Live Sync] Socket setup:', e);
+        }
+      }
+
+      // SSE fallback
+      if (typeof EventSource !== 'undefined') {
+        try {
+          const sse = new EventSource(`${BACKEND_BASE}/api/orders/stream`);
+          sse.onmessage = (e) => {
+            try {
+              const data = JSON.parse(e.data);
+              if (data && data.order) {
+                loadLiveOrders();
+              }
+            } catch (err) {}
+          };
+        } catch (e) {}
       }
     }
 
@@ -981,8 +1173,9 @@
       loadLiveOrders();
       loadMenuData();
       loadStoreSettings();
+      initOwnerLiveSync();
 
-      // Auto-poll live orders every 6 seconds
+      // Auto-poll live orders every 6 seconds as backup
       setInterval(() => {
         if (document.getElementById('panel-orders').classList.contains('active')) {
           loadLiveOrders();

@@ -1,5 +1,67 @@
 [
   {
+    "id": "SGH-357555",
+    "orderNumber": "SGH-357555",
+    "createdAt": "2026-09-22T05:05:03.991Z",
+    "timestamp": 1790053503992,
+    "customerName": "Nagarjun",
+    "customerPhone": "9010888842",
+    "phone": "9010888842",
+    "customerEmail": "test@subbayyagari.in",
+    "email": "test@subbayyagari.in",
+    "orderType": "delivery",
+    "branchId": "kphb",
+    "branchName": "KPHB Colony, Hyderabad",
+    "branchAddress": "MIG 295, Rd No. 4, Kukatpally, Hyderabad",
+    "items": [
+      {
+        "id": "meal-butta",
+        "name": "Butta Bojanam",
+        "price": 515,
+        "qty": 2
+      }
+    ],
+    "itemCount": 2,
+    "subtotal": 0,
+    "packagingFee": 30,
+    "deliveryFee": 0,
+    "discount": 0,
+    "promoCode": null,
+    "grandTotal": 1060,
+    "totalAmount": 1060,
+    "deliveryAddress": "",
+    "deliveryLandmark": "",
+    "gpsMapUrl": "",
+    "pickupSlot": "",
+    "vehicleNote": "",
+    "tableNumber": "Table #7",
+    "estimatedPrepTime": "15 Mins",
+    "riderName": "Ravi Kumar",
+    "riderPhone": "9876543210",
+    "kitchenNote": "Extra hot ghee added!",
+    "status": "Out for Delivery",
+    "orderStatus": "Out for Delivery",
+    "paymentStatus": "Verified & Confirmed",
+    "paymentMethod": "Online Payment",
+    "statusHistory": [
+      {
+        "status": "Received",
+        "time": "2026-09-22T05:05:03.991Z",
+        "note": "Order placed by customer via website"
+      },
+      {
+        "status": "In Kitchen",
+        "time": "2026-09-22T05:05:04.030Z",
+        "note": "Kitchen preparing hot bhojanam"
+      },
+      {
+        "status": "Out for Delivery",
+        "time": "2026-09-22T05:05:04.032Z",
+        "note": "Status updated to \"Out for Delivery\""
+      }
+    ]
+  },
+  {
     "id": "SGH-782419",
     "createdAt": "2026-09-21T07:15:00.000Z",
     "timestamp": 1790061300000,
@@ -11,9 +73,27 @@
     "branchName": "KPHB Colony, Hyderabad",
     "branchAddress": "MIG 295, Rd No. 4, Kukatpally, Hyderabad",
     "items": [
-      { "id": "butta-royal", "name": "Subbayya Gari Royal Butta Bhojanam", "price": 499, "qty": 2, "total": 998 },
-      { "id": "curry-gutti-vankaya", "name": "Godavari Gutti Vankaya Kura", "price": 180, "qty": 1, "total": 180 },
-      { "id": "sweet-pootharekulu", "name": "Atreyapuram Bellam Pootharekulu (4 Pcs)", "price": 160, "qty": 1, "total": 160 }
+      {
+        "id": "butta-royal",
+        "name": "Subbayya Gari Royal Butta Bhojanam",
+        "price": 499,
+        "qty": 2,
+        "total": 998
+      },
+      {
+        "id": "curry-gutti-vankaya",
+        "name": "Godavari Gutti Vankaya Kura",
+        "price": 180,
+        "qty": 1,
+        "total": 180
+      },
+      {
+        "id": "sweet-pootharekulu",
+        "name": "Atreyapuram Bellam Pootharekulu (4 Pcs)",
+        "price": 160,
+        "qty": 1,
+        "total": 160
+      }
     ],
     "itemCount": 4,
     "subtotal": 1338,
@@ -29,8 +109,16 @@
     "status": "Preparing",
     "paymentStatus": "Paid Online / UPI",
     "statusHistory": [
-      { "status": "Received", "time": "2026-09-21T07:15:00.000Z", "note": "Order confirmed by customer" },
-      { "status": "Preparing", "time": "2026-09-21T07:18:00.000Z", "note": "Chef started packaging hot Butta feast with fresh banana leaves" }
+      {
+        "status": "Received",
+        "time": "2026-09-21T07:15:00.000Z",
+        "note": "Order confirmed by customer"
+      },
+      {
+        "status": "Preparing",
+        "time": "2026-09-21T07:18:00.000Z",
+        "note": "Chef started packaging hot Butta feast with fresh banana leaves"
+      }
     ]
   },
   {
@@ -45,8 +133,20 @@
     "branchName": "Jubilee Hills, Hyderabad",
     "branchAddress": "Road No. 36, Near Peddamma Temple, Hyderabad",
     "items": [
-      { "id": "butta-mini", "name": "Traditional Mini Butta Bhojanam", "price": 299, "qty": 1, "total": 299 },
-      { "id": "sweet-nethi-bobbatlu", "name": "Nethi Bobbatlu with Pure Ghee (2 Pcs)", "price": 140, "qty": 2, "total": 280 }
+      {
+        "id": "butta-mini",
+        "name": "Traditional Mini Butta Bhojanam",
+        "price": 299,
+        "qty": 1,
+        "total": 299
+      },
+      {
+        "id": "sweet-nethi-bobbatlu",
+        "name": "Nethi Bobbatlu with Pure Ghee (2 Pcs)",
+        "price": 140,
+        "qty": 2,
+        "total": 280
+      }
     ],
     "itemCount": 3,
     "subtotal": 579,
@@ -62,9 +162,21 @@
     "status": "Out for Delivery",
     "paymentStatus": "Paid / Ghee Coins Applied",
     "statusHistory": [
-      { "status": "Received", "time": "2026-09-21T06:45:00.000Z", "note": "Takeaway order received" },
-      { "status": "Preparing", "time": "2026-09-21T06:50:00.000Z", "note": "Packaged in eco-bamboo basket" },
-      { "status": "Out for Delivery", "time": "2026-09-21T07:05:00.000Z", "note": "Order packed and waiting at takeaway counter" }
+      {
+        "status": "Received",
+        "time": "2026-09-21T06:45:00.000Z",
+        "note": "Takeaway order received"
+      },
+      {
+        "status": "Preparing",
+        "time": "2026-09-21T06:50:00.000Z",
+        "note": "Packaged in eco-bamboo basket"
+      },
+      {
+        "status": "Out for Delivery",
+        "time": "2026-09-21T07:05:00.000Z",
+        "note": "Order packed and waiting at takeaway counter"
+      }
     ]
   }
 ]

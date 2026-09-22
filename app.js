@@ -1,5 +1,12 @@
 
 // ==========================================================================
+// SUBBAYYA GARI HOTEL - GLOBAL BACKEND CONFIGURATION
+// ==========================================================================
+const BACKEND_BASE = (typeof window !== 'undefined' && window.location.protocol.startsWith('http'))
+  ? window.location.origin
+  : 'https://subbayya-gari-hotel.onrender.com';
+
+// ==========================================================================
 // REAL-TIME ORDER LIVE SYNC & NORMALIZATION (Customer Website)
 // ==========================================================================
 function normalizeServerOrder(o) {
@@ -45,6 +52,9 @@ function normalizeServerOrder(o) {
     reservationTime: o.reservationTime || '',
     seatingPreference: o.seatingPreference || 'Traditional Banana Leaf Seating',
     notes: o.notes || '',
+    kitchenNote: o.kitchenNote || '',
+    riderName: o.riderName || '',
+    riderPhone: o.riderPhone || '',
     estimatedPrepTime: o.estimatedPrepTime || '20-25 Mins',
     deliveryAddress: (typeof o.deliveryAddress === 'object' ? o.deliveryAddress?.address : o.deliveryAddress) || '',
     deliveryLandmark: (typeof o.deliveryAddress === 'object' ? o.deliveryAddress?.landmark : o.deliveryLandmark) || '',
@@ -52,66 +62,91 @@ function normalizeServerOrder(o) {
   };
 }
 
-// Live Socket.IO connection for customer real-time updates
+// Live Socket.IO connection & SSE stream for customer real-time updates
 let customerSocket = null;
+let customerSSE = null;
+
 function initCustomerLiveSync() {
+  const handleLiveOrderEvent = (payload) => {
+    console.log('[Customer Live Sync] Real-time order update received:', payload);
+    const rawOrder = payload.order || payload.data || payload;
+    const normalized = normalizeServerOrder(rawOrder);
+    if (!normalized || !normalized.id) return;
+
+    // Update local storage orders
+    try {
+      const localOrders = JSON.parse(localStorage.getItem('sgh_customer_orders') || '[]');
+      const idx = localOrders.findIndex(o => o && (o.id === normalized.id || o.orderNumber === normalized.id));
+      if (idx !== -1) {
+        localOrders[idx] = { ...localOrders[idx], ...normalized };
+      } else {
+        localOrders.unshift(normalized);
+      }
+      localStorage.setItem('sgh_customer_orders', JSON.stringify(localOrders));
+    } catch (e) {}
+
+    // Check if this order belongs to currently logged-in user or active session
+    const currentUserPhone = AppState?.currentUser?.phone ? AppState.currentUser.phone.replace(/\D/g, '').slice(-10) : '';
+    const isUserOrder = !currentUserPhone || (normalized.customerPhone && normalized.customerPhone.replace(/\D/g, '').slice(-10) === currentUserPhone);
+
+    // If order details modal is open for this order, dynamically update it live!
+    if (typeof activeViewingOrder !== 'undefined' && activeViewingOrder && (activeViewingOrder.id === normalized.id || activeViewingOrder.orderNumber === normalized.id)) {
+      openOrderDetailsModal(normalized.id);
+      showToast(`🔔 Live Update: Order #${normalized.id} status is now "${normalized.status}"!`);
+    } else if (isUserOrder) {
+      showToast(`🔔 Restaurant Update: Order #${normalized.id} is now "${normalized.status}"!`);
+    }
+
+    // If profile / my orders container is open, re-render list
+    const myOrdersContainer = document.getElementById('customer-orders-container');
+    if (myOrdersContainer && typeof fetchAndRenderCustomerOrders === 'function') {
+      fetchAndRenderCustomerOrders();
+    }
+  };
+
+  // 1. Socket.IO Connection
   if (typeof io !== 'undefined') {
     try {
       customerSocket = io(BACKEND_BASE, { transports: ['websocket', 'polling'] });
       
       customerSocket.on('connect', () => {
-        console.log('[Live Sync] Connected to Subbayya Gari Real-Time Server');
+        console.log('[Customer Live Sync] Connected to Subbayya Gari Real-Time Server');
       });
 
-      const handleOrderUpdate = (payload) => {
-        console.log('[Live Sync] Real-time order update received:', payload);
-        const rawOrder = payload.order || payload.data || payload;
-        const normalized = normalizeServerOrder(rawOrder);
-        if (!normalized || !normalized.id) return;
-
-        // Update local storage orders
-        try {
-          const localOrders = JSON.parse(localStorage.getItem('sgh_customer_orders') || '[]');
-          const idx = localOrders.findIndex(o => o && (o.id === normalized.id || o.orderNumber === normalized.id));
-          if (idx !== -1) {
-            localOrders[idx] = { ...localOrders[idx], ...normalized };
-          } else {
-            localOrders.unshift(normalized);
-          }
-          localStorage.setItem('sgh_customer_orders', JSON.stringify(localOrders));
-        } catch (e) {}
-
-        // If order details modal is open for this order, dynamically update it live!
-        if (typeof activeViewingOrder !== 'undefined' && activeViewingOrder && (activeViewingOrder.id === normalized.id || activeViewingOrder.orderNumber === normalized.id)) {
-          openOrderDetailsModal(normalized.id);
-          showToast(`🔔 Order #${normalized.id} updated to ${normalized.status}!`);
-        }
-
-        // If profile / my orders container is open, re-render list
-        const myOrdersContainer = document.getElementById('customer-orders-container');
-        if (myOrdersContainer) {
-          fetchAndRenderCustomerOrders();
-        }
-      };
-
-      customerSocket.on('order_status_updated', handleOrderUpdate);
-      customerSocket.on('order_update', handleOrderUpdate);
-      customerSocket.on('order_updated', handleOrderUpdate);
-      customerSocket.on('table_allocated', handleOrderUpdate);
-      customerSocket.on('payment_status_updated', handleOrderUpdate);
+      customerSocket.on('order_status_updated', handleLiveOrderEvent);
+      customerSocket.on('order_update', handleLiveOrderEvent);
+      customerSocket.on('order_updated', handleLiveOrderEvent);
+      customerSocket.on('table_allocated', handleLiveOrderEvent);
+      customerSocket.on('payment_status_updated', handleLiveOrderEvent);
       customerSocket.on('orders_updated', () => {
         if (typeof fetchAndRenderCustomerOrders === 'function') {
           fetchAndRenderCustomerOrders();
         }
       });
     } catch (err) {
-      console.warn('[Live Sync] Socket connection notice:', err);
+      console.warn('[Customer Live Sync] Socket connection notice:', err);
     }
   }
 
-  // Automatic Background Polling every 5 seconds for 100% reliability
+  // 2. Server-Sent Events (SSE) stream fallback
+  if (typeof EventSource !== 'undefined') {
+    try {
+      customerSSE = new EventSource(`${BACKEND_BASE}/api/orders/stream`);
+      customerSSE.onmessage = (e) => {
+        try {
+          const data = JSON.parse(e.data);
+          if (data && data.order) {
+            handleLiveOrderEvent(data);
+          }
+        } catch (err) {}
+      };
+    } catch (err) {
+      console.warn('[Customer Live Sync] SSE stream notice:', err);
+    }
+  }
+
+  // 3. Automatic Background Polling every 5 seconds for 100% reliability
   setInterval(() => {
-    // If order details modal is actively open, silently refresh its live status
     if (typeof activeViewingOrder !== 'undefined' && activeViewingOrder && activeViewingOrder.id) {
       fetch(`${BACKEND_BASE}/api/orders/${activeViewingOrder.id}`)
         .then(r => r.ok ? r.json() : null)
@@ -119,7 +154,7 @@ function initCustomerLiveSync() {
           const fresh = res?.data || res?.order;
           if (fresh) {
             const norm = normalizeServerOrder(fresh);
-            if (norm && (norm.status !== activeViewingOrder.status || norm.tableNumber !== activeViewingOrder.tableNumber)) {
+            if (norm && (norm.status !== activeViewingOrder.status || norm.tableNumber !== activeViewingOrder.tableNumber || norm.riderName !== activeViewingOrder.riderName)) {
               openOrderDetailsModal(norm.id);
               showToast(`🔔 Order #${norm.id} updated: ${norm.status}`);
             }
@@ -127,22 +162,14 @@ function initCustomerLiveSync() {
         }).catch(() => {});
     }
 
-    // If profile modal or orders container is visible, refresh
     const profileModal = document.getElementById('profile-modal');
     if (profileModal && profileModal.classList.contains('active')) {
-      fetchAndRenderCustomerOrders();
+      if (typeof fetchAndRenderCustomerOrders === 'function') {
+        fetchAndRenderCustomerOrders();
+      }
     }
   }, 5000);
 }
-
-/**
- * SUBBAYYA GARI HOTEL - CORE JAVASCRIPT APPLICATION
- * Authentic Andhra Vegetarian Culinary Experience Since 1950
- */
-
-const BACKEND_BASE = (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port === '5000')
-  ? window.location.origin
-  : 'https://subbayya-gari-hotel.onrender.com';
 
 
 // ==========================================================================
@@ -4958,27 +4985,49 @@ async function openOrderDetailsModal(orderId) {
   if (dtlTime) dtlTime.textContent = formattedTime;
   if (dtlPayment) dtlPayment.textContent = ord.paymentStatus || 'Paid Online (Verified)';
 
-  // Delivery / Pickup specific banner
+  // Delivery / Pickup / Dine-in specific banner & Live Management Updates
   const bannerEl = document.getElementById('dtl-delivery-banner');
   if (bannerEl) {
+    let detailsHtml = '';
     if (ord.orderType === 'delivery') {
-      let addrHtml = `<strong>🏠 Delivery Address:</strong> ${ord.deliveryAddress || 'Standard Delivery Location'}`;
+      detailsHtml += `<strong>🏠 Delivery Address:</strong> ${ord.deliveryAddress || 'Standard Delivery Location'}`;
       if (ord.deliveryLandmark) {
-        addrHtml += `<br/><span style="color: var(--color-text-muted);">🚩 Landmark: ${ord.deliveryLandmark}</span>`;
+        detailsHtml += `<br/><span style="color: var(--color-text-muted);">🚩 Landmark: ${ord.deliveryLandmark}</span>`;
       }
       if (ord.gpsMapUrl || ord.locationUrl) {
-        addrHtml += `<br/><a href="${ord.gpsMapUrl || ord.locationUrl}" target="_blank" style="color: var(--color-gold); font-weight: 700; text-decoration: underline;">📍 Open Exact Location in Google Maps ↗</a>`;
+        detailsHtml += `<br/><a href="${ord.gpsMapUrl || ord.locationUrl}" target="_blank" style="color: var(--color-gold); font-weight: 700; text-decoration: underline;">📍 Open Exact Location in Google Maps ↗</a>`;
       }
-      bannerEl.innerHTML = addrHtml;
-      bannerEl.style.display = 'block';
+    } else if (ord.orderType === 'dine-in') {
+      detailsHtml += `<strong>🍽️ Dine-in Booking:</strong> Traditional Godavari Sitting<br/>`;
+      if (ord.tableNumber) {
+        detailsHtml += `<span style="color: #10B981; font-weight: 800;">🪑 Allocated Table: ${ord.tableNumber}</span><br/>`;
+      }
+      detailsHtml += `<span style="color: var(--color-text-muted);">📍 Please visit ${ord.branchName || 'Selected Outlet'}.</span>`;
     } else {
-      bannerEl.innerHTML = `
+      detailsHtml += `
         <strong>🥡 Pickup Time:</strong> ${ord.pickupSlot || 'Ready in 15-20 Minutes'}<br/>
         <span style="color: var(--color-text-muted);">📍 Please collect at the designated Curbside Pickup counter at ${ord.branchName || 'Selected Outlet'}.</span>
         ${ord.vehicleNote ? `<br/><span style="color: var(--color-gold); font-weight: 700;">🚗 Vehicle Details: ${ord.vehicleNote}</span>` : ''}
       `;
-      bannerEl.style.display = 'block';
     }
+
+    // Live Owner / Kitchen Updates block
+    let liveUpdatesHtml = '';
+    if (ord.estimatedPrepTime) {
+      liveUpdatesHtml += `<div style="margin-top: 6px; color: var(--color-gold); font-weight: 700;">⏱️ Estimated Time: <span style="color: var(--color-text);">${ord.estimatedPrepTime}</span></div>`;
+    }
+    if (ord.riderName) {
+      liveUpdatesHtml += `<div style="margin-top: 4px; color: #8B5CF6; font-weight: 700;">🛵 Delivery Partner: <span style="color: var(--color-text);">${ord.riderName}</span> ${ord.riderPhone ? `<a href="tel:${ord.riderPhone}" style="color: var(--color-gold); margin-left: 6px;">📞 Call Rider (${ord.riderPhone})</a>` : ''}</div>`;
+    }
+    if (ord.tableNumber && ord.orderType !== 'dine-in') {
+      liveUpdatesHtml += `<div style="margin-top: 4px; color: #10B981; font-weight: 700;">🪑 Table / Token: <span style="color: var(--color-text);">${ord.tableNumber}</span></div>`;
+    }
+    if (ord.kitchenNote) {
+      liveUpdatesHtml += `<div style="margin-top: 6px; background: rgba(245, 158, 11, 0.12); padding: 5px 10px; border-radius: 6px; color: #FCD34D; font-size: 0.78rem; border-left: 3px solid var(--color-gold);">👨‍🍳 <strong>Kitchen Note:</strong> ${ord.kitchenNote}</div>`;
+    }
+
+    bannerEl.innerHTML = detailsHtml + (liveUpdatesHtml ? `<div style="border-top: 1px dashed rgba(255,255,255,0.15); margin-top: 8px; padding-top: 6px;">${liveUpdatesHtml}</div>` : '');
+    bannerEl.style.display = 'block';
   }
 
   // Dishes Breakdown
