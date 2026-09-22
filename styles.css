@@ -2826,6 +2826,12 @@ button {
   border: 1px solid #2563EB;
 }
 
+.cust-status-cancelled {
+  background: rgba(239, 68, 68, 0.12);
+  color: #EF4444;
+  border: 1px solid #EF4444;
+}
+
 /* Order Live Tracker */
 .order-tracker-steps {
   display: flex;
@@ -2866,6 +2872,7 @@ button {
   font-weight: 700;
   color: var(--color-text-muted);
   margin-bottom: 4px;
+  transition: all 0.3s ease;
 }
 .order-tracker-step.completed .order-tracker-dot {
   background: #16A34A;
@@ -2877,6 +2884,11 @@ button {
   border-color: var(--color-gold);
   color: #fff;
   box-shadow: 0 0 0 4px rgba(217, 119, 6, 0.2);
+}
+.order-tracker-step.cancelled .order-tracker-dot {
+  background: #EF4444;
+  border-color: #EF4444;
+  color: #fff;
 }
 .order-tracker-label {
   font-size: 0.7rem;

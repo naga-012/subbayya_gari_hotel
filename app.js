@@ -2,9 +2,19 @@
 // ==========================================================================
 // SUBBAYYA GARI HOTEL - GLOBAL BACKEND CONFIGURATION
 // ==========================================================================
-const BACKEND_BASE = (typeof window !== 'undefined' && window.location.protocol.startsWith('http'))
-  ? window.location.origin
-  : 'https://subbayya-gari-hotel.onrender.com';
+function resolveBackendBase() {
+  if (typeof window === 'undefined') return 'http://localhost:3000';
+  const loc = window.location;
+  if (loc.protocol.startsWith('http')) {
+    if ((loc.hostname === 'localhost' || loc.hostname === '127.0.0.1') && loc.port && loc.port !== '3000') {
+      return `http://${loc.hostname}:3000`;
+    }
+    return loc.origin;
+  }
+  return 'http://localhost:3000';
+}
+const BACKEND_BASE = resolveBackendBase();
+const sghBroadcast = (typeof BroadcastChannel !== 'undefined') ? new BroadcastChannel('sgh_order_channel') : null;
 
 // ==========================================================================
 // REAL-TIME ORDER LIVE SYNC & NORMALIZATION (Customer Website)
@@ -146,9 +156,47 @@ function initCustomerLiveSync() {
     }
   }
 
-  // 3. Automatic Background Polling every 5 seconds for 100% reliability
+  // 3. Intra-Browser BroadcastChannel Sync (Instant 0ms sync between Owner & Customer tabs)
+  if (sghBroadcast) {
+    try {
+      sghBroadcast.onmessage = (event) => {
+        if (event && event.data && (event.data.order || event.data.type)) {
+          console.log('[Customer Live Sync] BroadcastChannel event received:', event.data);
+          handleLiveOrderEvent(event.data);
+        }
+      };
+    } catch (e) {}
+  }
+
+  // 4. Cross-Tab LocalStorage Sync Event
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'sgh_latest_order_event' || e.key === 'sgh_customer_orders' || e.key === 'sgh_all_orders') {
+      try {
+        if (e.key === 'sgh_latest_order_event' && e.newValue) {
+          const parsed = JSON.parse(e.newValue);
+          if (parsed && parsed.order) {
+            handleLiveOrderEvent(parsed);
+          }
+        }
+        if (typeof fetchAndRenderCustomerOrders === 'function') {
+          fetchAndRenderCustomerOrders();
+        }
+      } catch (err) {}
+    }
+  });
+
+  // 5. Automatic Background Polling every 3 seconds for 100% reliability
   setInterval(() => {
     if (typeof activeViewingOrder !== 'undefined' && activeViewingOrder && activeViewingOrder.id) {
+      // Check local cache first
+      try {
+        const local = JSON.parse(localStorage.getItem('sgh_customer_orders') || '[]');
+        const cached = local.find(o => o && o.id === activeViewingOrder.id);
+        if (cached && (cached.status !== activeViewingOrder.status || cached.estimatedPrepTime !== activeViewingOrder.estimatedPrepTime || cached.riderName !== activeViewingOrder.riderName)) {
+          openOrderDetailsModal(cached.id);
+        }
+      } catch (e) {}
+
       fetch(`${BACKEND_BASE}/api/orders/${activeViewingOrder.id}`)
         .then(r => r.ok ? r.json() : null)
         .then(res => {
@@ -169,7 +217,7 @@ function initCustomerLiveSync() {
         fetchAndRenderCustomerOrders();
       }
     }
-  }, 5000);
+  }, 3000);
 }
 
 
@@ -2920,11 +2968,22 @@ function proceedToCheckout() {
     updateAuthUI();
   }
 
-  // Save to customer local orders list immediately for instant access
+  // Save to customer local orders and global orders list immediately for instant access
   try {
-    const existingOrders = JSON.parse(localStorage.getItem('sgh_customer_orders') || '[]');
-    existingOrders.unshift(orderPayload);
-    localStorage.setItem('sgh_customer_orders', JSON.stringify(existingOrders));
+    const existingCust = JSON.parse(localStorage.getItem('sgh_customer_orders') || '[]');
+    existingCust.unshift(orderPayload);
+    localStorage.setItem('sgh_customer_orders', JSON.stringify(existingCust));
+
+    const existingAll = JSON.parse(localStorage.getItem('sgh_all_orders') || '[]');
+    const allFiltered = existingAll.filter(o => o && (o.id || o.orderNumber) !== newOrderId);
+    allFiltered.unshift(orderPayload);
+    localStorage.setItem('sgh_all_orders', JSON.stringify(allFiltered));
+
+    // Broadcast instant storage event & intra-browser message to Owner dashboard
+    localStorage.setItem('sgh_latest_order_event', JSON.stringify({ type: 'order_created', order: orderPayload, timestamp: Date.now() }));
+    if (sghBroadcast) {
+      sghBroadcast.postMessage({ type: 'order_created', order: orderPayload, timestamp: Date.now() });
+    }
   } catch (err) {
     console.warn('Could not save order locally:', err);
   }
@@ -4964,47 +5023,70 @@ async function openOrderDetailsModal(orderId) {
 
   if (dtlId) dtlId.textContent = `Order #${ord.id}`;
   
-  const statusStr = (ord.status || 'Received').toLowerCase();
-  let statusIcon = '👨‍🍳';
-  let badgeClass = 'cust-status-preparing';
-  if (statusStr === 'delivered') {
+  const statusStr = (ord.status || 'Received').toLowerCase().trim();
+  let statusIcon = '📥';
+  let badgeClass = 'cust-status-received';
+  let statusDisplay = ord.status || 'Order Placed';
+
+  if (statusStr === 'delivered' || statusStr === 'completed' || statusStr === 'picked up') {
     statusIcon = '✅';
     badgeClass = 'cust-status-delivered';
-  } else if (statusStr === 'out for delivery' || statusStr === 'ready') {
+    statusDisplay = 'Delivered & Handed Over';
+  } else if (statusStr === 'out for delivery' || statusStr === 'ready' || statusStr === 'ready for pickup') {
     statusIcon = '🛵';
     badgeClass = 'cust-status-out';
-  } else if (statusStr === 'received') {
+    statusDisplay = ord.orderType === 'delivery' ? 'Out for Delivery' : 'Ready for Pickup';
+  } else if (statusStr === 'in kitchen' || statusStr === 'preparing' || statusStr === 'cooking' || statusStr === 'accepted' || statusStr === 'accepted & cooking' || statusStr === 'received & cooking') {
+    statusIcon = '👨‍🍳';
+    badgeClass = 'cust-status-preparing';
+    statusDisplay = 'Accepted & Cooking in Kitchen';
+  } else if (statusStr === 'received' || statusStr === 'placed' || statusStr === 'order placed' || statusStr === 'pending') {
     statusIcon = '📥';
     badgeClass = 'cust-status-received';
+    statusDisplay = 'Order Placed (Awaiting Acceptance)';
+  } else if (statusStr === 'cancelled') {
+    statusIcon = '❌';
+    badgeClass = 'cust-status-cancelled';
+    statusDisplay = 'Order Cancelled';
   }
 
   if (dtlStatusBadge) dtlStatusBadge.className = `cust-status-badge ${badgeClass}`;
   if (dtlStatusIcon) dtlStatusIcon.textContent = statusIcon;
-  if (dtlStatusText) dtlStatusText.textContent = ord.status || 'Received & Cooking';
+  if (dtlStatusText) dtlStatusText.textContent = statusDisplay;
 
-  // Live Tracker Steps
+  // Live Tracker Steps: Step 1 Placed -> Step 2 Cooking (only once owner accepts) -> Step 3 Out for Delivery -> Step 4 Delivered
   const trackerContainer = document.getElementById('dtl-order-tracker-steps');
   if (trackerContainer) {
     const isDelivery = ord.orderType === 'delivery';
     const step3Label = isDelivery ? 'Out for Delivery' : 'Ready for Pickup';
     const step4Label = isDelivery ? 'Delivered' : 'Picked Up';
 
-    let s1 = 'completed', s2 = '', s3 = '', s4 = '';
-    if (statusStr === 'received') {
+    let s1 = 'active', s2 = '', s3 = '', s4 = '';
+    if (statusStr === 'received' || statusStr === 'placed' || statusStr === 'order placed' || statusStr === 'pending') {
+      s1 = 'active';
+      s2 = '';
+      s3 = '';
+      s4 = '';
+    } else if (statusStr === 'in kitchen' || statusStr === 'preparing' || statusStr === 'cooking' || statusStr === 'accepted' || statusStr === 'accepted & cooking' || statusStr === 'received & cooking') {
       s1 = 'completed';
       s2 = 'active';
-    } else if (statusStr === 'preparing' || statusStr === 'cooking' || statusStr === 'received & cooking') {
-      s1 = 'completed';
-      s2 = 'active';
-    } else if (statusStr === 'out for delivery' || statusStr === 'ready') {
+      s3 = '';
+      s4 = '';
+    } else if (statusStr === 'out for delivery' || statusStr === 'ready' || statusStr === 'ready for pickup') {
       s1 = 'completed';
       s2 = 'completed';
       s3 = 'active';
-    } else if (statusStr === 'delivered' || statusStr === 'completed') {
+      s4 = '';
+    } else if (statusStr === 'delivered' || statusStr === 'completed' || statusStr === 'picked up') {
       s1 = 'completed';
       s2 = 'completed';
       s3 = 'completed';
       s4 = 'completed';
+    } else if (statusStr === 'cancelled') {
+      s1 = 'cancelled';
+      s2 = '';
+      s3 = '';
+      s4 = '';
     } else {
       s1 = 'completed';
       s2 = 'active';
@@ -5012,7 +5094,7 @@ async function openOrderDetailsModal(orderId) {
 
     trackerContainer.innerHTML = `
       <div class="order-tracker-step ${s1}">
-        <div class="order-tracker-dot">${s1 === 'completed' ? '✓' : '1'}</div>
+        <div class="order-tracker-dot">${s1 === 'completed' ? '✓' : (s1 === 'cancelled' ? '✕' : '1')}</div>
         <div class="order-tracker-label">Placed</div>
       </div>
       <div class="order-tracker-step ${s2}">
