@@ -3058,8 +3058,20 @@ function payViaCustomUpi(event) {
     other: 'UPI App'
   };
 
-  showToast(`⚡ Directing to ${appNames[appKey]} for UPI ID ${upiIdVal}...`);
+  const appName = appNames[appKey] || 'UPI';
+  showToast(`⚡ Directing to ${appName} for UPI ID ${upiIdVal}...`);
   window.location.href = appDeepLink;
+
+  const btn = document.getElementById('btn-complete-payment-order');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = `<span>⏳ Verifying UPI (${upiIdVal}) & Placing Order...</span>`;
+  }
+
+  // Automatically place order directly after payment
+  setTimeout(() => {
+    finalizePaymentAndPlaceOrder(`UPI (${upiIdVal})`, `Paid via UPI (${upiIdVal})`);
+  }, 1800);
 }
 window.payViaCustomUpi = payViaCustomUpi;
 
@@ -3179,22 +3191,29 @@ function launchUpiApp(appKey, event) {
   const specificUrl = getUpiDeepLink(appKey, amount);
   
   const appNames = {
-    phonepe: 'PhonePe',
+    phonepe: 'PhonePe UPI',
     gpay: 'Google Pay',
-    paytm: 'Paytm',
+    paytm: 'Paytm UPI',
     bhim: 'BHIM UPI',
     other: 'UPI App'
   };
 
-  showToast(`⚡ Launching ${appNames[appKey] || 'UPI'} for ₹${amount}...`);
+  const appName = appNames[appKey] || 'UPI App';
+  showToast(`⚡ Launching ${appName} for ₹${amount}...`);
 
   // Direct app trigger
   window.location.href = specificUrl;
 
   const btn = document.getElementById('btn-complete-payment-order');
   if (btn) {
-    btn.innerHTML = '<span>Complete Your Payment</span>';
+    btn.disabled = true;
+    btn.innerHTML = `<span>⏳ Verifying Payment with ${appName}...</span>`;
   }
+
+  // Once payment app is triggered, automatically complete order directly
+  setTimeout(() => {
+    finalizePaymentAndPlaceOrder(appName, `Paid Online (${appName})`);
+  }, 1800);
 }
 window.launchUpiApp = launchUpiApp;
 
@@ -3336,32 +3355,41 @@ function closeOnlinePaymentModal() {
 }
 window.closeOnlinePaymentModal = closeOnlinePaymentModal;
 
+let isPlacingOrder = false;
+
 function finalizePaymentAndPlaceOrder(customMethod, customStatus) {
+  if (isPlacingOrder) return;
+  isPlacingOrder = true;
+
   const btn = document.getElementById('btn-complete-payment-order');
 
-  // Launch payment app (PhonePe / GPay / Paytm / Card / UPI)
-  if (selectedPaymentAppKey === 'card') {
-    const cardNum = document.getElementById('card-number-input')?.value.replace(/\s+/g, '') || '';
-    if (cardNum.length >= 15) {
-      customMethod = customMethod || `Card (•••• ${cardNum.slice(-4)})`;
-      customStatus = customStatus || `Paid Online (Card •••• ${cardNum.slice(-4)})`;
-    }
-  } else if (selectedPaymentAppKey === 'customupi') {
-    const customUpiVal = document.getElementById('custom-upi-id-input')?.value.trim();
-    if (customUpiVal) {
-      customMethod = `UPI (${customUpiVal})`;
-      customStatus = `Paid via UPI (${customUpiVal})`;
-      payViaCustomUpi();
+  // Resolve payment method if not explicitly passed
+  if (!customMethod) {
+    if (selectedPaymentAppKey === 'card') {
+      const cardNum = document.getElementById('card-number-input')?.value.replace(/\s+/g, '') || '';
+      customMethod = cardNum.length >= 15 ? `Card (•••• ${cardNum.slice(-4)})` : 'Credit/Debit Card';
+      customStatus = `Paid Online (${customMethod})`;
+    } else if (selectedPaymentAppKey === 'customupi') {
+      const customUpiVal = document.getElementById('custom-upi-id-input')?.value.trim();
+      customMethod = customUpiVal ? `UPI (${customUpiVal})` : 'UPI ID';
+      customStatus = `Paid via ${customMethod}`;
     } else {
-      launchUpiApp('phonepe');
+      const appNames = {
+        phonepe: 'PhonePe UPI',
+        gpay: 'Google Pay',
+        paytm: 'Paytm UPI',
+        bhim: 'BHIM UPI',
+        other: 'UPI App'
+      };
+      const appName = appNames[selectedPaymentAppKey] || 'PhonePe UPI';
+      customMethod = appName;
+      customStatus = `Paid Online (${appName})`;
     }
-  } else {
-    launchUpiApp(selectedPaymentAppKey || 'phonepe');
   }
 
   if (btn) {
     btn.disabled = true;
-    btn.innerHTML = '<span>Complete Your Payment</span>';
+    btn.innerHTML = '<span>⏳ Placing Your Order Directly...</span>';
   }
 
   // Fallback if pendingCheckoutData is missing
@@ -3515,6 +3543,7 @@ window.finalizePaymentAndPlaceOrder = finalizePaymentAndPlaceOrder;
 let lastPlacedOrderData = null;
 
 function showOrderConfirmationModal(orderId, name, phone, whatsappMsg, details = {}) {
+  isPlacingOrder = false;
   const modal = document.getElementById('order-confirmation-modal');
   if (!modal) return;
 
