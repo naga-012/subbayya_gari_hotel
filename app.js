@@ -4005,13 +4005,17 @@ async function checkUserRegistration(target) {
 }
 
 let activeCustomerName = '';
+let activeCustomerPhone = '';
+let activeCustomerEmail = '';
 
 async function sendLoginOtp() {
   const nameInput = document.getElementById('auth-otp-name');
-  const targetInput = document.getElementById('auth-otp-target') || document.getElementById('auth-otp-phone');
+  const phoneInput = document.getElementById('auth-otp-phone');
+  const emailInput = document.getElementById('auth-otp-email');
   
   const enteredName = activeCustomerName || (nameInput ? nameInput.value.trim() : '');
-  const targetVal = activeOtpTarget || (targetInput ? targetInput.value.trim() : '');
+  const enteredPhone = activeCustomerPhone || (phoneInput ? phoneInput.value.trim().replace(/\D/g, '') : '');
+  const enteredEmail = activeCustomerEmail || (emailInput ? emailInput.value.trim() : '');
 
   if (!enteredName) {
     showToast('⚠️ Please enter your full name');
@@ -4019,14 +4023,15 @@ async function sendLoginOtp() {
     return;
   }
 
-  if (!targetVal) {
-    showToast('⚠️ Please enter your email address or mobile number');
-    if (targetInput) targetInput.focus();
+  if (!enteredPhone || enteredPhone.length < 10) {
+    showToast('⚠️ Please enter a valid 10-digit mobile number');
+    if (phoneInput) phoneInput.focus();
     return;
   }
 
   activeCustomerName = enteredName;
-  activeOtpTarget = targetVal;
+  activeCustomerPhone = enteredPhone;
+  activeCustomerEmail = enteredEmail;
   const newOtp = Math.floor(1000 + Math.random() * 9000).toString();
   activeGeneratedOtp = newOtp;
 
@@ -4039,7 +4044,9 @@ async function sendLoginOtp() {
 
   if (sendStep) sendStep.style.display = 'none';
   if (verifyStep) verifyStep.style.display = 'flex';
-  if (displaySpan) displaySpan.textContent = `${activeCustomerName} (${targetVal})`;
+  
+  const displayLabel = enteredEmail ? `+91 ${enteredPhone} (${enteredEmail})` : `+91 ${enteredPhone}`;
+  if (displaySpan) displaySpan.textContent = `${activeCustomerName} • ${displayLabel}`;
   if (chipCode) chipCode.textContent = newOtp;
 
   if (codeInput) {
@@ -4050,14 +4057,14 @@ async function sendLoginOtp() {
 
   showToast(`🔑 Verification Code: ${newOtp} (Tap chip to auto-fill)`);
 
-  // If input contains @, dispatch live email from backend
-  if (targetVal.includes('@')) {
+  // If email is provided, dispatch live email from backend
+  if (enteredEmail && enteredEmail.includes('@')) {
     try {
       const response = await fetch(`${BACKEND_BASE}/api/send-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email: targetVal,
+          email: enteredEmail,
           name: activeCustomerName,
           otp: newOtp
         })
@@ -4070,7 +4077,7 @@ async function sendLoginOtp() {
           if (chipCode) chipCode.textContent = activeGeneratedOtp;
         }
         if (data && data.liveEmailSent) {
-          showToast(`✉️ Live OTP delivered to ${targetVal}! Check your Gmail.`);
+          showToast(`✉️ Live OTP delivered to ${enteredEmail}! Check your inbox.`);
         }
       }
     } catch (err) {
@@ -4096,7 +4103,7 @@ function resetModalOtpStep() {
   const verifyStep = document.getElementById('auth-otp-verify-step');
   if (sendStep) sendStep.style.display = 'flex';
   if (verifyStep) verifyStep.style.display = 'none';
-  document.getElementById('auth-otp-name')?.focus();
+  document.getElementById('auth-otp-phone')?.focus();
 }
 window.resetModalOtpStep = resetModalOtpStep;
 
@@ -4137,15 +4144,14 @@ function handleOtpSubmit(event) {
 
   if (codeInput) codeInput.style.borderColor = '#16A34A';
 
-  const target = activeOtpTarget || 'Guest Patron';
-  const isEmail = target.includes('@');
-  const fallbackName = isEmail ? target.split('@')[0].replace(/[._]/g, ' ') : `Patron ${target.slice(-4)}`;
-  const finalName = activeCustomerName || (fallbackName.charAt(0).toUpperCase() + fallbackName.slice(1));
+  const finalName = activeCustomerName || 'Subbayya Gari Patron';
+  const phoneNum = activeCustomerPhone || '9010888842';
+  const finalEmail = activeCustomerEmail || `${phoneNum}@subbayyagari.in`;
 
   const user = {
     name: finalName,
-    phone: isEmail ? '9010888842' : target.replace(/\D/g, '').slice(-10),
-    email: isEmail ? target : `${target.replace(/\D/g, '').slice(-10)}@subbayyagari.in`,
+    phone: phoneNum,
+    email: finalEmail,
     address: 'Road No. 4, KPHB Colony, Kukatpally, Hyderabad',
     coins: 50,
     tier: 'VIP Patron',

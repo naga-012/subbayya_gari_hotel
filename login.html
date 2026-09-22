@@ -184,25 +184,46 @@
             </div>
 
             <div class="form-group" style="margin: 0;">
-              <label class="form-label" for="page-otp-target" style="font-size: 0.86rem; font-weight: 700; color: var(--color-text);">
-                Enter Email Address OR Mobile Number *
+              <label class="form-label" for="page-otp-phone" style="font-size: 0.86rem; font-weight: 700; color: var(--color-text);">
+                Enter Mobile / Phone Number *
               </label>
-              <input 
-                type="text" 
-                id="page-otp-target" 
-                class="form-control" 
-                placeholder="e.g. yourname@gmail.com or 9876543210" 
-                required 
-                style="font-size: 0.95rem; padding: 0.7rem 0.85rem;"
-                onkeydown="if(event.key==='Enter'){event.preventDefault();sendPageOtp();}"
-              />
+              <div style="display: flex; gap: 0.5rem;">
+                <span style="display: flex; align-items: center; padding: 0.7rem 0.85rem; background: #F3F4F6; border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-weight: 700; font-size: 0.9rem; color: var(--color-text-muted);">
+                  🇮🇳 +91
+                </span>
+                <input 
+                  type="tel" 
+                  id="page-otp-phone" 
+                  class="form-control" 
+                  placeholder="9876543210" 
+                  maxlength="10"
+                  required 
+                  style="font-size: 0.95rem; padding: 0.7rem 0.85rem; flex: 1;"
+                  oninput="this.value = this.value.replace(/\D/g, '')"
+                  onkeydown="if(event.key==='Enter'){event.preventDefault();sendPageOtp();}"
+                />
+              </div>
               <div style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 4px;">
-                Enter your email address or 10-digit mobile number to receive a 4-digit login code.
+                Enter your 10-digit mobile number to receive instant SMS / verification code.
               </div>
             </div>
 
+            <div class="form-group" style="margin: 0;">
+              <label class="form-label" for="page-otp-email" style="font-size: 0.86rem; font-weight: 600; color: var(--color-text-muted);">
+                Enter Email Address <span style="font-weight: 400; font-size: 0.78rem;">(Optional)</span>
+              </label>
+              <input 
+                type="email" 
+                id="page-otp-email" 
+                class="form-control" 
+                placeholder="e.g. yourname@gmail.com" 
+                style="font-size: 0.95rem; padding: 0.7rem 0.85rem;"
+                onkeydown="if(event.key==='Enter'){event.preventDefault();sendPageOtp();}"
+              />
+            </div>
+
             <button type="button" id="btn-page-send-otp" class="btn btn-gold btn-lg" onclick="sendPageOtp()" style="width: 100%; margin-top: 0.25rem;">
-              <span>Send Verification Code ✉️</span>
+              <span>Send Verification Code 📱</span>
             </button>
 
             <!-- 1-Click Instant VIP Login -->
@@ -273,19 +294,22 @@
 
     const OTP_SENDER_EMAIL = 'myakalanagarjun09@gmail.com';
     let currentGeneratedOtp = null;
-    let currentOtpTarget = '';
     let currentCustomerName = '';
+    let currentCustomerPhone = '';
+    let currentCustomerEmail = '';
     let isOtpSending = false;
 
-    // Step 1: Send OTP to Customer Email or Mobile
+    // Step 1: Send OTP to Customer Mobile / Email
     async function sendPageOtp(isResend = false) {
       if (isOtpSending) return;
 
       const nameInput = document.getElementById('page-otp-name');
-      const targetInput = document.getElementById('page-otp-target');
+      const phoneInput = document.getElementById('page-otp-phone');
+      const emailInput = document.getElementById('page-otp-email');
       
       const enteredName = currentCustomerName || (nameInput ? nameInput.value.trim() : '');
-      const targetVal = currentOtpTarget || (targetInput ? targetInput.value.trim() : '');
+      const enteredPhone = currentCustomerPhone || (phoneInput ? phoneInput.value.trim().replace(/\D/g, '') : '');
+      const enteredEmail = currentCustomerEmail || (emailInput ? emailInput.value.trim() : '');
 
       if (!enteredName) {
         showToast('⚠️ Please enter your full name');
@@ -293,14 +317,15 @@
         return;
       }
 
-      if (!targetVal) {
-        showToast('⚠️ Please enter your email address or mobile number');
-        if (targetInput) targetInput.focus();
+      if (!enteredPhone || enteredPhone.length < 10) {
+        showToast('⚠️ Please enter a valid 10-digit mobile number');
+        if (phoneInput) phoneInput.focus();
         return;
       }
 
       currentCustomerName = enteredName;
-      currentOtpTarget = targetVal;
+      currentCustomerPhone = enteredPhone;
+      currentCustomerEmail = enteredEmail;
       
       // Generate a fresh 4-digit OTP
       const newOtp = Math.floor(1000 + Math.random() * 9000).toString();
@@ -309,27 +334,26 @@
       // Update UI state
       isOtpSending = true;
       const sendBtn = document.getElementById('btn-page-send-otp');
-      const resendBtn = document.getElementById('btn-resend-otp');
 
       if (sendBtn) {
         sendBtn.disabled = true;
         sendBtn.innerHTML = '<span>Generating Code... ⏳</span>';
       }
 
-      transitionToVerifyStep(targetVal, newOtp);
+      transitionToVerifyStep(enteredPhone, enteredEmail, newOtp);
 
       if (isResend) {
         showToast(`✉️ Fresh code generated: ${newOtp}`);
       }
 
-      // If it looks like an email, dispatch to backend
-      if (targetVal.includes('@')) {
+      // If email is provided, dispatch to backend
+      if (enteredEmail && enteredEmail.includes('@')) {
         try {
           const response = await fetch(`${BACKEND_BASE}/api/send-otp`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              email: targetVal,
+              email: enteredEmail,
               name: currentCustomerName,
               otp: newOtp
             })
@@ -342,7 +366,7 @@
               updateOtpHelper(currentGeneratedOtp);
             }
             if (data && data.liveEmailSent) {
-              showToast(`✉️ Live OTP delivered to ${targetVal}! Check your Gmail.`);
+              showToast(`✉️ Live OTP delivered to ${enteredEmail}! Check your inbox.`);
             }
           }
         } catch (err) {
@@ -353,7 +377,7 @@
       isOtpSending = false;
       if (sendBtn) {
         sendBtn.disabled = false;
-        sendBtn.innerHTML = '<span>Send Verification Code ✉️</span>';
+        sendBtn.innerHTML = '<span>Send Verification Code 📱</span>';
       }
     }
 
@@ -372,7 +396,7 @@
       }
     }
 
-    function transitionToVerifyStep(targetVal, code) {
+    function transitionToVerifyStep(phone, email, code) {
       const sendWrap = document.getElementById('page-otp-send-wrap');
       const verifyWrap = document.getElementById('page-otp-verify-wrap');
       const targetDisplay = document.getElementById('page-otp-target-display');
@@ -380,7 +404,9 @@
 
       if (sendWrap) sendWrap.style.display = 'none';
       if (verifyWrap) verifyWrap.style.display = 'flex';
-      if (targetDisplay) targetDisplay.textContent = `${currentCustomerName} (${targetVal})`;
+      
+      const displayLabel = email ? `+91 ${phone} (${email})` : `+91 ${phone}`;
+      if (targetDisplay) targetDisplay.textContent = `${currentCustomerName} • ${displayLabel}`;
       updateOtpHelper(code);
 
       if (codeInput) {
@@ -397,7 +423,7 @@
       const verifyWrap = document.getElementById('page-otp-verify-wrap');
       if (sendWrap) sendWrap.style.display = 'flex';
       if (verifyWrap) verifyWrap.style.display = 'none';
-      document.getElementById('page-otp-target')?.focus();
+      document.getElementById('page-otp-phone')?.focus();
     }
 
     // Step 2: Handle OTP submission & login
@@ -425,15 +451,14 @@
         codeInput.style.borderColor = '#16A34A';
       }
 
-      const target = currentOtpTarget;
-      const isEmail = target.includes('@');
-      const fallbackName = isEmail ? target.split('@')[0].replace(/[._]/g, ' ') : `Patron ${target.slice(-4)}`;
-      const finalName = currentCustomerName || (fallbackName.charAt(0).toUpperCase() + fallbackName.slice(1));
+      const finalName = currentCustomerName || 'Subbayya Gari Patron';
+      const phoneNum = currentCustomerPhone || '9010888842';
+      const finalEmail = currentCustomerEmail || `${phoneNum}@subbayyagari.in`;
 
       const user = {
         name: finalName,
-        phone: isEmail ? '9010888842' : target.replace(/\D/g, '').slice(-10),
-        email: isEmail ? target : `${target.replace(/\D/g, '').slice(-10)}@subbayyagari.in`,
+        phone: phoneNum,
+        email: finalEmail,
         address: 'Road No. 4, KPHB Colony, Kukatpally, Hyderabad',
         coins: 50,
         tier: 'VIP Patron',
