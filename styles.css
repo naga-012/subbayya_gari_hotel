@@ -388,6 +388,7 @@ button {
   align-items: center;
   justify-content: space-between;
   height: 100%;
+  gap: 1.25rem;
 }
 
 /* Brand Logo */
@@ -396,6 +397,16 @@ button {
   align-items: center;
   gap: 0.75rem;
   text-decoration: none;
+  flex-shrink: 0;
+}
+
+.brand-logo img {
+  height: 48px;
+  width: auto;
+  max-width: 60px;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
 }
 
 .logo-emblem {
@@ -410,6 +421,7 @@ button {
   font-size: 1.4rem;
   box-shadow: 0 4px 10px rgba(15, 90, 39, 0.25);
   position: relative;
+  flex-shrink: 0;
 }
 
 .logo-emblem::after {
@@ -423,15 +435,19 @@ button {
 .brand-text {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  white-space: nowrap;
+  text-align: left;
 }
 
 .brand-title {
   font-family: var(--font-brand);
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 800;
   letter-spacing: 0.05em;
   color: var(--color-primary);
-  line-height: 1.1;
+  line-height: 1.15;
+  white-space: nowrap;
 }
 
 [data-theme="dark"] .brand-title {
@@ -439,20 +455,24 @@ button {
 }
 
 .brand-subtitle {
-  font-size: 0.72rem;
-  font-weight: 600;
+  font-size: 0.65rem;
+  font-weight: 700;
   color: var(--color-gold);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+  white-space: nowrap;
+  margin-top: 1px;
 }
 
 /* Nav Links */
 .nav-menu {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 1.15rem;
   list-style: none;
   white-space: nowrap;
+  margin: 0;
+  padding: 0;
 }
 
 .nav-link {
