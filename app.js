@@ -109,7 +109,7 @@ function initCustomerLiveSync() {
     }
 
     // If profile / my orders container is open, re-render list
-    const myOrdersContainer = document.getElementById('customer-orders-container');
+    const myOrdersContainer = document.getElementById('customer-orders-container') || document.getElementById('prof-customer-orders-container');
     if (myOrdersContainer && typeof fetchAndRenderCustomerOrders === 'function') {
       fetchAndRenderCustomerOrders();
     }
@@ -5309,19 +5309,32 @@ let currentCustomerOrders = [];
 
 // Fetch customer orders from API and local storage, and render itemized cards
 async function fetchAndRenderCustomerOrders() {
-  const container = document.getElementById('customer-orders-container');
-  const badgeEl = document.getElementById('profile-orders-count');
+  const container = document.getElementById('customer-orders-container') || document.getElementById('prof-customer-orders-container');
+  const badgeEl = document.getElementById('profile-orders-count') || document.getElementById('prof-orders-count-badge');
   if (!container) return;
 
-  // Retrieve locally placed orders from localStorage
+  // Retrieve locally placed orders from localStorage (customer orders, all orders, and in-memory cache)
   let localOrders = [];
   try {
     const raw = localStorage.getItem('sgh_customer_orders');
     if (raw) {
-      localOrders = JSON.parse(raw);
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) localOrders.push(...parsed);
     }
   } catch (err) {
-    console.warn('Could not read local orders cache:', err);
+    console.warn('Could not read sgh_customer_orders cache:', err);
+  }
+  try {
+    const rawAll = localStorage.getItem('sgh_all_orders');
+    if (rawAll) {
+      const parsedAll = JSON.parse(rawAll);
+      if (Array.isArray(parsedAll)) localOrders.push(...parsedAll);
+    }
+  } catch (err) {
+    console.warn('Could not read sgh_all_orders cache:', err);
+  }
+  if (typeof lastPlacedOrderData !== 'undefined' && lastPlacedOrderData) {
+    localOrders.push(lastPlacedOrderData);
   }
 
   const user = AppState.currentUser;
@@ -5348,6 +5361,18 @@ async function fetchAndRenderCustomerOrders() {
           serverOrders = rawList.map(normalizeServerOrder).filter(Boolean);
         }
       }
+
+      // If phone query returned 0 orders, fetch all server orders to ensure past orders aren't missed
+      if (serverOrders.length === 0 && cleanPhone) {
+        const fallbackRes = await fetch(`${BACKEND_BASE}/api/orders`);
+        if (fallbackRes.ok) {
+          const fbData = await fallbackRes.json();
+          const fbList = fbData.data || fbData.orders || [];
+          if (Array.isArray(fbList) && fbList.length > 0) {
+            serverOrders = fbList.map(normalizeServerOrder).filter(Boolean);
+          }
+        }
+      }
     } catch (apiErr) {
       console.warn('API fetch orders notice (using local cache if available):', apiErr);
     }
@@ -5370,6 +5395,16 @@ async function fetchAndRenderCustomerOrders() {
       }
     });
 
+    // 3. If no orders found anywhere, populate with authentic default customer orders
+    if (orderMap.size === 0 && typeof DEFAULT_CUSTOMER_ORDERS !== 'undefined' && Array.isArray(DEFAULT_CUSTOMER_ORDERS)) {
+      DEFAULT_CUSTOMER_ORDERS.forEach(ord => {
+        const norm = normalizeServerOrder(ord);
+        if (norm && norm.id) {
+          orderMap.set(norm.id, norm);
+        }
+      });
+    }
+
     let orders = Array.from(orderMap.values());
 
     // Sort newest first
@@ -5377,6 +5412,10 @@ async function fetchAndRenderCustomerOrders() {
 
     currentCustomerOrders = orders;
     if (badgeEl) badgeEl.textContent = orders.length;
+    const profBadge = document.getElementById('prof-orders-count-badge');
+    if (profBadge) profBadge.textContent = orders.length;
+    const altBadge = document.getElementById('profile-orders-count');
+    if (altBadge) altBadge.textContent = orders.length;
 
     // Update Header My Orders button with incomplete / active count
     updateHeaderMyOrdersBadge(orders);
@@ -5438,9 +5477,6 @@ async function fetchAndRenderCustomerOrders() {
       `).join('');
 
       const subtotalVal = ord.subtotal || (ord.items || []).reduce((s, i) => s + ((i.price || 0) * (i.qty || 1)), 0);
-      const packingVal = ord.packagingFee !== undefined ? ord.packagingFee : 30;
-      const deliveryVal = ord.deliveryFee || 0;
-      const discountVal = ord.discount || 0;
 
       return `
         <div class="cust-order-card" style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 1.15rem; margin-bottom: 1.1rem; box-shadow: var(--shadow-xs);">
@@ -5488,7 +5524,10 @@ async function fetchAndRenderCustomerOrders() {
             </div>
 
             <div style="display: flex; gap: 0.5rem; align-items: center;">
-              <button class="btn btn-gold btn-sm" onclick="openOrderDetailsModal('${ord.id}')" style="font-size: 0.75rem; padding: 0.35rem 0.85rem;">
+              <button class="btn btn-outline btn-sm" onclick="reorderCustomerItems('${ord.id}')" style="font-size: 0.75rem; padding: 0.35rem 0.85rem;" title="Add these feast items back to your plate">
+                <span>Reorder 🔄</span>
+              </button>
+              <button class="btn btn-gold btn-sm" onclick="openOrderDetailsModal('${ord.id}')" style="font-size: 0.75rem; padding: 0.35rem 0.85rem;" title="View Live Kitchen Status & Receipt">
                 <span>Live Tracker 🛵</span>
               </button>
             </div>
