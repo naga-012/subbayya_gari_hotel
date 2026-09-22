@@ -3338,42 +3338,24 @@ window.closeOnlinePaymentModal = closeOnlinePaymentModal;
 function finalizePaymentAndPlaceOrder(customMethod, customStatus) {
   const btn = document.getElementById('btn-complete-payment-order');
 
-  // If user hasn't initiated payment yet, prompt them and launch the selected app
-  if (!hasInitiatedPayment) {
-    const appNames = {
-      phonepe: 'PhonePe',
-      gpay: 'Google Pay',
-      paytm: 'Paytm',
-      bhim: 'BHIM UPI',
-      other: 'UPI App',
-      customupi: 'Entered UPI ID',
-      card: 'Card Gateway'
-    };
-    const targetName = appNames[selectedPaymentAppKey] || 'UPI App';
-    showToast(`⚠️ Please complete your payment! Opening ${targetName}...`);
-    
-    if (selectedPaymentAppKey === 'card') {
-      const cardBox = document.getElementById('action-card');
-      if (cardBox) cardBox.style.display = 'block';
-      document.getElementById('card-number-input')?.focus();
-    } else if (selectedPaymentAppKey === 'customupi') {
-      const upiInput = document.getElementById('custom-upi-id-input');
-      if (!upiInput?.value) {
-        upiInput?.focus();
-      } else {
-        payViaCustomUpi();
-        hasInitiatedPayment = true;
-      }
+  // Launch payment app (PhonePe / GPay / Paytm / Card / UPI)
+  if (selectedPaymentAppKey === 'card') {
+    const cardNum = document.getElementById('card-number-input')?.value.replace(/\s+/g, '') || '';
+    if (cardNum.length >= 15) {
+      customMethod = customMethod || `Card (•••• ${cardNum.slice(-4)})`;
+      customStatus = customStatus || `Paid Online (Card •••• ${cardNum.slice(-4)})`;
+    }
+  } else if (selectedPaymentAppKey === 'customupi') {
+    const customUpiVal = document.getElementById('custom-upi-id-input')?.value.trim();
+    if (customUpiVal) {
+      customMethod = `UPI (${customUpiVal})`;
+      customStatus = `Paid via UPI (${customUpiVal})`;
+      payViaCustomUpi();
     } else {
-      launchUpiApp(selectedPaymentAppKey);
-      hasInitiatedPayment = true;
+      launchUpiApp('phonepe');
     }
-
-    if (btn) {
-      btn.disabled = false;
-      btn.innerHTML = '<span>Complete Your Payment</span>';
-    }
-    return;
+  } else {
+    launchUpiApp(selectedPaymentAppKey || 'phonepe');
   }
 
   if (btn) {
