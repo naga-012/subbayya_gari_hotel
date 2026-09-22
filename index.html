@@ -2506,63 +2506,17 @@
         </div>
       </div>
 
-      <!-- Section: Online Payment (Only Online UPI) -->
-      <div class="cart-section-card payment-method-card" id="cart-payment-section">
-        <div class="cart-section-heading" style="margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: space-between;">
-          <span>💳 Online Payment Only</span>
-          <span class="payment-badge-popular">⚡ Prepaid Order</span>
-        </div>
-
-        <div style="background: rgba(22, 163, 74, 0.08); border: 1px solid rgba(22, 163, 74, 0.25); border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; font-size: 0.78rem; color: #16A34A; font-weight: 700; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.4rem;">
-          <span>🛡️</span>
-          <span>Only Online Payment (UPI / QR Code) is accepted for Delivery & Pickup orders.</span>
-        </div>
-
-        <!-- UPI Details Box -->
-        <div id="upi-payment-details-box" class="upi-details-container" style="margin-top: 0;">
-          <div class="upi-id-highlight-box">
-            <div class="upi-id-label-row">
-              <span class="upi-tag">OFFICIAL UPI ID</span>
-              <span class="upi-verified-badge">🛡️ Verified Merchant</span>
-            </div>
-            <div class="upi-id-row">
-              <span class="upi-id-text" id="merchant-upi-id">9121792433@ybl</span>
-              <button type="button" class="btn-copy-upi" onclick="copyUpiId('9121792433@ybl')" id="btn-copy-upi" title="Copy UPI ID">
-                <span id="copy-upi-btn-text">📋 Copy</span>
-              </button>
+      <!-- Section: Online Payment Badge -->
+      <div class="cart-section-card payment-method-card" id="cart-payment-section" style="padding: 0.75rem 0.85rem; background: rgba(22, 163, 74, 0.06); border: 1px solid rgba(22, 163, 74, 0.25);">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <div style="display: flex; align-items: center; gap: 0.45rem;">
+            <span style="font-size: 1.1rem;">⚡</span>
+            <div>
+              <div style="font-weight: 800; font-size: 0.85rem; color: #16A34A;">Online Payment (Prepaid)</div>
+              <div style="font-size: 0.72rem; color: var(--color-text-muted);">UPI ID: 9121792433@ybl • GPay / PhonePe / Paytm</div>
             </div>
           </div>
-
-          <!-- Direct Pay via UPI Deep-link for mobile -->
-          <a id="direct-upi-pay-btn" href="upi://pay?pa=9121792433@ybl&pn=Subbayya%20Gari%20Hotel&cu=INR" class="btn btn-gold btn-upi-app-pay" style="width: 100%; margin-top: 0.6rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; text-decoration: none; font-weight: 700;">
-            <span>📱 Pay ₹<span id="upi-pay-amount">0</span> via UPI App</span>
-          </a>
-
-          <!-- Interactive QR Code for scanning -->
-          <div class="upi-qr-wrapper">
-            <div class="upi-qr-card">
-              <img id="upi-qr-image" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=9121792433@ybl&pn=Subbayya%20Gari%20Hotel&cu=INR" alt="UPI Payment QR Code" class="upi-qr-img" />
-              <div class="upi-qr-caption">
-                <span>Scan with GPay / PhonePe / Paytm to Pay</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="upi-apps-icons-row">
-            <span class="upi-app-badge">GPay</span>
-            <span class="upi-app-badge">PhonePe</span>
-            <span class="upi-app-badge">Paytm</span>
-            <span class="upi-app-badge">BHIM</span>
-            <span class="upi-app-badge">Any UPI</span>
-          </div>
-
-          <!-- Optional UTR Input -->
-          <div class="cart-form-group" style="margin-top: 0.6rem; margin-bottom: 0;">
-            <label class="cart-input-label" for="upi-utr-input" style="font-size: 0.75rem;">
-              UPI Ref / UTR No. <span style="font-weight: normal; color: var(--color-text-muted);">(Optional if paid)</span>
-            </label>
-            <input type="text" id="upi-utr-input" class="form-control" placeholder="e.g. 423456789012" style="font-size: 0.8rem; padding: 0.45rem 0.65rem;" />
-          </div>
+          <span class="payment-badge-popular">100% Secure</span>
         </div>
       </div>
 
@@ -2737,6 +2691,97 @@
 
     </div>
   </div>
+
+  <!-- ==========================================================================
+       MODAL: DEDICATED ONLINE UPI PAYMENT GATEWAY / PAYMENT PAGE
+       ========================================================================== -->
+  <div class="modal-overlay" id="online-payment-modal">
+    <div class="modal-card payment-gateway-card" style="max-width: 480px; padding: 1.5rem; max-height: 92vh; overflow-y: auto;">
+      <button class="modal-close-btn" onclick="closeOnlinePaymentModal()">✕</button>
+
+      <div style="text-align: center; margin-bottom: 1rem;">
+        <div style="display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(22, 163, 74, 0.1); color: #16A34A; font-weight: 800; font-size: 0.75rem; padding: 0.3rem 0.75rem; border-radius: var(--radius-full); margin-bottom: 0.4rem;">
+          <span>🛡️ 100% Secure UPI Payment</span>
+        </div>
+        <h3 style="font-family: var(--font-serif); font-size: 1.45rem; color: var(--color-primary); margin: 0;">Complete Your Payment</h3>
+        <p style="font-size: 0.8rem; color: var(--color-text-muted); margin: 3px 0 0;">Pay via UPI App or Scan QR code to place your order directly</p>
+      </div>
+
+      <!-- Order Summary Card -->
+      <div class="payment-order-summary-box" style="background: var(--color-surface-muted); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 0.85rem; margin-bottom: 1rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
+          <span style="font-size: 0.8rem; color: var(--color-text-muted);">Customer:</span>
+          <span style="font-weight: 700; font-size: 0.85rem; color: var(--color-text);" id="pay-summary-name">Guest</span>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
+          <span style="font-size: 0.8rem; color: var(--color-text-muted);">Order Mode:</span>
+          <span style="font-weight: 700; font-size: 0.85rem; color: var(--color-gold);" id="pay-summary-type">🥡 Store Pickup</span>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px dashed var(--color-border); padding-top: 0.5rem; margin-top: 0.35rem;">
+          <span style="font-weight: 800; font-size: 0.95rem; color: var(--color-text);">Total Payable:</span>
+          <span style="font-weight: 900; font-size: 1.4rem; color: var(--color-primary); font-family: var(--font-brand);" id="pay-summary-amount">₹0</span>
+        </div>
+      </div>
+
+      <!-- UPI ID Display Card -->
+      <div class="upi-id-highlight-box">
+        <div class="upi-id-label-row">
+          <span class="upi-tag">OFFICIAL UPI ID</span>
+          <span class="upi-verified-badge">🛡️ Verified Merchant</span>
+        </div>
+        <div class="upi-id-row">
+          <span class="upi-id-text" id="merchant-upi-id">9121792433@ybl</span>
+          <button type="button" class="btn-copy-upi" onclick="copyUpiId('9121792433@ybl')" id="btn-copy-upi" title="Copy UPI ID">
+            <span id="copy-upi-btn-text">📋 Copy</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Direct Pay via UPI App for Mobile -->
+      <a id="direct-upi-pay-btn" href="#" class="btn btn-gold btn-upi-app-pay" style="width: 100%; margin-top: 0.75rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; text-decoration: none; font-weight: 800; font-size: 0.95rem; padding: 0.8rem;">
+        <span>📱 Pay ₹<span id="upi-pay-amount">0</span> via UPI App</span>
+      </a>
+
+      <!-- QR Code Section -->
+      <div class="upi-qr-wrapper" style="margin-top: 0.85rem;">
+        <div class="upi-qr-card" style="width: 100%; max-width: 220px; padding: 0.75rem; margin: 0 auto;">
+          <img id="upi-qr-image" src="" alt="UPI Payment QR Code" class="upi-qr-img" style="width: 160px; height: 160px; margin: 0 auto; display: block;" />
+          <div class="upi-qr-caption" style="margin-top: 0.45rem; font-size: 0.72rem;">
+            <span>Scan with GPay, PhonePe, Paytm or BHIM</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="upi-apps-icons-row" style="margin-top: 0.5rem;">
+        <span class="upi-app-badge">GPay</span>
+        <span class="upi-app-badge">PhonePe</span>
+        <span class="upi-app-badge">Paytm</span>
+        <span class="upi-app-badge">BHIM</span>
+        <span class="upi-app-badge">Amazon Pay</span>
+      </div>
+
+      <!-- Transaction Reference Input & Confirm Button -->
+      <div style="margin-top: 1rem; background: rgba(15, 90, 39, 0.04); padding: 0.85rem; border-radius: var(--radius-md); border: 1px solid var(--color-border);">
+        <div class="cart-form-group" style="margin-bottom: 0.75rem;">
+          <label class="cart-input-label" for="upi-utr-input" style="font-size: 0.75rem;">
+            UPI Ref / UTR No. <span style="font-weight: normal; color: var(--color-text-muted);">(Optional if paid)</span>
+          </label>
+          <input type="text" id="upi-utr-input" class="form-control" placeholder="e.g. 423456789012" style="font-size: 0.82rem;" />
+        </div>
+
+        <button type="button" class="btn btn-primary btn-lg" id="btn-complete-payment-order" onclick="finalizePaymentAndPlaceOrder()" style="width: 100%; font-size: 0.95rem; font-weight: 800; padding: 0.85rem; box-shadow: 0 4px 14px rgba(15, 90, 39, 0.35);">
+          <span>✅ I Have Paid — Place Order 🚀</span>
+        </button>
+      </div>
+
+      <div style="text-align: center; margin-top: 0.75rem;">
+        <button type="button" onclick="closeOnlinePaymentModal(); toggleCart(true);" style="background: none; border: none; color: var(--color-text-muted); font-size: 0.8rem; cursor: pointer; text-decoration: underline;">
+          ← Back to Cart & Edit Details
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div class="modal-overlay" id="order-confirmation-modal">
     <div class="modal-card" style="max-width: 540px; max-height: 90vh; overflow-y: auto;">
       <button class="modal-close-btn" onclick="document.getElementById('order-confirmation-modal').classList.remove('active')">✕</button>

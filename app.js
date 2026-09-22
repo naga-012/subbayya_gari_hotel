@@ -2395,13 +2395,12 @@ function renderCartDrawer() {
     qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(upiPaymentUrl)}`;
   }
 
-  // Update Checkout Button State - 100% Online Payment
+  // Update Checkout Button State - Proceed to Pay Online
   const cartCheckoutBtn = document.getElementById('cart-checkout-btn');
   const cartCheckoutBtnText = document.getElementById('cart-checkout-btn-text');
-  const orderModeLabel = isDelivery ? 'Delivery' : 'Pickup';
 
   if (cartCheckoutBtnText) {
-    cartCheckoutBtnText.textContent = `Pay ₹${grandTotal} Online & Place ${orderModeLabel} Order ⚡`;
+    cartCheckoutBtnText.textContent = `Proceed to Pay Online (₹${grandTotal}) 💳`;
   }
   if (cartCheckoutBtn) {
     cartCheckoutBtn.classList.remove('btn-outline-gold');
@@ -2862,6 +2861,8 @@ function saveDeliveryLocationModal(e) {
 }
 window.saveDeliveryLocationModal = saveDeliveryLocationModal;
 
+let pendingCheckoutData = null;
+
 function proceedToCheckout() {
   if (AppState.cart.length === 0) {
     showToast('⚠️ Your cart is empty. Add dishes to proceed!');
@@ -2920,7 +2921,94 @@ function proceedToCheckout() {
 
   const grandTotal = subtotal + packagingFee + deliveryFee - discount;
 
-  // Payment Method: 100% Online UPI Payment Only
+  pendingCheckoutData = {
+    customerName,
+    customerPhone,
+    isDelivery,
+    pickupSlot,
+    vehicleNote,
+    deliveryAddress,
+    deliveryLandmark,
+    gpsMapUrl,
+    activeBranchObj,
+    subtotal,
+    packagingFee,
+    exactKm,
+    deliveryFee,
+    discount,
+    grandTotal
+  };
+
+  // Close Cart Drawer and Open Dedicated Online Payment Page Modal
+  toggleCart(false);
+  openOnlinePaymentModal();
+}
+window.proceedToCheckout = proceedToCheckout;
+window.proceedToPaymentPage = proceedToCheckout;
+
+function openOnlinePaymentModal() {
+  if (!pendingCheckoutData) {
+    showToast('⚠️ Please fill your order details in cart');
+    toggleCart(true);
+    return;
+  }
+
+  const modal = document.getElementById('online-payment-modal');
+  if (!modal) return;
+
+  const data = pendingCheckoutData;
+  const nameEl = document.getElementById('pay-summary-name');
+  const typeEl = document.getElementById('pay-summary-type');
+  const amountEl = document.getElementById('pay-summary-amount');
+  const upiPayAmount = document.getElementById('upi-pay-amount');
+  const directUpiBtn = document.getElementById('direct-upi-pay-btn');
+  const qrImg = document.getElementById('upi-qr-image');
+
+  if (nameEl) nameEl.textContent = `${data.customerName} (${data.customerPhone})`;
+  if (typeEl) {
+    typeEl.textContent = data.isDelivery ? `🛵 Home Delivery (${data.exactKm} km)` : `🥡 Pickup from ${data.activeBranchObj.name.split(',')[0]}`;
+  }
+  if (amountEl) amountEl.textContent = `₹${data.grandTotal}`;
+  if (upiPayAmount) upiPayAmount.textContent = data.grandTotal;
+
+  const upiId = '9121792433@ybl';
+  const upiUrl = `upi://pay?pa=${upiId}&pn=Subbayya%20Gari%20Hotel&am=${data.grandTotal}&cu=INR&tn=Subbayya%20Order`;
+  
+  if (directUpiBtn) {
+    directUpiBtn.href = upiUrl;
+  }
+  if (qrImg) {
+    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(upiUrl)}`;
+  }
+
+  modal.classList.add('active');
+  modal.style.display = 'flex';
+  modal.style.visibility = 'visible';
+  modal.style.opacity = '1';
+  modal.style.pointerEvents = 'auto';
+  modal.style.zIndex = '9999';
+}
+window.openOnlinePaymentModal = openOnlinePaymentModal;
+
+function closeOnlinePaymentModal() {
+  const modal = document.getElementById('online-payment-modal');
+  if (modal) {
+    modal.classList.remove('active');
+    modal.style.display = 'none';
+    modal.style.visibility = 'hidden';
+    modal.style.opacity = '0';
+    modal.style.pointerEvents = 'none';
+  }
+}
+window.closeOnlinePaymentModal = closeOnlinePaymentModal;
+
+function finalizePaymentAndPlaceOrder() {
+  if (!pendingCheckoutData) {
+    showToast('⚠️ No pending order found. Please add dishes to cart.');
+    return;
+  }
+
+  const data = pendingCheckoutData;
   const upiUtr = document.getElementById('upi-utr-input')?.value.trim() || '';
   const paymentMethodLabel = 'Online UPI (9121792433@ybl)';
   const paymentStatusLabel = upiUtr ? `Paid via UPI (Ref: ${upiUtr})` : 'Paid Online (UPI: 9121792433@ybl)';
@@ -2940,25 +3028,25 @@ function proceedToCheckout() {
     createdAt: nowIso,
     timestamp: Date.now(),
     status: 'Received',
-    customerName: customerName,
-    customerPhone: customerPhone,
+    customerName: data.customerName,
+    customerPhone: data.customerPhone,
     customerEmail: AppState.currentUser ? (AppState.currentUser.email || '') : '',
     orderType: AppState.orderType,
-    branchId: activeBranchObj.id,
-    branchName: activeBranchObj.name,
-    branchAddress: activeBranchObj.address,
+    branchId: data.activeBranchObj.id,
+    branchName: data.activeBranchObj.name,
+    branchAddress: data.activeBranchObj.address,
     items: orderItemsCopy,
     itemCount: orderItemsCopy.reduce((s, i) => s + i.qty, 0),
-    subtotal: subtotal,
-    packagingFee: packagingFee,
-    deliveryFee: deliveryFee,
-    discount: discount,
-    grandTotal: grandTotal,
-    deliveryAddress: deliveryAddress,
-    deliveryLandmark: deliveryLandmark,
-    gpsMapUrl: gpsMapUrl,
-    pickupSlot: pickupSlot,
-    vehicleNote: vehicleNote,
+    subtotal: data.subtotal,
+    packagingFee: data.packagingFee,
+    deliveryFee: data.deliveryFee,
+    discount: data.discount,
+    grandTotal: data.grandTotal,
+    deliveryAddress: data.deliveryAddress,
+    deliveryLandmark: data.deliveryLandmark,
+    gpsMapUrl: data.gpsMapUrl,
+    pickupSlot: data.pickupSlot,
+    vehicleNote: data.vehicleNote,
     paymentMethod: paymentMethodLabel,
     paymentStatus: paymentStatusLabel,
     paymentUtr: upiUtr,
@@ -2968,8 +3056,8 @@ function proceedToCheckout() {
   // Ensure customer profile is recorded so "My Orders" and profile are accessible
   if (!AppState.currentUser) {
     AppState.currentUser = {
-      name: customerName,
-      phone: customerPhone,
+      name: data.customerName,
+      phone: data.customerPhone,
       email: '',
       coins: 50,
       tier: '👑 VIP Member',
@@ -3013,10 +3101,12 @@ function proceedToCheckout() {
     console.warn('[Order Sync] Backend sync failed, kept locally:', err);
   });
 
-  // Close Cart and show simulated live order ticket
-  toggleCart(false);
-  showOrderConfirmationModal(newOrderId, customerName, customerPhone, message, orderPayload);
+  // Close Payment Modal and show Order Confirmation Ticket
+  closeOnlinePaymentModal();
+  showToast('🎉 Online payment verified! Order placed successfully.');
+  showOrderConfirmationModal(newOrderId, data.customerName, data.customerPhone, '', orderPayload);
 }
+window.finalizePaymentAndPlaceOrder = finalizePaymentAndPlaceOrder;
 
 let lastPlacedOrderData = null;
 
