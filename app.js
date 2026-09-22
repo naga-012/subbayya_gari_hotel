@@ -3,6 +3,13 @@
  * Authentic Andhra Vegetarian Culinary Experience Since 1950
  */
 
+const BACKEND_BASE = (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port === '5000')
+  ? window.location.origin
+  : (typeof window !== 'undefined' && window.location.origin && window.location.origin.includes('onrender.com')
+      ? window.location.origin
+      : 'https://subbayya-gari-hotel.onrender.com');
+
+
 // ==========================================================================
 // 1. MENU DATABASE (30+ Authentic Subbayya Gari Specialties)
 // ==========================================================================
@@ -1705,7 +1712,7 @@ document.addEventListener('click', (e) => {
 async function syncLiveMenuAndSettings() {
   try {
     // 1. Fetch live menu prices & stock status
-    const menuRes = await fetch('/api/menu');
+    const menuRes = await fetch(`${BACKEND_BASE}/api/menu`);
     if (menuRes.ok) {
       const menuData = await menuRes.json();
       if (menuData && Array.isArray(menuData.menu)) {
@@ -1729,7 +1736,7 @@ async function syncLiveMenuAndSettings() {
     }
 
     // 2. Fetch live settings & announcement banner
-    const settingsRes = await fetch('/api/settings');
+    const settingsRes = await fetch(`${BACKEND_BASE}/api/settings`);
     if (settingsRes.ok) {
       const settingsData = await settingsRes.json();
       const settings = settingsData.settings;
@@ -2759,7 +2766,7 @@ function proceedToCheckout() {
   }
 
   // Asynchronously send to Server Orders Database
-  fetch('/api/orders', {
+  fetch(`${BACKEND_BASE}/api/orders`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(orderPayload)
@@ -3050,6 +3057,37 @@ function setupReservationForm() {
     const bookingRef = 'TKT-' + Math.floor(100000 + Math.random() * 900000);
 
     // Show Confirmation Ticket Modal
+        // Asynchronously send Table Reservation to Backend Server
+    fetch(`${BACKEND_BASE}/api/orders`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: bookingRef,
+        customerName: name,
+        phone: phone,
+        orderType: 'dine-in',
+        branch: branch,
+        reservationDate: date,
+        reservationTime: timeSlot,
+        guestsCount: parseInt(guests, 10) || 1,
+        seatingPreference: selectedSeating,
+        notes: notes,
+        items: [
+          {
+            name: `Traditional Banana Leaf Dining (${guests} Guests)`,
+            price: 0,
+            qty: parseInt(guests, 10) || 1
+          }
+        ],
+        paymentMethod: 'Pay at Hotel',
+        paymentStatus: 'Pending'
+      })
+    }).then(r => r.json()).then(res => {
+      console.log('[Table Booking Sync] Recorded on backend:', res);
+    }).catch(err => {
+      console.warn('[Table Booking Sync] Backend offline, recorded locally:', err);
+    });
+
     const passRefEl = document.getElementById('pass-booking-ref');
     const passNameEl = document.getElementById('pass-guest-name');
     const passBranchEl = document.getElementById('pass-branch');
@@ -3780,7 +3818,7 @@ async function checkUserRegistration(target) {
 
   // 1. Check API first
   try {
-    const res = await fetch(`/api/users/check?target=${encodeURIComponent(cleanTarget)}`);
+    const res = await fetch(`${BACKEND_BASE}/api/users/check?target=${encodeURIComponent(cleanTarget)}`);
     if (res.ok) {
       const data = await res.json();
       if (data && data.registered && data.user) {
@@ -3856,7 +3894,7 @@ async function sendLoginOtp() {
 
   // Background live dispatch to customer Gmail with exact synced OTP
   try {
-    const response = await fetch('/api/send-otp', {
+    const response = await fetch(`${BACKEND_BASE}/api/send-otp`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -3967,7 +4005,7 @@ async function handleSignup(event) {
 
   // Sync with API backend
   try {
-    await fetch('/api/users/register', {
+    await fetch(`${BACKEND_BASE}/api/users/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newUser)
@@ -4488,7 +4526,7 @@ async function fetchAndRenderCustomerOrders() {
     
     let serverOrders = [];
     try {
-      let url = `/api/orders`;
+      let url = `${BACKEND_BASE}/api/orders`;
       if (cleanPhone) {
         url += `?phone=${encodeURIComponent(cleanPhone)}`;
         if (email && !email.endsWith('@subbayyagari.in')) {
@@ -4731,7 +4769,7 @@ async function openOrderDetailsModal(orderId) {
   // 2. Fetch from API if still not found
   if (!ord) {
     try {
-      const res = await fetch(`/api/orders`);
+      const res = await fetch(`${BACKEND_BASE}/api/orders`);
       if (res.ok) {
         const data = await res.json();
         if (data && Array.isArray(data.orders)) {

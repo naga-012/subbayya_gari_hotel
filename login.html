@@ -241,6 +241,12 @@
 
   <!-- Client-side script for login page -->
   <script>
+    const BACKEND_BASE = (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port === '5000')
+      ? window.location.origin
+      : (typeof window !== 'undefined' && window.location.origin && window.location.origin.includes('onrender.com')
+          ? window.location.origin
+          : 'https://subbayya-gari-hotel.onrender.com');
+
     const OTP_SENDER_EMAIL = 'myakalanagarjun09@gmail.com';
     let currentGeneratedOtp = null;
     let currentOtpTarget = '';
@@ -293,7 +299,7 @@
 
       // Trigger Live Email Dispatch from myakalanagarjun09@gmail.com with EXACT synced OTP
       try {
-        const response = await fetch('/api/send-otp', {
+        const response = await fetch(`${BACKEND_BASE}/api/send-otp`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

@@ -648,6 +648,12 @@
   <div class="toast-container" id="toast-container"></div>
 
   <script>
+    const BACKEND_BASE = (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port === '5000')
+      ? window.location.origin
+      : (typeof window !== 'undefined' && window.location.origin && window.location.origin.includes('onrender.com')
+          ? window.location.origin
+          : 'https://subbayya-gari-hotel.onrender.com');
+
     let activeSettings = {};
     let activeMenu = [];
 
@@ -673,7 +679,7 @@
       const container = document.getElementById('orders-list-container');
       const badge = document.getElementById('badge-orders-count');
       try {
-        const res = await fetch('/api/orders');
+        const res = await fetch(`${BACKEND_BASE}/api/orders`);
         const data = await res.json();
         const orders = data.orders || [];
         if (badge) badge.textContent = orders.length;
@@ -734,7 +740,7 @@
 
     async function updateOrderStatus(orderId, status) {
       try {
-        const res = await fetch(`/api/orders/${orderId}/status`, {
+        const res = await fetch(`${BACKEND_BASE}/api/orders/${orderId}/status`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ status })
@@ -754,7 +760,7 @@
       const tbody = document.getElementById('menu-table-body');
       const badge = document.getElementById('badge-menu-count');
       try {
-        const res = await fetch('/api/menu');
+        const res = await fetch(`${BACKEND_BASE}/api/menu`);
         const data = await res.json();
         activeMenu = data.menu || [];
         if (badge) badge.textContent = activeMenu.length;
@@ -805,7 +811,7 @@
       }
 
       try {
-        const res = await fetch('/api/menu/update', {
+        const res = await fetch(`${BACKEND_BASE}/api/menu/update`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ id: itemId, price: newPrice })
@@ -827,7 +833,7 @@
       }
 
       try {
-        const res = await fetch('/api/menu/update', {
+        const res = await fetch(`${BACKEND_BASE}/api/menu/update`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ id: itemId, inStock: inStock })
@@ -844,7 +850,7 @@
     async function restoreDefaultMenu() {
       if (!confirm('Are you sure you want to reset all menu items and prices to default?')) return;
       try {
-        const res = await fetch('/api/menu/reset', { method: 'POST' });
+        const res = await fetch(`${BACKEND_BASE}/api/menu/reset`, { method: 'POST' });
         const data = await res.json();
         if (data.success) {
           showToast('↺ Menu catalog reset to defaults!');
@@ -858,7 +864,7 @@
     // 3. STORE SETTINGS & ANNOUNCEMENT
     async function loadStoreSettings() {
       try {
-        const res = await fetch('/api/settings');
+        const res = await fetch(`${BACKEND_BASE}/api/settings`);
         const data = await res.json();
         activeSettings = data.settings || {};
 
@@ -913,7 +919,7 @@
       };
 
       try {
-        const res = await fetch('/api/settings/update', {
+        const res = await fetch(`${BACKEND_BASE}/api/settings/update`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
@@ -931,7 +937,7 @@
     async function loadPatrons() {
       const container = document.getElementById('patrons-list-container');
       try {
-        const res = await fetch('/api/users');
+        const res = await fetch(`${BACKEND_BASE}/api/users`);
         const data = await res.json();
         const users = data.users || [];
 
