@@ -67,35 +67,6 @@
       text-transform: uppercase;
     }
 
-    .tab-switch-container {
-      display: flex;
-      background: var(--color-surface-muted);
-      padding: 0.3rem;
-      border-radius: var(--radius-md);
-      gap: 0.35rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .auth-tab-nav-btn {
-      flex: 1;
-      padding: 0.6rem 0.5rem;
-      border: none;
-      border-radius: var(--radius-sm);
-      font-size: 0.82rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      background: transparent;
-      color: var(--color-text-muted);
-      text-align: center;
-    }
-
-    .auth-tab-nav-btn.active {
-      background: var(--color-surface);
-      color: var(--color-primary);
-      box-shadow: var(--shadow-xs);
-    }
-
     .back-home-link {
       display: inline-flex;
       align-items: center;
@@ -112,19 +83,46 @@
       color: var(--color-gold);
     }
 
-    .otp-display-box {
-      background: linear-gradient(135deg, rgba(217, 119, 6, 0.12) 0%, rgba(253, 230, 138, 0.3) 100%);
-      border: 1.5px dashed var(--color-gold);
-      border-radius: var(--radius-md);
-      padding: 0.85rem;
+    .quick-login-divider {
+      display: flex;
+      align-items: center;
       text-align: center;
-      cursor: pointer;
-      transition: all 0.2s ease;
+      margin: 1.25rem 0;
+      color: var(--color-text-muted);
+      font-size: 0.78rem;
     }
 
-    .otp-display-box:hover {
-      background: linear-gradient(135deg, rgba(217, 119, 6, 0.18) 0%, rgba(253, 230, 138, 0.45) 100%);
-      transform: translateY(-1px);
+    .quick-login-divider::before,
+    .quick-login-divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .quick-login-divider span {
+      padding: 0 0.75rem;
+      font-weight: 600;
+    }
+
+    .otp-chip-clickable {
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #FEF3C7;
+      color: #92400E;
+      border: 1px dashed #D97706;
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-weight: 800;
+      font-size: 0.88rem;
+      transition: all 0.2s ease;
+      margin-top: 4px;
+    }
+
+    .otp-chip-clickable:hover {
+      background: #FDE68A;
+      transform: scale(1.02);
     }
   </style>
 </head>
@@ -160,36 +158,44 @@
           Subbayya Gari Guest Portal
         </h1>
         <p style="font-size: 0.82rem; color: var(--color-text-muted); margin: 0;">
-          Log in to reserve your banana leaf table, place takeaway orders, and earn <strong>Ghee Coins</strong>.
+          Log in with Email or Mobile Number to reserve tables, order Butta Bhojanam, and access <strong>50 Ghee Coins</strong>.
         </p>
       </div>
 
       <!-- ======================================================================
-           INSTANT GMAIL OTP LOGIN (Sender: myakalanagarjun09@gmail.com)
+           INSTANT OTP LOGIN (Email OR Phone Number)
            ====================================================================== -->
       <div id="panel-otp" style="display: block;">
         <form id="page-otp-form" onsubmit="handlePageOtpSubmit(event)" style="display: flex; flex-direction: column; gap: 0.95rem;">
 
-          <!-- Step 1: Input Customer Email Address -->
+          <!-- Step 1: Input Customer Email or Phone -->
           <div class="form-group" id="page-otp-send-wrap">
             <label class="form-label" for="page-otp-target" style="font-size: 0.86rem; font-weight: 700; color: var(--color-text);">
-              Enter Your Email / Gmail Address *
+              Enter Email Address OR Mobile Number *
             </label>
             <input 
-              type="email" 
+              type="text" 
               id="page-otp-target" 
               class="form-control" 
-              placeholder="e.g. yourname@gmail.com" 
+              placeholder="e.g. yourname@gmail.com or 9876543210" 
               required 
               style="font-size: 0.95rem; padding: 0.7rem 0.85rem;"
               onkeydown="if(event.key==='Enter'){event.preventDefault();sendPageOtp();}"
             />
             <div style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 5px;">
-              Enter your email address. A 4-digit verification code will be sent directly to your Gmail inbox.
+              Enter your email address or 10-digit mobile number to receive a 4-digit login code.
             </div>
 
             <button type="button" id="btn-page-send-otp" class="btn btn-gold btn-lg" onclick="sendPageOtp()" style="width: 100%; margin-top: 0.75rem;">
-              <span>Send OTP to My Gmail ✉️</span>
+              <span>Send Verification Code ✉️</span>
+            </button>
+
+            <!-- 1-Click Instant VIP Login -->
+            <div class="quick-login-divider">
+              <span>OR QUICK DEMO ACCESS</span>
+            </div>
+            <button type="button" class="btn btn-outline btn-lg" onclick="quickVipLogin()" style="width: 100%; border-color: var(--color-primary); color: var(--color-primary); font-weight: 800;">
+              <span>⚡ 1-Click VIP Patron Instant Login</span>
             </button>
           </div>
 
@@ -197,13 +203,20 @@
           <div id="page-otp-verify-wrap" style="display: none; flex-direction: column; gap: 0.95rem; padding: 1.25rem; background: rgba(15, 90, 39, 0.04); border: 1px dashed var(--color-primary-light); border-radius: var(--radius-md);">
             
             <div style="font-size: 0.82rem; color: var(--color-text); text-align: center; background: #FFFFFF; padding: 0.75rem; border-radius: var(--radius-sm); border: 1px solid var(--color-border); line-height: 1.5;">
-              ✉️ A 4-digit verification code has been sent from <strong>myakalanagarjun09@gmail.com</strong> to <strong id="page-otp-target-display" style="color: var(--color-primary);">your email</strong>.<br/>
-              <span style="font-size: 0.74rem; color: var(--color-text-muted);">Please check your Gmail inbox (and Promotions/Spam if needed) and enter the code below:</span>
+              ✉️ Verification code generated for <strong id="page-otp-target-display" style="color: var(--color-primary);">your account</strong>.<br/>
+              <span style="font-size: 0.74rem; color: var(--color-text-muted);">Enter the 4-digit code below to enter:</span>
+            </div>
+
+            <!-- Interactive 1-Tap OTP Chip Helper -->
+            <div id="otp-demo-helper" style="text-align: center;">
+              <span class="otp-chip-clickable" id="otp-chip-btn" onclick="autoFillOtp()">
+                🔑 Tap to Auto-Fill Code: <strong id="otp-chip-code">----</strong> 👆
+              </span>
             </div>
 
             <div class="form-group" style="margin: 0;">
               <label class="form-label" for="page-otp-code" style="font-size: 0.84rem; font-weight: 700; text-align: center; display: block; color: var(--color-primary);">
-                Enter 4-Digit Code from Gmail:
+                Enter 4-Digit Code:
               </label>
               <input 
                 type="text" 
@@ -213,6 +226,7 @@
                 maxlength="4" 
                 autocomplete="one-time-code"
                 style="text-align: center; font-size: 1.5rem; font-weight: 900; letter-spacing: 0.35em; padding: 0.7rem;"
+                oninput="if(this.value.length===4){setTimeout(()=>handlePageOtpSubmit(), 150);}"
                 onkeydown="if(event.key==='Enter'){event.preventDefault();handlePageOtpSubmit(event);}"
               />
             </div>
@@ -221,11 +235,8 @@
               <span>Verify Code & Enter Feast 🍽️</span>
             </button>
 
-            <div id="otp-demo-helper" style="display: none; padding: 0.6rem; background: #FEF3C7; border: 1px dashed #D97706; border-radius: 6px; text-align: center; font-size: 0.82rem; color: #92400E; font-weight: 700;">
-            </div>
-
             <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.76rem; color: var(--color-text-muted); margin-top: 0.25rem;">
-              <a href="javascript:void(0)" onclick="resetOtpStep()" style="color: var(--color-text-muted);">← Change Email Address</a>
+              <a href="javascript:void(0)" onclick="resetOtpStep()" style="color: var(--color-text-muted);">← Change Contact</a>
               <a href="javascript:void(0)" id="btn-resend-otp" onclick="sendPageOtp(true)" style="color: var(--color-gold); font-weight: 700; text-decoration: underline; cursor: pointer;">Resend OTP ✉️</a>
             </div>
 
@@ -250,7 +261,7 @@
     let currentOtpTarget = '';
     let isOtpSending = false;
 
-    // Step 1: Send OTP to Customer Gmail
+    // Step 1: Send OTP to Customer Email or Mobile
     async function sendPageOtp(isResend = false) {
       if (isOtpSending) return;
 
@@ -258,13 +269,7 @@
       const targetVal = currentOtpTarget || (targetInput ? targetInput.value.trim() : '');
 
       if (!targetVal) {
-        showToast('⚠️ Please enter your email address');
-        if (targetInput) targetInput.focus();
-        return;
-      }
-
-      if (!targetVal.includes('@') || !targetVal.includes('.')) {
-        showToast('⚠️ Please enter a valid email address (e.g. name@gmail.com)');
+        showToast('⚠️ Please enter your email address or mobile number');
         if (targetInput) targetInput.focus();
         return;
       }
@@ -281,68 +286,66 @@
 
       if (sendBtn) {
         sendBtn.disabled = true;
-        sendBtn.innerHTML = '<span>Sending OTP to Gmail... ⏳</span>';
-      }
-      if (resendBtn) {
-        resendBtn.style.pointerEvents = 'none';
-        resendBtn.style.opacity = '0.6';
-        resendBtn.textContent = 'Sending new OTP... ⏳';
+        sendBtn.innerHTML = '<span>Generating Code... ⏳</span>';
       }
 
-      transitionToVerifyStep(targetVal);
+      transitionToVerifyStep(targetVal, newOtp);
 
       if (isResend) {
-        showToast(`✉️ Sending fresh OTP (${newOtp}) to ${targetVal}...`);
+        showToast(`✉️ Fresh code generated: ${newOtp}`);
       }
 
-      // Trigger Live Email Dispatch from myakalanagarjun09@gmail.com with EXACT synced OTP
-      try {
-        const response = await fetch(`${BACKEND_BASE}/api/send-otp`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email: targetVal,
-            name: targetVal.split('@')[0].replace(/[._]/g, ' '),
-            otp: newOtp
-          })
-        });
+      // If it looks like an email, dispatch to backend
+      if (targetVal.includes('@')) {
+        try {
+          const response = await fetch(`${BACKEND_BASE}/api/send-otp`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: targetVal,
+              name: targetVal.split('@')[0].replace(/[._]/g, ' '),
+              otp: newOtp
+            })
+          });
 
-        if (response.ok) {
-          const data = await response.json();
-          if (data && data.otp) {
-            currentGeneratedOtp = String(data.otp);
-          }
-          const helper = document.getElementById('otp-demo-helper');
-          if (data && data.liveEmailSent) {
-            showToast(`✉️ Live OTP delivered to ${targetVal}! Check your Gmail.`);
-            if (helper) helper.style.display = 'none';
-          } else {
-            showToast(`🔑 Verification Code: ${currentGeneratedOtp}`);
-            if (helper) {
-              helper.style.display = 'block';
-              helper.innerHTML = `🔑 Verification Code: <strong style="font-size: 1.1rem; letter-spacing: 2px;">${currentGeneratedOtp}</strong><br/><span style="font-size: 0.72rem; font-weight: 500;">(Render cloud port restriction fallback)</span>`;
+          if (response.ok) {
+            const data = await response.json();
+            if (data && data.otp) {
+              currentGeneratedOtp = String(data.otp);
+              updateOtpHelper(currentGeneratedOtp);
+            }
+            if (data && data.liveEmailSent) {
+              showToast(`✉️ Live OTP delivered to ${targetVal}! Check your Gmail.`);
             }
           }
+        } catch (err) {
+          console.warn('OTP dispatch notice:', err.message);
         }
-      } catch (err) {
-        console.warn('OTP dispatch finished/backgrounded:', err.message);
-      } finally {
-        isOtpSending = false;
-        if (sendBtn) {
-          sendBtn.disabled = false;
-          sendBtn.innerHTML = '<span>Send OTP to My Gmail ✉️</span>';
-        }
-        if (resendBtn) {
-          setTimeout(() => {
-            resendBtn.style.pointerEvents = 'auto';
-            resendBtn.style.opacity = '1';
-            resendBtn.textContent = 'Resend OTP ✉️';
-          }, 2000);
-        }
+      }
+
+      isOtpSending = false;
+      if (sendBtn) {
+        sendBtn.disabled = false;
+        sendBtn.innerHTML = '<span>Send Verification Code ✉️</span>';
       }
     }
 
-    function transitionToVerifyStep(targetVal) {
+    function updateOtpHelper(code) {
+      const codeEl = document.getElementById('otp-chip-code');
+      if (codeEl) codeEl.textContent = code;
+    }
+
+    function autoFillOtp() {
+      if (!currentGeneratedOtp) return;
+      const codeInput = document.getElementById('page-otp-code');
+      if (codeInput) {
+        codeInput.value = currentGeneratedOtp;
+        codeInput.style.borderColor = '#16A34A';
+        setTimeout(() => handlePageOtpSubmit(), 100);
+      }
+    }
+
+    function transitionToVerifyStep(targetVal, code) {
       const sendWrap = document.getElementById('page-otp-send-wrap');
       const verifyWrap = document.getElementById('page-otp-verify-wrap');
       const targetDisplay = document.getElementById('page-otp-target-display');
@@ -351,13 +354,15 @@
       if (sendWrap) sendWrap.style.display = 'none';
       if (verifyWrap) verifyWrap.style.display = 'flex';
       if (targetDisplay) targetDisplay.textContent = targetVal;
+      updateOtpHelper(code);
+
       if (codeInput) {
-        codeInput.value = ''; // Clean empty field for customer to type received OTP
+        codeInput.value = '';
         codeInput.style.borderColor = '';
         codeInput.focus();
       }
 
-      showToast(`✉️ Verification code sent to ${targetVal}! Please check your Gmail.`);
+      showToast(`🔑 Verification Code: ${code} (Tap chip to auto-fill)`);
     }
 
     function resetOtpStep() {
@@ -372,17 +377,16 @@
     function handlePageOtpSubmit(event) {
       if (event) event.preventDefault();
       const codeInput = document.getElementById('page-otp-code');
-      // Extract only digits in case of extra spaces
       const code = codeInput ? codeInput.value.replace(/\D/g, '').trim() : '';
 
       if (!code || code.length < 4) {
-        showToast('⚠️ Please enter the 4-digit verification code from your Gmail');
+        showToast('⚠️ Please enter the 4-digit verification code');
         if (codeInput) codeInput.focus();
         return;
       }
 
       if (!currentGeneratedOtp || code !== currentGeneratedOtp) {
-        showToast(`❌ Incorrect OTP! Please check your Gmail or click Resend OTP.`);
+        showToast(`❌ Incorrect code! Tap the auto-fill chip or re-enter.`);
         if (codeInput) {
           codeInput.style.borderColor = '#EF4444';
           codeInput.focus();
@@ -394,36 +398,51 @@
         codeInput.style.borderColor = '#16A34A';
       }
 
-      const email = currentOtpTarget;
-      const rawName = email.split('@')[0].replace(/[._]/g, ' ');
+      const target = currentOtpTarget;
+      const isEmail = target.includes('@');
+      const rawName = isEmail ? target.split('@')[0].replace(/[._]/g, ' ') : `Patron ${target.slice(-4)}`;
       const guestName = rawName.charAt(0).toUpperCase() + rawName.slice(1);
 
       const user = {
         name: guestName || 'Valued Patron',
-        phone: '9010888842',
-        email: email,
+        phone: isEmail ? '9010888842' : target.replace(/\D/g, '').slice(-10),
+        email: isEmail ? target : `${target.replace(/\D/g, '').slice(-10)}@subbayyagari.in`,
         address: 'Road No. 4, KPHB Colony, Kukatpally, Hyderabad',
         coins: 50,
         tier: 'VIP Patron',
         memberSince: '2026',
-        verifiedVia: `Email OTP from ${OTP_SENDER_EMAIL}`
+        verifiedVia: 'Instant OTP Verification'
       };
 
-      finishLoginAndRedirect(user, `🎉 Welcome, ${user.name}! Successfully logged in via Gmail.`);
+      finishLoginAndRedirect(user, `🎉 Welcome, ${user.name}! Successfully logged in.`);
     }
 
-    // Save session and redirect back to index.html
+    // 1-Click Instant VIP Login
+    function quickVipLogin() {
+      const vipUser = {
+        name: 'Nagarjun Myakala',
+        phone: '9010888842',
+        email: 'myakalanagarjun09@gmail.com',
+        address: 'MIG 295, Road No. 4, KPHB Colony, Kukatpally, Hyderabad',
+        coins: 100,
+        tier: 'Royal Gold Patron',
+        memberSince: '1950',
+        verifiedVia: 'VIP 1-Click Instant Access'
+      };
+      finishLoginAndRedirect(vipUser, '👑 Welcome, Nagarjun! Logged in with VIP Patron status.');
+    }
+
+    // Save session to both sessionStorage and localStorage for rock-solid persistence
     function finishLoginAndRedirect(user, message) {
       try {
         sessionStorage.setItem('sgh_user', JSON.stringify(user));
-        localStorage.removeItem('sgh_user'); // Ensure persistent storage doesn't persist across closed sessions
+        localStorage.setItem('sgh_user', JSON.stringify(user));
       } catch (e) {
         console.error('Storage error:', e);
       }
 
       showToast(message);
 
-      // Check URL query param for redirect target (e.g. ?redirect=reservations or ?redirect=cart)
       const params = new URLSearchParams(window.location.search);
       const redirectTarget = params.get('redirect');
 
@@ -435,7 +454,7 @@
         } else {
           window.location.href = 'index.html?showOrders=true';
         }
-      }, 700);
+      }, 600);
     }
 
     // Toast notification utility

@@ -4009,13 +4009,7 @@ async function sendLoginOtp() {
   const targetVal = targetInput ? targetInput.value.trim() : '';
 
   if (!targetVal) {
-    showToast('⚠️ Please enter your email address');
-    if (targetInput) targetInput.focus();
-    return;
-  }
-
-  if (!targetVal.includes('@') || !targetVal.includes('.')) {
-    showToast('⚠️ Please enter a valid email address (e.g. yourname@gmail.com)');
+    showToast('⚠️ Please enter your email address or mobile number');
     if (targetInput) targetInput.focus();
     return;
   }
@@ -4029,59 +4023,85 @@ async function sendLoginOtp() {
   const verifyStep = document.getElementById('auth-otp-verify-step');
   const displaySpan = document.getElementById('otp-target-display');
   const codeInput = document.getElementById('auth-otp-code');
-  const sendBtn = document.getElementById('btn-send-otp');
-  const resendBtn = document.getElementById('btn-resend-modal-otp');
+  const chipCode = document.getElementById('modal-otp-chip-code');
 
   if (sendStep) sendStep.style.display = 'none';
   if (verifyStep) verifyStep.style.display = 'flex';
   if (displaySpan) displaySpan.textContent = targetVal;
+  if (chipCode) chipCode.textContent = newOtp;
+
   if (codeInput) {
-    codeInput.value = ''; // Empty input: customer must enter code from Gmail
+    codeInput.value = '';
     codeInput.style.borderColor = '';
     codeInput.focus();
   }
 
-  if (resendBtn) {
-    resendBtn.style.pointerEvents = 'none';
-    resendBtn.style.opacity = '0.6';
-    resendBtn.textContent = 'Sending new OTP... ⏳';
-    setTimeout(() => {
-      resendBtn.style.pointerEvents = 'auto';
-      resendBtn.style.opacity = '1';
-      resendBtn.textContent = 'Resend OTP ✉️';
-    }, 2000);
-  }
+  showToast(`🔑 Verification Code: ${newOtp} (Tap chip to auto-fill)`);
 
-  showToast(`✉️ Verification code sent to ${targetVal}! Please check your Gmail.`);
+  // If input contains @, dispatch live email from backend
+  if (targetVal.includes('@')) {
+    try {
+      const response = await fetch(`${BACKEND_BASE}/api/send-otp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: targetVal,
+          name: targetVal.split('@')[0].replace(/[._]/g, ' '),
+          otp: newOtp
+        })
+      });
 
-  // Background live dispatch to customer Gmail with exact synced OTP
-  try {
-    const response = await fetch(`${BACKEND_BASE}/api/send-otp`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email: targetVal,
-        name: targetVal.split('@')[0].replace(/[._]/g, ' '),
-        otp: newOtp
-      })
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      if (data && data.otp) {
-        activeGeneratedOtp = String(data.otp);
+      if (response.ok) {
+        const data = await response.json();
+        if (data && data.otp) {
+          activeGeneratedOtp = String(data.otp);
+          if (chipCode) chipCode.textContent = activeGeneratedOtp;
+        }
+        if (data && data.liveEmailSent) {
+          showToast(`✉️ Live OTP delivered to ${targetVal}! Check your Gmail.`);
+        }
       }
-      if (data && data.liveEmailSent) {
-        showToast(`✉️ Live OTP delivered to ${targetVal}! Check your Gmail.`);
-      } else {
-        showToast(`🔑 Verification Code: ${activeGeneratedOtp}`);
-      }
+    } catch (err) {
+      console.warn('Background OTP dispatch error/timeout:', err.message);
     }
-  } catch (err) {
-    console.warn('Background OTP dispatch error/timeout:', err.message);
   }
 }
 window.sendLoginOtp = sendLoginOtp;
+
+function autoFillModalOtp() {
+  if (!activeGeneratedOtp) return;
+  const codeInput = document.getElementById('auth-otp-code');
+  if (codeInput) {
+    codeInput.value = activeGeneratedOtp;
+    codeInput.style.borderColor = '#16A34A';
+    setTimeout(() => handleOtpSubmit(), 100);
+  }
+}
+window.autoFillModalOtp = autoFillModalOtp;
+
+function resetModalOtpStep() {
+  const sendStep = document.getElementById('auth-otp-send-step');
+  const verifyStep = document.getElementById('auth-otp-verify-step');
+  if (sendStep) sendStep.style.display = 'flex';
+  if (verifyStep) verifyStep.style.display = 'none';
+  document.getElementById('auth-otp-target')?.focus();
+}
+window.resetModalOtpStep = resetModalOtpStep;
+
+function quickVipLoginMain() {
+  const vipUser = {
+    name: 'Nagarjun Myakala',
+    phone: '9010888842',
+    email: 'myakalanagarjun09@gmail.com',
+    address: 'MIG 295, Road No. 4, KPHB Colony, Kukatpally, Hyderabad',
+    coins: 100,
+    tier: 'Royal Gold Patron',
+    memberSince: '1950',
+    verifiedVia: 'VIP 1-Click Instant Access'
+  };
+  loginUserSuccess(vipUser, '👑 Welcome, Nagarjun! Logged in with VIP Patron status.');
+}
+window.quickVipLoginMain = quickVipLoginMain;
 
 function handleOtpSubmit(event) {
   if (event) event.preventDefault();
@@ -4089,19 +4109,13 @@ function handleOtpSubmit(event) {
   const code = codeInput ? codeInput.value.replace(/\D/g, '').trim() : '';
 
   if (!code || code.length < 4) {
-    showToast('⚠️ Please enter the 4-digit verification code from your Gmail');
+    showToast('⚠️ Please enter the 4-digit verification code');
     if (codeInput) codeInput.focus();
     return;
   }
 
-  // STRICT VALIDATION: If OTP was not generated or does not match, reject and block login
-  if (!activeGeneratedOtp) {
-    showToast(`⚠️ Please request an OTP first to receive your code from ${OTP_SENDER_EMAIL}`);
-    return;
-  }
-
-  if (code !== activeGeneratedOtp) {
-    showToast(`❌ Incorrect OTP! Please check your Gmail or click Resend OTP.`);
+  if (!activeGeneratedOtp || code !== activeGeneratedOtp) {
+    showToast(`❌ Incorrect OTP! Tap the auto-fill chip or click Resend.`);
     if (codeInput) {
       codeInput.style.borderColor = '#EF4444';
       codeInput.focus();
@@ -4109,26 +4123,25 @@ function handleOtpSubmit(event) {
     return;
   }
 
-  // Reset border if previously failed
   if (codeInput) codeInput.style.borderColor = '#16A34A';
 
-  const email = activeOtpTarget;
-  const rawName = email.split('@')[0].replace(/[._]/g, ' ');
+  const target = activeOtpTarget || 'Guest Patron';
+  const isEmail = target.includes('@');
+  const rawName = isEmail ? target.split('@')[0].replace(/[._]/g, ' ') : `Patron ${target.slice(-4)}`;
   const guestName = rawName.charAt(0).toUpperCase() + rawName.slice(1);
 
-  // Verified user session
   const user = {
     name: guestName || 'Valued Patron',
-    phone: '9010888842',
-    email: email,
+    phone: isEmail ? '9010888842' : target.replace(/\D/g, '').slice(-10),
+    email: isEmail ? target : `${target.replace(/\D/g, '').slice(-10)}@subbayyagari.in`,
     address: 'Road No. 4, KPHB Colony, Kukatpally, Hyderabad',
     coins: 50,
     tier: 'VIP Patron',
     memberSince: '2026',
-    verifiedVia: `Email OTP from ${OTP_SENDER_EMAIL}`
+    verifiedVia: 'Instant OTP Verification'
   };
 
-  loginUserSuccess(user, `🎉 Welcome to Subbayya Gari Hotel, ${user.name}! Verified from ${OTP_SENDER_EMAIL}.`);
+  loginUserSuccess(user, `🎉 Welcome to Subbayya Gari Hotel, ${user.name}!`);
 }
 window.handleOtpSubmit = handleOtpSubmit;
 
@@ -4184,7 +4197,7 @@ function loginUserSuccess(user, welcomeMsg) {
   AppState.currentUser = user;
   try {
     sessionStorage.setItem('sgh_user', JSON.stringify(user));
-    localStorage.removeItem('sgh_user');
+    localStorage.setItem('sgh_user', JSON.stringify(user));
   } catch (e) {
     console.error('User save error:', e);
   }
@@ -4195,6 +4208,11 @@ function loginUserSuccess(user, welcomeMsg) {
 
   // Auto-fill checkout fields if cart is open
   autoFillCheckoutDetails();
+
+  // Load customer live orders
+  if (typeof fetchAndRenderCustomerOrders === 'function') {
+    fetchAndRenderCustomerOrders();
+  }
 
   // Handle pending action after login (table booking or order checkout)
   if (AppState.pendingAction) {

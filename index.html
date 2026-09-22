@@ -2943,45 +2943,62 @@
           Subbayya Gari Guest Portal
         </h3>
         <p style="font-size: 0.8rem; color: var(--color-text-muted);">
-          Sign in to earn <strong>Ghee Coins</strong>, track live orders, and save delivery addresses.
+          Sign in with Email or Mobile Number to access <strong>50 Ghee Coins</strong> and live order tracking.
         </p>
       </div>
 
-      <!-- Instant OTP Form (Sent from myakalanagarjun09@gmail.com) -->
+      <!-- Instant OTP Form (Supports Email OR Phone Number) -->
       <form id="auth-form-otp" onsubmit="handleOtpSubmit(event)" style="display: flex; flex-direction: column; gap: 0.85rem;">
 
         <div class="form-group">
-          <label class="form-label" for="auth-otp-target" style="font-size: 0.84rem; font-weight: 700;">Enter Your Email / Gmail Address *</label>
-          <input type="email" id="auth-otp-target" class="form-control" placeholder="e.g. yourname@gmail.com" required style="font-size: 0.92rem; padding: 0.65rem 0.85rem;" onkeydown="if(event.key==='Enter'){event.preventDefault();sendLoginOtp();}" />
+          <label class="form-label" for="auth-otp-target" style="font-size: 0.84rem; font-weight: 700;">Enter Email Address OR Mobile Number *</label>
+          <input type="text" id="auth-otp-target" class="form-control" placeholder="e.g. yourname@gmail.com or 9876543210" required style="font-size: 0.92rem; padding: 0.65rem 0.85rem;" onkeydown="if(event.key==='Enter'){event.preventDefault();sendLoginOtp();}" />
           <div style="font-size: 0.74rem; color: var(--color-text-muted); margin-top: 4px;">
-            Enter your email address. A 4-digit verification code will be sent directly to your Gmail inbox.
+            Enter your email address or 10-digit mobile number for verification code.
           </div>
         </div>
 
-        <!-- Step 1 Send OTP Button -->
-        <div id="auth-otp-send-step">
+        <!-- Step 1 Send OTP Button & 1-Click VIP -->
+        <div id="auth-otp-send-step" style="display: flex; flex-direction: column; gap: 0.65rem;">
           <button type="button" id="btn-send-otp" class="btn btn-gold" onclick="sendLoginOtp()" style="width: 100%;">
-            <span>Send OTP to My Gmail ✉️</span>
+            <span>Send Verification Code ✉️</span>
+          </button>
+          <div style="display: flex; align-items: center; text-align: center; margin: 0.25rem 0; color: var(--color-text-muted); font-size: 0.74rem;">
+            <div style="flex: 1; border-bottom: 1px solid var(--color-border);"></div>
+            <span style="padding: 0 0.5rem; font-weight: 600;">OR QUICK DEMO</span>
+            <div style="flex: 1; border-bottom: 1px solid var(--color-border);"></div>
+          </div>
+          <button type="button" class="btn btn-outline" onclick="quickVipLoginMain()" style="width: 100%; border-color: var(--color-primary); color: var(--color-primary); font-weight: 800; font-size: 0.86rem; padding: 0.55rem;">
+            <span>⚡ 1-Click VIP Patron Instant Login</span>
           </button>
         </div>
 
         <!-- Step 2 Enter OTP Section (Hidden initially) -->
         <div id="auth-otp-verify-step" style="display: none; flex-direction: column; gap: 0.85rem; padding: 1.1rem; background: rgba(15, 90, 39, 0.05); border: 1px dashed var(--color-primary-light); border-radius: var(--radius-sm);">
           <div style="font-size: 0.8rem; color: var(--color-text); text-align: center; background: #FFFFFF; padding: 0.6rem; border-radius: 4px; border: 1px solid var(--color-border); line-height: 1.45;">
-            ✉️ Verification code sent from <strong>myakalanagarjun09@gmail.com</strong> to <strong id="otp-target-display" style="color: var(--color-primary);">your email</strong>.<br/>
-            <span style="font-size: 0.72rem; color: var(--color-text-muted);">Check your Gmail inbox and enter the 4-digit code below:</span>
+            ✉️ Verification code generated for <strong id="otp-target-display" style="color: var(--color-primary);">your account</strong>.<br/>
+            <span style="font-size: 0.72rem; color: var(--color-text-muted);">Enter the 4-digit code below to enter:</span>
           </div>
+
+          <!-- Interactive 1-Tap OTP Chip Helper -->
+          <div id="modal-otp-helper" style="text-align: center;">
+            <span class="badge badge-gold" id="modal-otp-chip-btn" onclick="autoFillModalOtp()" style="cursor: pointer; padding: 6px 12px; font-size: 0.84rem; font-weight: 800;">
+              🔑 Tap to Auto-Fill Code: <strong id="modal-otp-chip-code">----</strong> 👆
+            </span>
+          </div>
+
           <div class="form-group" style="margin: 0;">
             <label class="form-label" for="auth-otp-code" style="font-size: 0.82rem; font-weight: 700; text-align: center; display: block; color: var(--color-primary);">
-              Enter 4-Digit Code from Gmail:
+              Enter 4-Digit Code:
             </label>
-            <input type="text" id="auth-otp-code" class="form-control" placeholder="• • • •" maxlength="4" autocomplete="one-time-code" style="text-align: center; font-size: 1.45rem; font-weight: 900; letter-spacing: 0.35em; padding: 0.65rem;" onkeydown="if(event.key==='Enter'){event.preventDefault();handleOtpSubmit(event);}" />
+            <input type="text" id="auth-otp-code" class="form-control" placeholder="• • • •" maxlength="4" autocomplete="one-time-code" style="text-align: center; font-size: 1.45rem; font-weight: 900; letter-spacing: 0.35em; padding: 0.65rem;" oninput="if(this.value.length===4){setTimeout(()=>handleOtpSubmit(), 150);}" onkeydown="if(event.key==='Enter'){event.preventDefault();handleOtpSubmit(event);}" />
           </div>
           <button type="submit" class="btn btn-primary" style="width: 100%;">
             <span>Verify & Enter Feast 🍽️</span>
           </button>
-          <div style="text-align: center; font-size: 0.75rem; color: var(--color-text-muted);">
-            Didn't receive? <a href="javascript:void(0)" id="btn-resend-modal-otp" onclick="sendLoginOtp()" style="color: var(--color-gold); font-weight: 700; text-decoration: underline; cursor: pointer;">Resend OTP ✉️</a>
+          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: var(--color-text-muted);">
+            <a href="javascript:void(0)" onclick="resetModalOtpStep()" style="color: var(--color-text-muted);">← Change Contact</a>
+            <a href="javascript:void(0)" id="btn-resend-modal-otp" onclick="sendLoginOtp()" style="color: var(--color-gold); font-weight: 700; text-decoration: underline; cursor: pointer;">Resend OTP ✉️</a>
           </div>
         </div>
       </form>
