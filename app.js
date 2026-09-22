@@ -2379,19 +2379,56 @@ function renderCartDrawer() {
 
   document.getElementById('cart-grand-total').textContent = `₹${grandTotal}`;
 
-  // Update Checkout Button State
+  // Update Online UPI Payment Section
+  const upiPayAmount = document.getElementById('upi-pay-amount');
+  if (upiPayAmount) upiPayAmount.textContent = grandTotal;
+
+  const upiId = '9121792433@ybl';
+  const upiPaymentUrl = `upi://pay?pa=${upiId}&pn=Subbayya%20Gari%20Hotel&am=${grandTotal}&cu=INR&tn=Subbayya%20Food%20Order`;
+  const directUpiBtn = document.getElementById('direct-upi-pay-btn');
+  if (directUpiBtn) {
+    directUpiBtn.href = upiPaymentUrl;
+  }
+
+  const qrImg = document.getElementById('upi-qr-image');
+  if (qrImg) {
+    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(upiPaymentUrl)}`;
+  }
+
+  // Update Checkout Button State - 100% Online Payment
   const cartCheckoutBtn = document.getElementById('cart-checkout-btn');
   const cartCheckoutBtnText = document.getElementById('cart-checkout-btn-text');
   const orderModeLabel = isDelivery ? 'Delivery' : 'Pickup';
 
   if (cartCheckoutBtnText) {
-    cartCheckoutBtnText.textContent = `Confirm & Place ${orderModeLabel} Order (₹${grandTotal}) 🚀`;
+    cartCheckoutBtnText.textContent = `Pay ₹${grandTotal} Online & Place ${orderModeLabel} Order ⚡`;
   }
   if (cartCheckoutBtn) {
     cartCheckoutBtn.classList.remove('btn-outline-gold');
     cartCheckoutBtn.classList.add('btn-gold');
   }
 }
+
+function copyUpiId(upiId) {
+  const idToCopy = upiId || '9121792433@ybl';
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(idToCopy).then(() => {
+      const copyBtnText = document.getElementById('copy-upi-btn-text');
+      if (copyBtnText) {
+        copyBtnText.textContent = '✅ Copied!';
+        setTimeout(() => {
+          copyBtnText.textContent = '📋 Copy';
+        }, 2000);
+      }
+      showToast(`📋 UPI ID (${idToCopy}) copied to clipboard!`);
+    }).catch(() => {
+      prompt('Copy UPI ID:', idToCopy);
+    });
+  } else {
+    prompt('Copy UPI ID:', idToCopy);
+  }
+}
+window.copyUpiId = copyUpiId;
 
 // Calculate Great-circle distance between two GPS coordinates using Haversine formula
 function calculateDistanceBetweenCoords(lat1, lon1, lat2, lon2) {
@@ -2874,7 +2911,6 @@ function proceedToCheckout() {
   const subtotal = AppState.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
   const packagingFee = 30;
   const exactKm = AppState.deliveryExactKm || AppState.deliveryDistanceKm || 2;
-  // Delivery charge calculation: 2km <= 30rs, then ₹10/km
   const deliveryFee = isDelivery ? calculateDeliveryFee(exactKm) : 0;
   
   let discount = 0;
@@ -2883,53 +2919,11 @@ function proceedToCheckout() {
   }
 
   const grandTotal = subtotal + packagingFee + deliveryFee - discount;
-  
-  // Format WhatsApp Order Message
-  let message = `*🌿 SUBBAYYA GARI HOTEL - NEW ORDER*%0A`;
-  message += `👤 *Customer Name:* ${encodeURIComponent(customerName)}%0A`;
-  message += `📞 *Phone / WhatsApp:* ${encodeURIComponent(customerPhone)}%0A`;
-  
-  if (!isDelivery) {
-    message += `📦 *Order Type:* 🥡 RESTAURANT PICKUP / TAKEAWAY%0A`;
-    message += `🏢 *Pickup Outlet:* ${encodeURIComponent(activeBranchObj.name)}%0A`;
-    message += `📍 *Outlet Address:* ${encodeURIComponent(activeBranchObj.address)}%0A`;
-    message += `⏰ *Pickup Schedule:* ${encodeURIComponent(pickupSlot)}%0A`;
-    if (vehicleNote) {
-      message += `🚗 *Vehicle / Handover Note:* ${encodeURIComponent(vehicleNote)}%0A`;
-    }
-    message += `🛵 *Delivery Fee:* FREE (Self Pickup)%0A`;
-  } else {
-    message += `📦 *Order Type:* 🛵 HOME DELIVERY (${exactKm} km — ₹30 for ≤2km + ₹10/km)%0A`;
-    message += `🏢 *Serving Branch:* ${encodeURIComponent(activeBranchObj.name)}%0A`;
-    if (deliveryAddress) {
-      message += `🏠 *Delivery Address:* ${encodeURIComponent(deliveryAddress)}%0A`;
-    }
-    if (deliveryLandmark) {
-      message += `🚩 *Landmark:* ${encodeURIComponent(deliveryLandmark)}%0A`;
-    }
-    if (gpsMapUrl) {
-      message += `📍 *Exact Google Maps Live Location:* ${encodeURIComponent(gpsMapUrl)}%0A`;
-    }
-    message += `🛵 *Delivery Charges:* ₹${deliveryFee} (${exactKm} km — ₹30 for ≤2km + ₹10/km)%0A`;
-  }
 
-  message += `%0A*📋 ORDER DETAILS:*%0A`;
-  
-  AppState.cart.forEach((item, idx) => {
-    message += `${idx + 1}. ${item.name} x ${item.qty} = ₹${item.price * item.qty}%0A`;
-  });
-
-  message += `%0A*💰 Item Total:* ₹${subtotal}%0A`;
-  message += `*🍃 Packaging (Banana Leaf & Butta):* ₹${packagingFee}%0A`;
-  if (isDelivery) {
-    message += `*🛵 Delivery Charges:* ₹${deliveryFee} (${exactKm} km)%0A`;
-  }
-  if (discount > 0) {
-    message += `*🎉 Godavari Promo:* -₹${discount}%0A`;
-  }
-  message += `*⭐ Grand Total:* ₹${grandTotal}%0A%0A`;
-  message += `_Packing: Authentic Traditional Banana Leaf & Eco Butta_%0A`;
-  message += `_Thank you for ordering with Subbayya Gari Godavari Bhojanam!_`;
+  // Payment Method: 100% Online UPI Payment Only
+  const upiUtr = document.getElementById('upi-utr-input')?.value.trim() || '';
+  const paymentMethodLabel = 'Online UPI (9121792433@ybl)';
+  const paymentStatusLabel = upiUtr ? `Paid via UPI (Ref: ${upiUtr})` : 'Paid Online (UPI: 9121792433@ybl)';
 
   const newOrderId = 'SGH-' + Math.floor(100000 + Math.random() * 900000);
   const nowIso = new Date().toISOString();
@@ -2965,7 +2959,10 @@ function proceedToCheckout() {
     gpsMapUrl: gpsMapUrl,
     pickupSlot: pickupSlot,
     vehicleNote: vehicleNote,
-    paymentStatus: 'Paid Online / Verified'
+    paymentMethod: paymentMethodLabel,
+    paymentStatus: paymentStatusLabel,
+    paymentUtr: upiUtr,
+    upiId: '9121792433@ybl'
   };
 
   // Ensure customer profile is recorded so "My Orders" and profile are accessible
@@ -3047,7 +3044,13 @@ function showOrderConfirmationModal(orderId, name, phone, whatsappMsg, details =
   if (confId) confId.textContent = orderId;
   if (confName) confName.textContent = name;
   if (confBranch) confBranch.textContent = (details.branchName || AppState.selectedBranch).toUpperCase();
-  if (confPayment) confPayment.textContent = details.paymentStatus || 'Paid Online (Verified)';
+  if (confPayment) {
+    if (details.paymentMethod) {
+      confPayment.textContent = `${details.paymentMethod} (${details.paymentStatus || 'Verified'})`;
+    } else {
+      confPayment.textContent = details.paymentStatus || 'Paid Online via UPI';
+    }
+  }
   
   if (confOrderType) {
     confOrderType.textContent = details.orderType === 'delivery' ? '🛵 Home Delivery' : '🥡 Restaurant Pickup';
@@ -3084,10 +3087,10 @@ function showOrderConfirmationModal(orderId, name, phone, whatsappMsg, details =
     if (details.orderType === 'delivery') {
       deliveryRow.style.display = 'block';
       let addrParts = [];
-      if (details.address) addrParts.push(details.address);
-      if (details.landmark) addrParts.push(`Landmark: ${details.landmark}`);
-      if (details.locationUrl) {
-        addrParts.push(`<a href="${details.locationUrl}" target="_blank" style="color: var(--color-gold); font-weight: 700; text-decoration: underline;">📍 View Live Location Pin ↗</a>`);
+      if (details.deliveryAddress || details.address) addrParts.push(details.deliveryAddress || details.address);
+      if (details.deliveryLandmark || details.landmark) addrParts.push(`Landmark: ${details.deliveryLandmark || details.landmark}`);
+      if (details.gpsMapUrl || details.locationUrl) {
+        addrParts.push(`<a href="${details.gpsMapUrl || details.locationUrl}" target="_blank" style="color: var(--color-gold); font-weight: 700; text-decoration: underline;">📍 View Live Location Pin ↗</a>`);
       }
       deliveryLoc.innerHTML = addrParts.join('<br/>') || 'Delivery location recorded';
     } else {
@@ -3102,7 +3105,7 @@ function showOrderConfirmationModal(orderId, name, phone, whatsappMsg, details =
   }
 
   const waBtn = document.getElementById('conf-whatsapp-btn');
-  if (waBtn) {
+  if (waBtn && whatsappMsg) {
     waBtn.href = `https://api.whatsapp.com/send?phone=919010888842&text=${whatsappMsg}`;
   }
 
@@ -4938,7 +4941,7 @@ async function fetchAndRenderCustomerOrders() {
               <span>${ord.branchName || 'KPHB Colony, Hyderabad'}</span>
             </div>
             ${ord.tableNumber ? `<span style="background:rgba(16,185,129,0.15); color:#10B981; font-weight:800; padding:2px 8px; border-radius:4px; font-size:0.75rem;">🪑 Table #${ord.tableNumber}</span>` : ''}
-            <span style="color: var(--color-gold); font-weight: 700; font-size: 0.74rem;">💳 ${ord.paymentStatus || 'Paid Online'}</span>
+            <span style="color: var(--color-gold); font-weight: 700; font-size: 0.74rem;">💳 ${ord.paymentMethod || ord.paymentStatus || 'Paid via UPI'}</span>
           </div>
 
           <!-- Dishes Ordered -->
@@ -5262,10 +5265,12 @@ async function openOrderDetailsModal(orderId) {
 
   if (grandTotalEl) grandTotalEl.textContent = `₹${grandTotalVal}`;
 
-  // WhatsApp Track Button
-  const waBtn = document.getElementById('dtl-whatsapp-track-btn');
-  if (waBtn) {
-    waBtn.href = `https://api.whatsapp.com/send?phone=919010888842&text=${encodeURIComponent('Hi Subbayya Gari Hotel, I would like to check the live status of my order #' + ord.id)}`;
+  // Support Call Button
+  const supportBtn = document.getElementById('dtl-support-btn');
+  if (supportBtn) {
+    const branchObj = BRANCHES_DATA.find(b => b.id === ord.branchId) || BRANCHES_DATA[0];
+    supportBtn.href = `tel:${branchObj.phone ? branchObj.phone.replace(/[^0-9+]/g, '') : '+919010888842'}`;
+    supportBtn.innerHTML = `📞 Call ${branchObj.name ? branchObj.name.split(',')[0] : 'Restaurant'}`;
   }
 
   modal.classList.add('active');
