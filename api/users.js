@@ -85,7 +85,7 @@ function registerUserHandler(req, res) {
     email: cleanEmail,
     address: (address || 'Hyderabad, Telangana').trim(),
     coins: 50,
-    tier: 'VIP Patron',
+    tier: 'Royal Patron',
     memberSince: new Date().getFullYear().toString(),
     registeredAt: new Date().toISOString()
   };

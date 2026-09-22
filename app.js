@@ -4107,21 +4107,6 @@ function resetModalOtpStep() {
 }
 window.resetModalOtpStep = resetModalOtpStep;
 
-function quickVipLoginMain() {
-  const vipUser = {
-    name: 'Nagarjun Myakala',
-    phone: '9010888842',
-    email: 'myakalanagarjun09@gmail.com',
-    address: 'MIG 295, Road No. 4, KPHB Colony, Kukatpally, Hyderabad',
-    coins: 100,
-    tier: 'Royal Gold Patron',
-    memberSince: '1950',
-    verifiedVia: 'VIP 1-Click Instant Access'
-  };
-  loginUserSuccess(vipUser, '👑 Welcome, Nagarjun! Logged in with VIP Patron status.');
-}
-window.quickVipLoginMain = quickVipLoginMain;
-
 function handleOtpSubmit(event) {
   if (event) event.preventDefault();
   const codeInput = document.getElementById('auth-otp-code');
@@ -4154,7 +4139,7 @@ function handleOtpSubmit(event) {
     email: finalEmail,
     address: 'Road No. 4, KPHB Colony, Kukatpally, Hyderabad',
     coins: 50,
-    tier: 'VIP Patron',
+    tier: 'Royal Patron',
     memberSince: '2026',
     verifiedVia: 'Instant OTP Verification'
   };
@@ -5320,7 +5305,7 @@ function openProfileModal(initialTab = 'account') {
   if (detailNameEl) detailNameEl.textContent = user.name;
   if (detailPhoneEl) detailPhoneEl.textContent = user.phone;
   if (detailEmailEl) detailEmailEl.textContent = user.email || 'guest@subbayyagari.in';
-  if (detailTierEl) detailTierEl.textContent = user.tier || '👑 VIP Member';
+  if (detailTierEl) detailTierEl.textContent = user.tier || '✨ Royal Patron';
   if (detailSinceEl) detailSinceEl.textContent = user.memberSince || '2026';
 
   switchProfileTab(initialTab);

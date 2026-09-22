@@ -453,27 +453,12 @@
         email: finalEmail,
         address: 'Road No. 4, KPHB Colony, Kukatpally, Hyderabad',
         coins: 50,
-        tier: 'VIP Patron',
+        tier: 'Royal Patron',
         memberSince: '2026',
         verifiedVia: 'Instant OTP Verification'
       };
 
       finishLoginAndRedirect(user, `🎉 Welcome, ${user.name}! Successfully logged in.`);
-    }
-
-    // 1-Click Instant VIP Login
-    function quickVipLogin() {
-      const vipUser = {
-        name: 'Nagarjun Myakala',
-        phone: '9010888842',
-        email: 'myakalanagarjun09@gmail.com',
-        address: 'MIG 295, Road No. 4, KPHB Colony, Kukatpally, Hyderabad',
-        coins: 100,
-        tier: 'Royal Gold Patron',
-        memberSince: '1950',
-        verifiedVia: 'VIP 1-Click Instant Access'
-      };
-      finishLoginAndRedirect(vipUser, '👑 Welcome, Nagarjun! Logged in with VIP Patron status.');
     }
 
     // Save session to both sessionStorage and localStorage for rock-solid persistence
