@@ -263,42 +263,58 @@ module.exports = {
     res.json({
       success: true,
       count: menu.length,
-      menu
+      menu,
+      data: menu
     });
   },
 
   // POST /api/menu/update - Update price, stock status, or details of an item
   updateMenuItemHandler: (req, res) => {
     try {
-      const { id, price, inStock, isBestseller, name, description } = req.body || {};
+      const { id, price, originalPrice, inStock, isAvailable, isBestseller, name, description, image, photo, imageUrl } = req.body || {};
 
-      if (!id) {
-        return res.status(400).json({ success: false, error: 'Item ID is required.' });
+      if (!id && !name) {
+        return res.status(400).json({ success: false, error: 'Item ID or name is required.' });
       }
 
       const menu = getMenu();
-      const itemIndex = menu.findIndex(item => item.id === id);
+      const targetId = (id || '').toString();
+      const targetName = (name || '').toLowerCase().trim();
+
+      const itemIndex = menu.findIndex(item =>
+        (targetId && item.id === targetId) ||
+        (targetName && item.name.toLowerCase().trim() === targetName) ||
+        (targetId && item.name.toLowerCase().trim() === targetId.toLowerCase().trim())
+      );
 
       if (itemIndex === -1) {
-        return res.status(404).json({ success: false, error: `Item with id ${id} not found.` });
+        return res.status(404).json({ success: false, error: `Item with id ${id || name} not found.` });
       }
 
       const item = menu[itemIndex];
       if (price !== undefined && !isNaN(Number(price))) item.price = Number(price);
+      if (originalPrice !== undefined && !isNaN(Number(originalPrice))) item.originalPrice = Number(originalPrice);
       if (inStock !== undefined) item.inStock = Boolean(inStock);
+      if (isAvailable !== undefined) item.inStock = Boolean(isAvailable);
       if (isBestseller !== undefined) item.isBestseller = Boolean(isBestseller);
       if (name) item.name = name;
       if (description) item.description = description;
 
+      const newImg = image || photo || imageUrl;
+      if (newImg && typeof newImg === 'string' && newImg.trim()) {
+        item.image = newImg.trim();
+      }
+
       menu[itemIndex] = item;
       saveMenu(menu);
 
-      console.log(`[Menu Updated by Owner] ${item.name} (${item.id}): Price=₹${item.price}, inStock=${item.inStock}`);
+      console.log(`[Menu Updated by Owner] ${item.name} (${item.id}): Price=₹${item.price}, Photo=${item.image ? item.image.slice(0, 40) + '...' : 'none'}, inStock=${item.inStock}`);
 
       res.json({
         success: true,
         message: `Updated ${item.name} successfully!`,
-        item
+        item,
+        data: item
       });
     } catch (err) {
       console.error('Error updating menu item:', err);
@@ -306,7 +322,6 @@ module.exports = {
     }
   },
 
-  // POST /api/menu/reset - Restore default menu prices
   resetMenuHandler: (req, res) => {
     saveMenu(DEFAULT_MENU);
     res.json({

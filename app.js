@@ -1922,26 +1922,102 @@ document.addEventListener('click', (e) => {
 // Live Real-Time Synchronization between Owner Command Center & Customer Site
 async function syncLiveMenuAndSettings() {
   try {
-    // 1. Fetch live menu prices & stock status
-    const menuRes = await fetch(`${BACKEND_BASE}/api/menu`);
-    if (menuRes.ok) {
-      const menuData = await menuRes.json();
-      if (menuData && Array.isArray(menuData.menu)) {
-        let hasChanges = false;
-        menuData.menu.forEach(liveItem => {
-          const localItem = MENU_DATA.find(m => m.id === liveItem.id);
-          if (localItem) {
-            if (localItem.price !== liveItem.price || localItem.inStock !== liveItem.inStock) {
-              localItem.price = liveItem.price;
-              localItem.inStock = liveItem.inStock;
-              hasChanges = true;
-            }
+    // 1. Fetch live menu from Owner Operations Portal (Render & localhost:5000) and customer backend
+    const endpoints = [
+      'https://subbayya-gari-hotel.onrender.com/api/menu',
+      `${BACKEND_BASE}/api/menu`
+    ];
+    if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+      endpoints.unshift('http://localhost:5000/api/menu');
+    }
+
+    let liveItems = null;
+    for (const url of [...new Set(endpoints)]) {
+      try {
+        const res = await fetch(url, { cache: 'no-store' });
+        if (res.ok) {
+          const json = await res.json();
+          const list = json.data || json.menu || json.items;
+          if (Array.isArray(list) && list.length > 0) {
+            liveItems = list;
+            break;
           }
-        });
-        if (hasChanges) {
-          renderMenuGrid();
-          if (typeof renderRateBoard === 'function') renderRateBoard();
-          updateCartBadge();
+        }
+      } catch (err) {
+        // Continue to next endpoint
+      }
+    }
+
+    if (Array.isArray(liveItems) && liveItems.length > 0) {
+      let hasChanges = false;
+
+      liveItems.forEach(liveItem => {
+        const liveId = (liveItem.itemId || liveItem.id || '').toString();
+        const liveName = (liveItem.name || '').toLowerCase().trim();
+        const liveTelugu = (liveItem.telugu || '').trim();
+
+        // Match locally by id, itemId, english name, or telugu name
+        const localItem = MENU_DATA.find(m =>
+          (liveId && (m.id === liveId || m.itemId === liveId)) ||
+          (liveName && m.name.toLowerCase().trim() === liveName) ||
+          (liveTelugu && m.telugu && m.telugu.trim() === liveTelugu)
+        );
+
+        if (localItem) {
+          const newPrice = Number(liveItem.price);
+          const newOrigPrice = liveItem.originalPrice !== undefined && liveItem.originalPrice !== null ? Number(liveItem.originalPrice) : localItem.originalPrice;
+          const newImage = liveItem.image || liveItem.photo || liveItem.imageUrl;
+          const newStock = liveItem.isAvailable !== undefined ? Boolean(liveItem.isAvailable) : (liveItem.inStock !== undefined ? Boolean(liveItem.inStock) : localItem.inStock);
+
+          // Update Price (Cost)
+          if (!isNaN(newPrice) && newPrice > 0 && localItem.price !== newPrice) {
+            localItem.price = newPrice;
+            hasChanges = true;
+          }
+
+          // Update Original / Strikethrough Price
+          if (newOrigPrice !== undefined && localItem.originalPrice !== newOrigPrice) {
+            localItem.originalPrice = newOrigPrice;
+            hasChanges = true;
+          }
+
+          // Update Photo / Image
+          if (newImage && typeof newImage === 'string' && newImage.trim() && localItem.image !== newImage.trim()) {
+            localItem.image = newImage.trim();
+            hasChanges = true;
+          }
+
+          // Update Stock Availability
+          if (newStock !== undefined && localItem.inStock !== newStock) {
+            localItem.inStock = newStock;
+            hasChanges = true;
+          }
+
+          // Update Description if provided
+          if (liveItem.description && localItem.description !== liveItem.description) {
+            localItem.description = liveItem.description;
+            hasChanges = true;
+          }
+        }
+      });
+
+      if (hasChanges) {
+        console.log('[Live Menu Sync] Updated menu items (photos & costs) from Owner Portal!');
+        renderMenuGrid();
+        if (typeof renderRateBoard === 'function') renderRateBoard();
+        updateCartBadge();
+
+        // Synchronize active cart items with latest photo and price
+        if (Array.isArray(AppState.cart)) {
+          AppState.cart.forEach(cartItem => {
+            const fresh = MENU_DATA.find(m => m.id === cartItem.id || m.name === cartItem.name);
+            if (fresh) {
+              cartItem.price = fresh.price;
+              if (fresh.image) cartItem.image = fresh.image;
+            }
+          });
+          saveCart();
+          updateCartUI();
         }
       }
     }
@@ -1952,7 +2028,6 @@ async function syncLiveMenuAndSettings() {
       const settingsData = await settingsRes.json();
       const settings = settingsData.settings;
       if (settings) {
-        // Update top announcement bar if present
         const announceTextEl = document.querySelector('.announcement-bar span:nth-child(2)');
         if (announceTextEl && settings.announcementText) {
           announceTextEl.textContent = settings.announcementText;
@@ -1960,7 +2035,7 @@ async function syncLiveMenuAndSettings() {
       }
     }
   } catch (err) {
-    // Network silent catch
+    // Silent catch
   }
 }
 window.syncLiveMenuAndSettings = syncLiveMenuAndSettings;
@@ -6140,5 +6215,20 @@ if (typeof document !== "undefined") {
     initCustomerLiveSync();
     updateHeaderMyOrdersBadge();
     fetchAndRenderCustomerOrders();
+  });
+}
+
+
+// Cross-tab instant synchronization for menu changes
+window.addEventListener('storage', (e) => {
+  if (e.key === 'sgh_menu_update_event') {
+    syncLiveMenuAndSettings();
+  }
+});
+if (sghBroadcast) {
+  sghBroadcast.addEventListener('message', (e) => {
+    if (e.data && e.data.type === 'menu_updated') {
+      syncLiveMenuAndSettings();
+    }
   });
 }
