@@ -2191,7 +2191,6 @@ function addToCart(itemId) {
   renderMenuGrid();
   renderCartDrawer();
   updateCartBadge();
-  toggleCart(true);
   showToast(`Added "${item.name}" to your plate! 🌿`);
 }
 
@@ -2206,6 +2205,8 @@ function updateItemQty(itemId, delta) {
 
   saveCart();
   renderMenuGrid();
+  renderCartDrawer();
+  updateCartBadge();
 }
 
 function updateCartBadge() {
