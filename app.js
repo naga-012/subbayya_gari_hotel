@@ -2940,13 +2940,21 @@ function proceedToCheckout() {
     grandTotal
   };
 
+  /*
   // Close Cart Drawer and Open Dedicated Online Payment Page Modal
   toggleCart(false);
   openOnlinePaymentModal();
+  */
+
+  // Direct checkout & order placement (Payment method commented out as requested)
+  toggleCart(false);
+  placeOrder(true, 'Direct Order', 'Confirmed');
 }
 window.proceedToCheckout = proceedToCheckout;
 window.proceedToPaymentPage = proceedToCheckout;
 
+// Payment method app selector (Commented out as requested - not deleted)
+/*
 let selectedPaymentAppKey = 'phonepe';
 
 function selectPaymentApp(appKey) {
@@ -2970,6 +2978,8 @@ function selectPaymentApp(appKey) {
   });
 }
 window.selectPaymentApp = selectPaymentApp;
+*/
+window.selectPaymentApp = function(appKey) {};
 
 function detectUpiHandle(val) {
   const badge = document.getElementById('custom-upi-detected-badge');
