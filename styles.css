@@ -3294,6 +3294,16 @@ button {
   border-top-color: #374151;
 }
 
+#online-payment-modal {
+  z-index: 999999 !important;
+}
+
+#online-payment-modal .modal-card {
+  position: relative !important;
+  z-index: 1000000 !important;
+  pointer-events: auto !important;
+}
+
 #btn-complete-payment-order {
   width: 100% !important;
   font-size: clamp(0.8rem, 3.6vw, 0.95rem) !important;
@@ -3310,6 +3320,11 @@ button {
   box-sizing: border-box !important;
   border-radius: var(--radius-md) !important;
   box-shadow: 0 4px 14px rgba(15, 90, 39, 0.35) !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  position: relative !important;
+  z-index: 1000002 !important;
 }
 
 /* ==========================================================================

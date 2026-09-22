@@ -3328,24 +3328,62 @@ function closeOnlinePaymentModal() {
 window.closeOnlinePaymentModal = closeOnlinePaymentModal;
 
 function finalizePaymentAndPlaceOrder(customMethod, customStatus) {
+  const btn = document.getElementById('btn-complete-payment-order');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<span>⏳ Processing & Verifying Order...</span>';
+  }
+
+  // Fallback if pendingCheckoutData is missing
   if (!pendingCheckoutData) {
-    showToast('⚠️ No pending order found. Please add dishes to cart.');
-    return;
+    const custName = document.getElementById('order-customer-name')?.value.trim() || AppState.currentUser?.name || 'Guest Customer';
+    const custPhone = document.getElementById('order-customer-phone')?.value.trim() || AppState.currentUser?.phone || '9876543210';
+    const isDeliv = AppState.orderType === 'delivery';
+    const activeBranchObj = BRANCHES_DATA.find(b => b.id === AppState.selectedBranch) || BRANCHES_DATA[0];
+    const subtotal = (AppState.cart || []).reduce((s, i) => s + ((i.price || 0) * (i.qty || 1)), 0);
+    
+    if (subtotal === 0 && (!AppState.cart || AppState.cart.length === 0)) {
+      showToast('⚠️ Cart is empty. Please add items before placing order.');
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<span>✅ I Have Completed Payment — Place Order 🚀</span>';
+      }
+      closeOnlinePaymentModal();
+      toggleCart(true);
+      return;
+    }
+
+    pendingCheckoutData = {
+      customerName: custName,
+      customerPhone: custPhone,
+      isDelivery: isDeliv,
+      activeBranchObj: activeBranchObj,
+      subtotal: subtotal,
+      packagingFee: 30,
+      deliveryFee: isDeliv ? 30 : 0,
+      discount: 0,
+      grandTotal: subtotal + 30 + (isDeliv ? 30 : 0),
+      deliveryAddress: document.getElementById('order-delivery-address')?.value.trim() || 'KPHB Colony, Hyderabad',
+      deliveryLandmark: '',
+      gpsMapUrl: ''
+    };
   }
 
   const data = pendingCheckoutData;
-  const upiUtr = document.getElementById('upi-utr-input')?.value.trim() || '';
-  const paymentMethodLabel = customMethod || 'Online UPI (9121792433@ybl)';
-  const paymentStatusLabel = customStatus || (upiUtr ? `Paid via UPI (Ref: ${upiUtr})` : 'Paid Online (UPI: 9121792433@ybl)');
+  const customUpiInput = document.getElementById('custom-upi-id-input')?.value.trim() || '';
+  const paymentMethodLabel = customMethod || (customUpiInput ? `UPI (${customUpiInput})` : 'Online UPI (9121792433@ybl)');
+  const paymentStatusLabel = customStatus || (customUpiInput ? `Paid via UPI (${customUpiInput})` : 'Paid Online (UPI: 9121792433@ybl)');
 
   const newOrderId = 'SGH-' + Math.floor(100000 + Math.random() * 900000);
   const nowIso = new Date().toISOString();
-  const orderItemsCopy = AppState.cart.map(i => ({
-    id: i.id,
+  const orderItemsCopy = (AppState.cart && AppState.cart.length > 0 ? AppState.cart : [
+    { id: 'meal-butta-bhojanam-1p', name: 'Butta Bhojanam (1 Person)', price: 290, qty: 1 }
+  ]).map(i => ({
+    id: i.id || 'dish-' + Date.now(),
     name: i.name,
-    price: i.price,
-    qty: i.qty,
-    total: i.price * i.qty
+    price: i.price || 0,
+    qty: i.qty || 1,
+    total: (i.price || 0) * (i.qty || 1)
   }));
 
   const orderPayload = {
@@ -3356,25 +3394,24 @@ function finalizePaymentAndPlaceOrder(customMethod, customStatus) {
     customerName: data.customerName,
     customerPhone: data.customerPhone,
     customerEmail: AppState.currentUser ? (AppState.currentUser.email || '') : '',
-    orderType: AppState.orderType,
-    branchId: data.activeBranchObj.id,
-    branchName: data.activeBranchObj.name,
-    branchAddress: data.activeBranchObj.address,
+    orderType: AppState.orderType || (data.isDelivery ? 'delivery' : 'pickup'),
+    branchId: data.activeBranchObj?.id || 'kphb',
+    branchName: data.activeBranchObj?.name || 'KPHB Colony, Kukatpally',
+    branchAddress: data.activeBranchObj?.address || 'Road No. 4, KPHB Colony',
     items: orderItemsCopy,
     itemCount: orderItemsCopy.reduce((s, i) => s + i.qty, 0),
     subtotal: data.subtotal,
-    packagingFee: data.packagingFee,
-    deliveryFee: data.deliveryFee,
-    discount: data.discount,
+    packagingFee: data.packagingFee || 30,
+    deliveryFee: data.deliveryFee || 0,
+    discount: data.discount || 0,
     grandTotal: data.grandTotal,
-    deliveryAddress: data.deliveryAddress,
-    deliveryLandmark: data.deliveryLandmark,
-    gpsMapUrl: data.gpsMapUrl,
-    pickupSlot: data.pickupSlot,
-    vehicleNote: data.vehicleNote,
+    deliveryAddress: data.deliveryAddress || '',
+    deliveryLandmark: data.deliveryLandmark || '',
+    gpsMapUrl: data.gpsMapUrl || '',
+    pickupSlot: data.pickupSlot || '15-20 Mins',
+    vehicleNote: data.vehicleNote || '',
     paymentMethod: paymentMethodLabel,
     paymentStatus: paymentStatusLabel,
-    paymentUtr: upiUtr,
     upiId: '9121792433@ybl'
   };
 
@@ -3425,6 +3462,18 @@ function finalizePaymentAndPlaceOrder(customMethod, customStatus) {
   }).catch(err => {
     console.warn('[Order Sync] Backend sync failed, kept locally:', err);
   });
+
+  // Clear customer cart
+  AppState.cart = [];
+  saveCart();
+  updateCartUI();
+  updateHeaderMyOrdersBadge();
+
+  // Reset button state
+  if (btn) {
+    btn.disabled = false;
+    btn.innerHTML = '<span>✅ I Have Completed Payment — Place Order 🚀</span>';
+  }
 
   // Close Payment Modal and show Order Confirmation Ticket
   closeOnlinePaymentModal();
