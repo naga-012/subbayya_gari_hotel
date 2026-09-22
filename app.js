@@ -3192,7 +3192,7 @@ function launchUpiApp(appKey, event) {
 
   const btn = document.getElementById('btn-complete-payment-order');
   if (btn) {
-    btn.innerHTML = '<span>✅ I Have Completed Payment — Place Order 🚀</span>';
+    btn.innerHTML = '<span>Complete Your Payment</span>';
   }
 }
 window.launchUpiApp = launchUpiApp;
@@ -3311,7 +3311,7 @@ function openOnlinePaymentModal() {
   const mainBtn = document.getElementById('btn-complete-payment-order');
   if (mainBtn) {
     mainBtn.disabled = false;
-    mainBtn.innerHTML = '<span>✅ I Have Completed Payment — Place Order 🚀</span>';
+    mainBtn.innerHTML = '<span>Complete Your Payment</span>';
   }
 
   modal.classList.add('active');
@@ -3371,14 +3371,14 @@ function finalizePaymentAndPlaceOrder(customMethod, customStatus) {
 
     if (btn) {
       btn.disabled = false;
-      btn.innerHTML = '<span>✅ Payment Completed in App? Click to Confirm 🚀</span>';
+      btn.innerHTML = '<span>Complete Your Payment</span>';
     }
     return;
   }
 
   if (btn) {
     btn.disabled = true;
-    btn.innerHTML = '<span>⏳ Processing & Verifying Order...</span>';
+    btn.innerHTML = '<span>Complete Your Payment</span>';
   }
 
   // Fallback if pendingCheckoutData is missing
