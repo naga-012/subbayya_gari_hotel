@@ -3160,6 +3160,8 @@ function getUpiDeepLink(appKey, amount) {
   }
 }
 
+let hasInitiatedPayment = false;
+
 function launchUpiApp(appKey, event) {
   if (event) {
     event.preventDefault();
@@ -3171,6 +3173,7 @@ function launchUpiApp(appKey, event) {
     return;
   }
   
+  hasInitiatedPayment = true;
   const amount = pendingCheckoutData.grandTotal;
   const specificUrl = getUpiDeepLink(appKey, amount);
   
@@ -3187,13 +3190,10 @@ function launchUpiApp(appKey, event) {
   // Direct app trigger
   window.location.href = specificUrl;
 
-  setTimeout(() => {
-    // If user is on desktop or app protocol isn't registered, reveal QR code
-    const qrBody = document.getElementById('swiggy-qr-body');
-    if (qrBody && qrBody.style.display !== 'block') {
-      qrBody.style.display = 'block';
-    }
-  }, 1200);
+  const btn = document.getElementById('btn-complete-payment-order');
+  if (btn) {
+    btn.innerHTML = '<span>✅ I Have Completed Payment — Place Order 🚀</span>';
+  }
 }
 window.launchUpiApp = launchUpiApp;
 
@@ -3247,6 +3247,8 @@ function openOnlinePaymentModal() {
     toggleCart(true);
     return;
   }
+
+  hasInitiatedPayment = false;
 
   const modal = document.getElementById('online-payment-modal');
   if (!modal) return;
@@ -3306,12 +3308,18 @@ function openOnlinePaymentModal() {
   // Select PhonePe by default
   selectPaymentApp('phonepe');
 
+  const mainBtn = document.getElementById('btn-complete-payment-order');
+  if (mainBtn) {
+    mainBtn.disabled = false;
+    mainBtn.innerHTML = '<span>✅ I Have Completed Payment — Place Order 🚀</span>';
+  }
+
   modal.classList.add('active');
   modal.style.display = 'flex';
   modal.style.visibility = 'visible';
   modal.style.opacity = '1';
   modal.style.pointerEvents = 'auto';
-  modal.style.zIndex = '9999';
+  modal.style.zIndex = '999999';
 }
 window.openOnlinePaymentModal = openOnlinePaymentModal;
 
@@ -3329,6 +3337,45 @@ window.closeOnlinePaymentModal = closeOnlinePaymentModal;
 
 function finalizePaymentAndPlaceOrder(customMethod, customStatus) {
   const btn = document.getElementById('btn-complete-payment-order');
+
+  // If user hasn't initiated payment yet, prompt them and launch the selected app
+  if (!hasInitiatedPayment) {
+    const appNames = {
+      phonepe: 'PhonePe',
+      gpay: 'Google Pay',
+      paytm: 'Paytm',
+      bhim: 'BHIM UPI',
+      other: 'UPI App',
+      customupi: 'Entered UPI ID',
+      card: 'Card Gateway'
+    };
+    const targetName = appNames[selectedPaymentAppKey] || 'UPI App';
+    showToast(`⚠️ Please complete your payment! Opening ${targetName}...`);
+    
+    if (selectedPaymentAppKey === 'card') {
+      const cardBox = document.getElementById('action-card');
+      if (cardBox) cardBox.style.display = 'block';
+      document.getElementById('card-number-input')?.focus();
+    } else if (selectedPaymentAppKey === 'customupi') {
+      const upiInput = document.getElementById('custom-upi-id-input');
+      if (!upiInput?.value) {
+        upiInput?.focus();
+      } else {
+        payViaCustomUpi();
+        hasInitiatedPayment = true;
+      }
+    } else {
+      launchUpiApp(selectedPaymentAppKey);
+      hasInitiatedPayment = true;
+    }
+
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '<span>✅ Payment Completed in App? Click to Confirm 🚀</span>';
+    }
+    return;
+  }
+
   if (btn) {
     btn.disabled = true;
     btn.innerHTML = '<span>⏳ Processing & Verifying Order...</span>';
