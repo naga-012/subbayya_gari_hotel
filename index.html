@@ -2860,6 +2860,43 @@
             </div>
           </div>
 
+          <!-- Enter Customer UPI ID Option -->
+          <div class="swiggy-app-item" id="swiggy-app-customupi" onclick="selectPaymentApp('customupi')">
+            <div class="swiggy-app-main-row">
+              <div class="swiggy-app-icon-wrap" style="background: linear-gradient(135deg, #059669, #10b981);">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+              </div>
+              <div class="swiggy-app-info">
+                <div class="swiggy-app-name">Enter UPI ID (VPA)</div>
+                <div class="swiggy-app-sub">PhonePe (@ybl), Google Pay, Paytm, etc.</div>
+              </div>
+              <div class="swiggy-radio-circle" id="radio-customupi">
+                <div class="swiggy-radio-dot"></div>
+              </div>
+            </div>
+            <div class="swiggy-app-action-box" id="action-customupi" style="display: none; padding: 0 1rem 1rem;">
+              <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: 0.75rem; margin-bottom: 0.65rem; text-align: left;">
+                <label class="cart-input-label" for="custom-upi-id-input" style="font-size: 0.73rem;">ENTER YOUR UPI ID</label>
+                <div style="position: relative;">
+                  <input type="text" id="custom-upi-id-input" class="form-control" placeholder="e.g. 9876543210@ybl" style="font-size: 0.85rem; padding-right: 70px;" oninput="detectUpiHandle(this.value)" />
+                  <span id="custom-upi-detected-badge" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-size: 0.72rem; font-weight: 700; color: #5f259f;"></span>
+                </div>
+                <!-- Quick handle pills -->
+                <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px;">
+                  <button type="button" class="btn-upi-pill" onclick="appendUpiHandle('@ybl', event)">@ybl (PhonePe)</button>
+                  <button type="button" class="btn-upi-pill" onclick="appendUpiHandle('@oksbi', event)">@oksbi</button>
+                  <button type="button" class="btn-upi-pill" onclick="appendUpiHandle('@okhdfcbank', event)">@okhdfcbank</button>
+                  <button type="button" class="btn-upi-pill" onclick="appendUpiHandle('@paytm', event)">@paytm</button>
+                  <button type="button" class="btn-upi-pill" onclick="appendUpiHandle('@axl', event)">@axl</button>
+                </div>
+              </div>
+              <button type="button" class="swiggy-pay-now-btn" style="width: 100%; border: none; cursor: pointer;" onclick="payViaCustomUpi(event)">
+                <span>⚡ Pay ₹<span class="pay-app-amount-val">0</span> via Entered UPI ID</span>
+                <span>➔</span>
+              </button>
+            </div>
+          </div>
+
         </div>
 
         <!-- Section: Credit & Debit Cards -->

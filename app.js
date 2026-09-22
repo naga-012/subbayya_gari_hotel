@@ -2950,7 +2950,7 @@ let selectedPaymentAppKey = 'phonepe';
 
 function selectPaymentApp(appKey) {
   selectedPaymentAppKey = appKey;
-  const appKeys = ['phonepe', 'gpay', 'paytm', 'bhim', 'other', 'card'];
+  const appKeys = ['phonepe', 'gpay', 'paytm', 'bhim', 'other', 'customupi', 'card'];
   
   appKeys.forEach(k => {
     const itemEl = document.getElementById(`swiggy-app-${k}`);
@@ -2969,6 +2969,98 @@ function selectPaymentApp(appKey) {
   });
 }
 window.selectPaymentApp = selectPaymentApp;
+
+function detectUpiHandle(val) {
+  const badge = document.getElementById('custom-upi-detected-badge');
+  if (!badge) return;
+  const v = val.toLowerCase().trim();
+  if (v.includes('@ybl') || v.includes('@ibl') || v.includes('@axl')) {
+    badge.textContent = '🟣 PhonePe';
+    badge.style.color = '#5f259f';
+  } else if (v.includes('@oksbi') || v.includes('@okhdfcbank') || v.includes('@okaxis') || v.includes('@okicici')) {
+    badge.textContent = '🔵 Google Pay';
+    badge.style.color = '#1a73e8';
+  } else if (v.includes('@paytm')) {
+    badge.textContent = '🔷 Paytm';
+    badge.style.color = '#002970';
+  } else if (v.includes('@apl')) {
+    badge.textContent = '🟠 Amazon Pay';
+    badge.style.color = '#ff9900';
+  } else if (v.includes('@upi')) {
+    badge.textContent = '🟢 BHIM UPI';
+    badge.style.color = '#008233';
+  } else if (v.includes('@')) {
+    badge.textContent = '⚡ Verified UPI';
+    badge.style.color = '#059669';
+  } else {
+    badge.textContent = '';
+  }
+}
+window.detectUpiHandle = detectUpiHandle;
+
+function appendUpiHandle(handle, event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  const input = document.getElementById('custom-upi-id-input');
+  if (!input) return;
+  let currentVal = input.value.trim();
+  if (!currentVal) {
+    currentVal = (pendingCheckoutData?.customerPhone || '9876543210');
+  }
+  if (currentVal.includes('@')) {
+    currentVal = currentVal.split('@')[0];
+  }
+  input.value = currentVal + handle;
+  detectUpiHandle(input.value);
+  input.focus();
+}
+window.appendUpiHandle = appendUpiHandle;
+
+function payViaCustomUpi(event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  if (!pendingCheckoutData) {
+    showToast('⚠️ No active order found.');
+    return;
+  }
+  const input = document.getElementById('custom-upi-id-input');
+  const upiIdVal = input ? input.value.trim().toLowerCase() : '';
+  if (!upiIdVal || !upiIdVal.includes('@') || upiIdVal.length < 5) {
+    showToast('⚠️ Please enter a valid UPI ID (e.g. mobile@ybl or name@oksbi)');
+    input?.focus();
+    return;
+  }
+
+  const amount = pendingCheckoutData.grandTotal;
+  let appKey = 'other';
+
+  if (upiIdVal.includes('@ybl') || upiIdVal.includes('@ibl') || upiIdVal.includes('@axl')) {
+    appKey = 'phonepe';
+  } else if (upiIdVal.includes('@oksbi') || upiIdVal.includes('@okhdfcbank') || upiIdVal.includes('@okaxis') || upiIdVal.includes('@okicici')) {
+    appKey = 'gpay';
+  } else if (upiIdVal.includes('@paytm')) {
+    appKey = 'paytm';
+  } else if (upiIdVal.includes('@upi')) {
+    appKey = 'bhim';
+  }
+
+  const appDeepLink = getUpiDeepLink(appKey, amount);
+  const appNames = {
+    phonepe: 'PhonePe',
+    gpay: 'Google Pay',
+    paytm: 'Paytm',
+    bhim: 'BHIM UPI',
+    other: 'UPI App'
+  };
+
+  showToast(`⚡ Directing to ${appNames[appKey]} for UPI ID ${upiIdVal}...`);
+  window.location.href = appDeepLink;
+}
+window.payViaCustomUpi = payViaCustomUpi;
 
 function formatCardNumber(input) {
   let val = input.value.replace(/\D/g, '');
