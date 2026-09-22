@@ -83,6 +83,7 @@ function initCustomerLiveSync() {
         localOrders.unshift(normalized);
       }
       localStorage.setItem('sgh_customer_orders', JSON.stringify(localOrders));
+      updateHeaderMyOrdersBadge(localOrders);
     } catch (e) {}
 
     // Check if this order belongs to currently logged-in user or active session
@@ -4353,21 +4354,8 @@ function updateAuthUI() {
       resSubmitBtnText.textContent = 'Confirm Reservation & Generate Ticket 🎟️';
     }
 
-    // Manage "My Orders" buttons
-    const btnHeaderMyOrders = document.getElementById('btn-header-my-orders');
-    const mobileDrawerMyOrders = document.getElementById('mobile-drawer-my-orders');
-    const localOrders = (() => {
-      try {
-        return JSON.parse(localStorage.getItem('sgh_customer_orders') || '[]');
-      } catch (e) {
-        return [];
-      }
-    })();
-    if (btnHeaderMyOrders) {
-      btnHeaderMyOrders.style.display = 'inline-flex';
-      btnHeaderMyOrders.innerHTML = `<span>📦</span><span>My Orders (${localOrders.length})</span>`;
-    }
-    if (mobileDrawerMyOrders) mobileDrawerMyOrders.style.display = 'block';
+    // Manage "My Orders" buttons badge (Showing incomplete / active orders count)
+    updateHeaderMyOrdersBadge();
 
     // Auto-fill checkout inputs
     autoFillCheckoutDetails();
@@ -4385,27 +4373,8 @@ function updateAuthUI() {
       authHeaderBtn.style.color = 'var(--color-gold)';
     }
 
-    // Manage "My Orders" buttons visibility
-    const localOrdersCount = (() => {
-      try {
-        return (JSON.parse(localStorage.getItem('sgh_customer_orders') || '[]')).length;
-      } catch (e) {
-        return 0;
-      }
-    })();
-
-    const btnHeaderMyOrders = document.getElementById('btn-header-my-orders');
-    const mobileDrawerMyOrders = document.getElementById('mobile-drawer-my-orders');
-    if (localOrdersCount > 0) {
-      if (btnHeaderMyOrders) {
-        btnHeaderMyOrders.style.display = 'inline-flex';
-        btnHeaderMyOrders.innerHTML = `<span>📦</span><span>My Orders (${localOrdersCount})</span>`;
-      }
-      if (mobileDrawerMyOrders) mobileDrawerMyOrders.style.display = 'block';
-    } else {
-      if (btnHeaderMyOrders) btnHeaderMyOrders.style.display = 'none';
-      if (mobileDrawerMyOrders) mobileDrawerMyOrders.style.display = 'none';
-    }
+    // Manage "My Orders" buttons visibility & incomplete count
+    updateHeaderMyOrdersBadge();
 
     const dockLoginText = document.getElementById('dock-login-text');
     const dockLoginItem = document.getElementById('dock-item-login');
@@ -4655,6 +4624,54 @@ const DEFAULT_CUSTOMER_ORDERS = [
   }
 ];
 
+// Helper: Check if an order is active/incomplete (not completed/delivered/cancelled)
+function isOrderIncomplete(status) {
+  if (!status) return true;
+  const s = String(status).toLowerCase().trim();
+  return !s.includes('delivered') && !s.includes('completed') && !s.includes('cancelled') && !s.includes('canceled');
+}
+window.isOrderIncomplete = isOrderIncomplete;
+
+// Update the "My Orders" header button and mobile drawer badges with the count of active/incomplete orders
+function updateHeaderMyOrdersBadge(orders) {
+  const btnHeaderMyOrders = document.getElementById('btn-header-my-orders');
+  const mobileDrawerMyOrders = document.getElementById('mobile-drawer-my-orders');
+  if (!btnHeaderMyOrders && !mobileDrawerMyOrders) return;
+
+  let orderList = orders;
+  if (!orderList) {
+    try {
+      orderList = JSON.parse(localStorage.getItem('sgh_customer_orders') || '[]');
+    } catch (e) {
+      orderList = [];
+    }
+  }
+
+  const incompleteCount = orderList.filter(o => o && isOrderIncomplete(o.status)).length;
+
+  if (btnHeaderMyOrders) {
+    if (AppState.currentUser || orderList.length > 0) {
+      btnHeaderMyOrders.style.display = 'inline-flex';
+      if (incompleteCount > 0) {
+        btnHeaderMyOrders.innerHTML = `<span>📦</span><span>My Orders <strong style="background: #D97706; color: #FFFFFF; font-size: 0.72rem; padding: 2px 7px; border-radius: 50px; margin-left: 2px; font-weight: 800;">${incompleteCount}</strong></span>`;
+      } else {
+        btnHeaderMyOrders.innerHTML = `<span>📦</span><span>My Orders</span>`;
+      }
+    } else {
+      btnHeaderMyOrders.style.display = 'none';
+    }
+  }
+
+  if (mobileDrawerMyOrders) {
+    if (AppState.currentUser || orderList.length > 0) {
+      mobileDrawerMyOrders.style.display = 'block';
+    } else {
+      mobileDrawerMyOrders.style.display = 'none';
+    }
+  }
+}
+window.updateHeaderMyOrdersBadge = updateHeaderMyOrdersBadge;
+
 // Cache of fetched customer orders
 let currentCustomerOrders = [];
 
@@ -4729,10 +4746,8 @@ async function fetchAndRenderCustomerOrders() {
     currentCustomerOrders = orders;
     if (badgeEl) badgeEl.textContent = orders.length;
 
-    const headerMyOrdersBtn = document.getElementById('btn-header-my-orders');
-    if (headerMyOrdersBtn) {
-      headerMyOrdersBtn.innerHTML = `<span>📦</span><span>My Orders (${orders.length})</span>`;
-    }
+    // Update Header My Orders button with incomplete / active count
+    updateHeaderMyOrdersBadge(orders);
 
     if (orders.length === 0) {
       container.innerHTML = `
