@@ -4625,14 +4625,40 @@ const DEFAULT_CUSTOMER_ORDERS = [
 ];
 
 // Helper: Check if an order is active/incomplete (not completed/delivered/cancelled)
-function isOrderIncomplete(status) {
-  if (!status) return true;
-  const s = String(status).toLowerCase().trim();
-  return !s.includes('delivered') && !s.includes('completed') && !s.includes('cancelled') && !s.includes('canceled');
+function isOrderIncomplete(orderOrStatus) {
+  if (!orderOrStatus) return false;
+  const rawStatus = (typeof orderOrStatus === 'object')
+    ? (orderOrStatus.status || orderOrStatus.orderStatus || (orderOrStatus.statusHistory && orderOrStatus.statusHistory.slice(-1)[0]?.status) || '')
+    : String(orderOrStatus);
+
+  if (!rawStatus) return false;
+  const s = rawStatus.toLowerCase().trim();
+
+  // Completed or Cancelled -> DEFINITELY NOT INCOMPLETE
+  if (
+    s.includes('deliver') || 
+    s.includes('complete') || 
+    s.includes('cancel') || 
+    s.includes('reject') || 
+    s.includes('close') || 
+    s === 'done' || 
+    s === 'paid & served'
+  ) {
+    return false;
+  }
+
+  // Active in-progress states
+  const activeKeywords = [
+    'received', 'pending', 'new', 'confirmed', 'accept',
+    'prepar', 'cook', 'kitchen', 'pack', 'ready',
+    'out for delivery', 'dispatch', 'on the way', 'arrived', 'transit'
+  ];
+
+  return activeKeywords.some(kw => s.includes(kw));
 }
 window.isOrderIncomplete = isOrderIncomplete;
 
-// Update the "My Orders" header button and mobile drawer badges with the count of active/incomplete orders
+// Update the "My Orders" header button and mobile drawer badges with ONLY the count of active/incomplete orders
 function updateHeaderMyOrdersBadge(orders) {
   const btnHeaderMyOrders = document.getElementById('btn-header-my-orders');
   const mobileDrawerMyOrders = document.getElementById('mobile-drawer-my-orders');
@@ -4647,13 +4673,16 @@ function updateHeaderMyOrdersBadge(orders) {
     }
   }
 
-  const incompleteCount = orderList.filter(o => o && isOrderIncomplete(o.status)).length;
+  // Filter ONLY incomplete / active orders
+  const activeIncompleteOrders = (Array.isArray(orderList) ? orderList : []).filter(o => isOrderIncomplete(o));
+  const incompleteCount = activeIncompleteOrders.length;
 
   if (btnHeaderMyOrders) {
-    if (AppState.currentUser || orderList.length > 0) {
+    if (AppState.currentUser || (Array.isArray(orderList) && orderList.length > 0)) {
       btnHeaderMyOrders.style.display = 'inline-flex';
+      // ONLY show number badge if there are active / incomplete orders
       if (incompleteCount > 0) {
-        btnHeaderMyOrders.innerHTML = `<span>📦</span><span>My Orders <strong style="background: #D97706; color: #FFFFFF; font-size: 0.72rem; padding: 2px 7px; border-radius: 50px; margin-left: 2px; font-weight: 800;">${incompleteCount}</strong></span>`;
+        btnHeaderMyOrders.innerHTML = `<span>📦</span><span>My Orders <strong style="background: #D97706; color: #FFFFFF; font-size: 0.72rem; padding: 2px 7px; border-radius: 50px; margin-left: 4px; font-weight: 800;">${incompleteCount}</strong></span>`;
       } else {
         btnHeaderMyOrders.innerHTML = `<span>📦</span><span>My Orders</span>`;
       }
@@ -4663,7 +4692,7 @@ function updateHeaderMyOrdersBadge(orders) {
   }
 
   if (mobileDrawerMyOrders) {
-    if (AppState.currentUser || orderList.length > 0) {
+    if (AppState.currentUser || (Array.isArray(orderList) && orderList.length > 0)) {
       mobileDrawerMyOrders.style.display = 'block';
     } else {
       mobileDrawerMyOrders.style.display = 'none';
@@ -5411,9 +5440,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-// Initialize customer real-time sync
+// Initialize customer real-time sync & active orders badge
 if (typeof document !== "undefined") {
   document.addEventListener("DOMContentLoaded", () => {
     initCustomerLiveSync();
+    updateHeaderMyOrdersBadge();
+    fetchAndRenderCustomerOrders();
   });
 }
