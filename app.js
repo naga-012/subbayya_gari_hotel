@@ -253,7 +253,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/butta_bhojanam.jpg',
     description: 'Full satisfying single-person Andhra bhojanam with rice, 2 curries, sambar, rasam, podi, ghee, curd, and papad.'
   },
   {
@@ -267,7 +267,7 @@ const MENU_DATA = [
     spiceLevel: 'spicy',
     dietary: ['chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_rice_varieties.jpg',
     description: 'Fragrant basmati rice slow-cooked with fresh country vegetables, aromatic whole spices, and rich herbs. Served with raita.'
   },
   {
@@ -281,7 +281,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['jain-available'],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_rice_varieties.jpg',
     description: 'Traditional Godavari tamarind rice tossed with crunchy roasted peanuts, green chillies, curry leaves, and asafoetida.'
   },
   {
@@ -295,7 +295,7 @@ const MENU_DATA = [
     spiceLevel: 'spicy',
     dietary: ['chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_rice_varieties.jpg',
     description: 'Tangy seasoned Gongura leaf spiced rice tempered with mustard, dry chillies, and roasted chana dal.'
   },
   {
@@ -309,7 +309,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['jain-available'],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1546833998-877b37c2e5c6?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_rice_varieties.jpg',
     description: 'Chef special coastal Andhra flavored rice of the day tempered with cashew nuts, ghee, and mild spices.'
   },
   {
@@ -323,7 +323,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['jain-available'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1546833998-877b37c2e5c6?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_rice_varieties.jpg',
     description: 'Comforting hot rice mashed with rich Godavari drumstick sambar and finished with generous pure ghee tadka.'
   },
   {
@@ -337,7 +337,7 @@ const MENU_DATA = [
     spiceLevel: 'mild',
     dietary: ['jain-available'],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_rice_varieties.jpg',
     description: 'Cooling creamy fresh curd rice tempered with mustard seeds, ginger, curry leaves, and pomegranate arils.'
   },
   {
@@ -351,7 +351,7 @@ const MENU_DATA = [
     spiceLevel: 'mild',
     dietary: ['jain-available'],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_rice_varieties.jpg',
     description: 'Steaming hot portion of aged Sona Masoori white rice.'
   },
   {
@@ -365,7 +365,7 @@ const MENU_DATA = [
     spiceLevel: 'mild',
     dietary: ['jain-available', 'chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1546833998-877b37c2e5c6?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_karam_podi.jpg',
     description: 'Thick, creamy slow-cooked toor dal tempered with cumin, garlic, dry red chillies, and pure ghee.'
   },
   {
@@ -379,7 +379,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['jain-available'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1543339308-43e59d6b73a6?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_rice_varieties.jpg',
     description: 'Aromatic coastal Andhra sambar prepared with drumsticks, shallots, pumpkin, and authentic stone-ground sambar masala.'
   },
   {
@@ -393,7 +393,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['jain-available'],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1543339308-43e59d6b73a6?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_rice_varieties.jpg',
     description: 'Invigorating Godavari black pepper and garlic rasam simmered with fresh coriander and asafoetida.'
   },
   {
@@ -407,7 +407,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['jain-available'],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_veg_fry.jpg',
     description: 'Daily fresh farm vegetable cooked in home-style Godavari gravy.'
   },
   {
@@ -421,7 +421,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: [],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_veg_fry.jpg',
     description: 'Crispy seasoned vegetable fry tossed with roasted peanuts, curry leaves, and Andhra karam podi.'
   },
   {
@@ -435,7 +435,7 @@ const MENU_DATA = [
     spiceLevel: 'mild',
     dietary: ['jain-available'],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/perugu_vada_dahi.jpg',
     description: 'Thick, creamy country buffalo milk fresh set curd.'
   },
   {
@@ -449,7 +449,7 @@ const MENU_DATA = [
     spiceLevel: 'spicy',
     dietary: ['chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_pickles_avakaya.jpg',
     description: 'Fresh mortar-stone pounded vegetable chutney of the day (Dosakaya / Beerakaya / Tomato) with roasted chillies.'
   },
   {
@@ -463,7 +463,7 @@ const MENU_DATA = [
     spiceLevel: 'mild',
     dietary: ['jain-available'],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1543339308-43e59d6b73a6?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/perugu_vada_dahi.jpg',
     description: 'Seasoned churned buttermilk stew simmered with turmeric, ginger, green chillies, and ash gourd.'
   },
   {
@@ -477,7 +477,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1543339308-43e59d6b73a6?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_pickles_avakaya.jpg',
     description: 'Raw cold tamarind soup infused with flame-roasted green chillies, sliced shallots, jaggery, and fresh cilantro.'
   },
   {
@@ -505,7 +505,7 @@ const MENU_DATA = [
     spiceLevel: 'mild',
     dietary: ['chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/perugu_vada_dahi.jpg',
     description: 'Two fluffy urad dal vadas thoroughly soaked in seasoned spiced curd with mustard tadka and boondi.'
   },
   {
@@ -519,7 +519,7 @@ const MENU_DATA = [
     spiceLevel: 'mild',
     dietary: ['chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/perugu_vada_dahi.jpg',
     description: 'Three fluffy urad dal vadas drenched in chilled spiced buttermilk curd, garnished with fresh cilantro and roasted cumin.'
   },
 
@@ -535,7 +535,7 @@ const MENU_DATA = [
     spiceLevel: 'spicy',
     dietary: ['chef-special'],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_veg_fry.jpg',
     description: 'Long green peppers slow-simmered in roasted sesame, peanut, and tangy tamarind gravy.'
   },
   {
@@ -549,7 +549,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['jain-available'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/gutti_vankaya.jpg',
     description: 'Fresh purple brinjal chunks and sweet green peas cooked in a comforting home-style coastal Andhra masala.'
   },
   {
@@ -563,7 +563,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: [],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_veg_fry.jpg',
     description: 'Crisp green bell peppers and protein-rich soya chunks tossed with onions, tomatoes, and garam masala.'
   },
   {
@@ -577,7 +577,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['jain-available'],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_veg_fry.jpg',
     description: 'Country ripe tomatoes simmered with mustard, cumin, curry leaves, and a mild touch of jaggery.'
   },
   {
@@ -591,7 +591,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['jain-available'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_veg_fry.jpg',
     description: 'Crisp pan-fried bitter gourd roundels seasoned with roasted garlic podi and peanuts.'
   },
   {
@@ -605,7 +605,7 @@ const MENU_DATA = [
     spiceLevel: 'mild',
     dietary: ['jain-available'],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_veg_fry.jpg',
     description: 'Finely shredded cabbage sautéed with chana dal, grated coconut, green chillies, and mustard tadka.'
   },
   {
@@ -619,7 +619,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: [],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_veg_fry.jpg',
     description: 'Golden roasted potato cubes tossed with crispy curry leaves and spicy Guntur red chilli powder.'
   },
   {
@@ -633,7 +633,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_veg_fry.jpg',
     description: 'Thin sliced okra coated in spiced gram flour batter and fried till crunch-perfect with cashews.'
   },
   {
@@ -647,7 +647,7 @@ const MENU_DATA = [
     spiceLevel: 'spicy',
     dietary: ['chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_veg_fry.jpg',
     description: 'The royal crown of Godavari festive vegetarian feasts! Tender raw jackfruit pieces simmered in rich mustard-poppy seed gravy.'
   },
   {
@@ -661,7 +661,7 @@ const MENU_DATA = [
     spiceLevel: 'spicy',
     dietary: ['chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_veg_fry.jpg',
     description: 'Juicy button mushrooms cooked in an aromatic roasted cashew and pepper coastal masala gravy.'
   },
   {
@@ -675,7 +675,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_veg_fry.jpg',
     description: 'Soft cottage cheese cubes cooked in rich tomato butter gravy infused with authentic Godavari spices.'
   },
   {
@@ -689,7 +689,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['jain-available'],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_veg_fry.jpg',
     description: 'Tender broad beans slow-cooked with tomatoes, onions, garlic, and fresh ground coconut.'
   },
   {
@@ -703,7 +703,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: [],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_veg_fry.jpg',
     description: 'Baby potato pieces simmered in spiced onion-tomato gravy with aromatic cinnamon and cloves.'
   },
   {
@@ -717,7 +717,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1543339308-43e59d6b73a6?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_veg_fry.jpg',
     description: 'Fresh farm drumsticks cooked in sweet and tangy tomato gravy with mustard-cumin tempering.'
   },
   {
@@ -731,7 +731,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: [],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_veg_fry.jpg',
     description: 'Sliced ivy gourd simmered in caramelized onion and red chilli paste.'
   },
   {
@@ -745,7 +745,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['jain-available'],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1568584711075-3d021a7c3ca3?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_veg_fry.jpg',
     description: 'Tender cauliflower florets seasoned with turmeric, ginger, tomatoes, and fresh coriander.'
   },
   {
@@ -759,7 +759,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: [],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_veg_fry.jpg',
     description: 'Crispy sliced tindora sautéed with crunchy peanuts and Godavari karam podi.'
   },
   {
@@ -773,7 +773,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['jain-available'],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_veg_fry.jpg',
     description: 'Fresh okra cutlets gently simmered in lightly spiced country gravy with cumin and garlic.'
   },
   {
@@ -787,7 +787,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_veg_fry.jpg',
     description: 'Raw green plantains steamed and pan-roasted with mustard seeds, urad dal, and red chillies.'
   },
   {
@@ -801,7 +801,7 @@ const MENU_DATA = [
     spiceLevel: 'mild',
     dietary: ['jain-available'],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1543339308-43e59d6b73a6?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_veg_fry.jpg',
     description: 'Sweet ridge gourd slow-cooked with farm milk, green chillies, and cumin.'
   },
   {
@@ -815,7 +815,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/gutti_vankaya.jpg',
     description: 'Crispy golden eggplant fritters tossed in fragrant spiced onion gravy.'
   },
   {
@@ -843,7 +843,7 @@ const MENU_DATA = [
     spiceLevel: 'spicy',
     dietary: [],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_veg_fry.jpg',
     description: 'Golden urad dal punugulu soaked in tangy tamarind and onion pulusu stew.'
   },
   {
@@ -857,7 +857,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_veg_fry.jpg',
     description: 'Steamed elephant yam cubes tossed with Malabar spinach, tamarind, and mustard paste.'
   },
   {
@@ -871,7 +871,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: [],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_veg_fry.jpg',
     description: 'Crunchy battered ivy gourd fritters tossed with dry garlic red chilli seasoning.'
   },
   {
@@ -885,7 +885,7 @@ const MENU_DATA = [
     spiceLevel: 'spicy',
     dietary: [],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_veg_fry.jpg',
     description: 'Tangy Andhra gongura masala curry cooked with savory noodles/makarani.'
   },
   {
@@ -899,7 +899,7 @@ const MENU_DATA = [
     spiceLevel: 'mild',
     dietary: ['jain-available'],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/perugu_vada_dahi.jpg',
     description: 'Rich buffalo milk thick curd served fresh.'
   },
   {
@@ -913,7 +913,7 @@ const MENU_DATA = [
     spiceLevel: 'mild',
     dietary: ['jain-available'],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1543339308-43e59d6b73a6?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/perugu_vada_dahi.jpg',
     description: 'Probiotic spiced buttermilk stew with ash gourd and green chillies.'
   },
   {
@@ -927,7 +927,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['jain-available'],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1543339308-43e59d6b73a6?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_rice_varieties.jpg',
     description: 'Digestive black pepper and tomato rasam brewed with fresh coriander.'
   },
   {
@@ -941,7 +941,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['jain-available'],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1543339308-43e59d6b73a6?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_rice_varieties.jpg',
     description: 'Authentic Andhra vegetable sambar with shallots and drumsticks.'
   },
 
@@ -957,7 +957,7 @@ const MENU_DATA = [
     spiceLevel: 'mild',
     dietary: ['jain-available', 'chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/butta_bhojanam.jpg',
     description: 'Crispy sun-dried moong dal papads prepared according to ancestral Godavari methods with cumin and rock salt.'
   },
   {
@@ -971,7 +971,7 @@ const MENU_DATA = [
     spiceLevel: 'spicy',
     dietary: ['chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/butta_bhojanam.jpg',
     description: 'Fiery sun-dried lentil papads infused with Guntur red chilli powder, asafoetida, and cumin seeds.'
   },
   {
@@ -985,7 +985,7 @@ const MENU_DATA = [
     spiceLevel: 'mild',
     dietary: ['jain-available'],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1596040033282-01968be8c460?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/butta_bhojanam.jpg',
     description: 'Nutty, aromatic papads studded with roasted white sesame seeds. Incredibly crisp when roasted on flame or fried.'
   },
   {
@@ -999,7 +999,7 @@ const MENU_DATA = [
     spiceLevel: 'mild',
     dietary: ['jain-available'],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/butta_bhojanam.jpg',
     description: 'Classic roasted toor dal sun-dried papads. The quintessential accompaniment for rasam, sambar, and curd rice.'
   },
 
@@ -1029,7 +1029,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['jain-available'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1596040033282-01968be8c460?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_karam_podi.jpg',
     description: 'Fresh farm curry leaves dry-roasted with black pepper, lentils, and rock salt. Rich in aroma, iron, and digestive health benefits.'
   },
   {
@@ -1043,7 +1043,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['jain-available'],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_karam_podi.jpg',
     description: 'Delectable dry roasted grated coconut blended with fiery Guntur red chillies, garlic, and cumin. Perfect with hot rice, idlis, and dosas.'
   },
   {
@@ -1085,7 +1085,7 @@ const MENU_DATA = [
     spiceLevel: 'spicy',
     dietary: ['chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_karam_podi.jpg',
     description: 'Nutritious roasted horsegram (Ulavalu) coarse powder infused with traditional spices. Famous across coastal Andhra for authentic rich rustic flavor.'
   },
   {
@@ -1099,7 +1099,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['jain-available'],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1596040033282-01968be8c460?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_karam_podi.jpg',
     description: 'Fragrant dry-roasted whole coriander seeds gently ground with lentils, dry chillies, and cumin for a soothing herbal aroma.'
   },
   {
@@ -1113,7 +1113,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_karam_podi.jpg',
     description: 'The definitive tiffin chutney podi! Coarsely roasted urad & chana dal with sesame seeds and chillies — heavenly when sprinkled on steaming hot idlis with melted ghee.'
   },
   {
@@ -1127,7 +1127,7 @@ const MENU_DATA = [
     spiceLevel: 'spicy',
     dietary: [],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_karam_podi.jpg',
     description: 'Special garlic-infused roasted black podi. Bold pungent garlic notes balanced with toasted cumin and whole Guntur chillies.'
   },
   {
@@ -1141,7 +1141,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['jain-available'],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_karam_podi.jpg',
     description: 'Traditional slow-roasted spice blend of fenugreek, coriander, lentils, and red chillies that gives Godavari sambar its signature aroma.'
   },
   {
@@ -1155,7 +1155,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1596040033282-01968be8c460?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_karam_podi.jpg',
     description: 'Nutrient-dense wild drumstick leaves (moringa) gently roasted with lentils, black pepper, and garlic. Packed with natural vitamins and immunity.'
   },
   {
@@ -1169,7 +1169,7 @@ const MENU_DATA = [
     spiceLevel: 'mild',
     dietary: ['jain-available', 'chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1631709497146-a239ef373cf1?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_karam_podi.jpg',
     description: 'Traditional slow-cooked bilona-style golden aromatic grain-textured pure ghee sourced directly from Godavari dairy farms.'
   },
 
@@ -1185,7 +1185,7 @@ const MENU_DATA = [
     spiceLevel: 'spicy',
     dietary: ['chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_pickles_avakaya.jpg',
     description: 'The king of Andhra pickles! Crisp raw country mango cubes marinated with pungent mustard powder (Ava pindi), Guntur red chillies, and cold-pressed gingelly oil.'
   },
   {
@@ -1199,7 +1199,7 @@ const MENU_DATA = [
     spiceLevel: 'spicy',
     dietary: ['chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_pickles_avakaya.jpg',
     description: 'The crown pride of Andhra Pradesh! Tangy red sorrel leaves sautéed in sesame oil with whole red chillies, fenugreek, garlic, and rock salt.'
   },
   {
@@ -1213,7 +1213,7 @@ const MENU_DATA = [
     spiceLevel: 'spicy',
     dietary: ['chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_pickles_avakaya.jpg',
     description: 'Royal Godavari fusion of fresh Gongura leaves and fiery ripe red chillies (Pandu Mirapakayalu) stone-pounded with roasted spices.'
   },
   {
@@ -1227,7 +1227,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['jain-available'],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1534483509719-3feaee7c30da?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_pickles_avakaya.jpg',
     description: 'Juicy country yellow lemons cured in sea salt, turmeric, and spiced red chilli powder. Tangy, zesty, and easy on digestion.'
   },
   {
@@ -1241,7 +1241,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_pickles_avakaya.jpg',
     description: 'Traditional ginger pachadi sweetened gently with organic jaggery and tangy tamarind pulp. Famous Godavari accompaniment for pesarattu and rice.'
   },
   {
@@ -1255,7 +1255,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: [],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_pickles_avakaya.jpg',
     description: 'Tender baby brinjals gently pickled with mustard seeds, fenugreek, and gingelly oil. Uniquely flavorful with unmatched Godavari heritage.'
   },
   {
@@ -1269,7 +1269,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['jain-available'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1546833998-877b37c2e5c6?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_pickles_avakaya.jpg',
     description: 'Whole wild gooseberries (amla) cooked gently in seasoned mustard oil, tamarind, and turmeric. Rich in natural vitamin C.'
   },
   {
@@ -1283,7 +1283,7 @@ const MENU_DATA = [
     spiceLevel: 'spicy',
     dietary: ['chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_pickles_avakaya.jpg',
     description: 'Sun-dried peeled raw mango strips seasoned with mustard powder, fenugreek, and chilli powder. Soft texture with deep tangy flavor.'
   },
   {
@@ -1297,7 +1297,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['jain-available'],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_pickles_avakaya.jpg',
     description: 'Sun-ripened farm country tomatoes slow-simmered with garlic, tamarind, and mustard tempering. Delicious with hot rice and tiffins.'
   },
   {
@@ -1311,7 +1311,7 @@ const MENU_DATA = [
     spiceLevel: 'spicy',
     dietary: ['chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_pickles_avakaya.jpg',
     description: 'Vibrant red ripe chillies stone-crushed with garlic, tamarind, and mustard seeds. An authentic fiery Andhra specialty.'
   },
   {
@@ -1325,7 +1325,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['jain-available'],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_pickles_avakaya.jpg',
     description: 'Crispy pan-fried bitter gourd roundels marinated with tamarind, jaggery hint, and spices. A healthy, delicious delicacy.'
   },
   {
@@ -1339,7 +1339,7 @@ const MENU_DATA = [
     spiceLevel: 'mild',
     dietary: ['chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_pickles_avakaya.jpg',
     description: 'Sweet and spicy cut mango pickle sweetened with pure organic Godavari jaggery syrup and roasted spices. Beloved by children and adults alike!'
   },
   {
@@ -1353,7 +1353,7 @@ const MENU_DATA = [
     spiceLevel: 'spicy',
     dietary: [],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_pickles_avakaya.jpg',
     description: 'Raw green country tamarind pounded with green/red chillies and garlic. Intensely tangy, rustic, and refreshing.'
   },
   {
@@ -1367,7 +1367,7 @@ const MENU_DATA = [
     spiceLevel: 'medium',
     dietary: ['jain-available'],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1568584711075-3d021a7c3ca3?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/andhra_pickles_avakaya.jpg',
     description: 'Crunchy cauliflower florets pickled in tangy mustard-chilli masala with sesame oil. A winter festival favorite across Andhra homes.'
   },
 
@@ -1383,7 +1383,7 @@ const MENU_DATA = [
     spiceLevel: 'mild',
     dietary: ['jain-available', 'chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/poornam_boorelu_sweets.jpg',
     description: 'Traditional auspicious poornam boorelu stuffed with sweetened chana dal, jaggery and coconut, dipped in batter and golden fried in pure ghee.'
   },
   {
@@ -1411,7 +1411,7 @@ const MENU_DATA = [
     spiceLevel: 'mild',
     dietary: ['chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/poornam_boorelu_sweets.jpg',
     description: 'Delicate flaky pooris soaked in saffron-infused condensed rabdi milk cream and garnished with roasted pistachios and almonds.'
   },
   {
@@ -1439,7 +1439,7 @@ const MENU_DATA = [
     spiceLevel: 'mild',
     dietary: ['jain-available'],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/kakinada_kaja.jpg',
     description: 'Multi-layered ribbon folded crispy sweet pastry glistening with cardamom sugar syrup. Pure heritage perfection.'
   },
   {
@@ -1453,7 +1453,7 @@ const MENU_DATA = [
     spiceLevel: 'mild',
     dietary: ['jain-available'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/kakinada_kaja.jpg',
     description: 'Flaky, buttery layered sweet rounds with a crisp outer crust and a succulent, melt-in-mouth soft syrupy center.'
   },
   {
@@ -1467,7 +1467,7 @@ const MENU_DATA = [
     spiceLevel: 'mild',
     dietary: ['jain-available'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/poornam_boorelu_sweets.jpg',
     description: 'Golden gram flour pearls bonded with pure ghee, sugar syrup, roasted cashews, raisins, and aromatic green cardamom.'
   },
   {
@@ -1482,7 +1482,7 @@ const MENU_DATA = [
     spiceLevel: 'mild',
     dietary: ['jain-available', 'chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/poornam_boorelu_sweets.jpg',
     description: 'Freshly prepared succulent golden flower spirals made of urad dal batter fried to crisp perfection and soaked in saffron cardamom sugar syrup.'
   },
   {
@@ -1496,7 +1496,7 @@ const MENU_DATA = [
     spiceLevel: 'mild',
     dietary: ['jain-available', 'chef-special'],
     isBestseller: true,
-    image: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/poornam_boorelu_sweets.jpg',
     description: 'Paper-thin rice starch edible film rolled with organic jaggery, pure ghee, roasted pistachios, and cashews.'
   },
   {
@@ -1510,7 +1510,7 @@ const MENU_DATA = [
     spiceLevel: 'mild',
     dietary: ['jain-available'],
     isBestseller: false,
-    image: 'https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?auto=format&fit=crop&w=800&q=80',
+    image: 'assets/poornam_boorelu_sweets.jpg',
     description: 'Spiral crispy golden jalebis soaked in spiced organic country jaggery syrup with a hint of cardamom.'
   }
 ];
