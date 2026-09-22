@@ -2948,9 +2948,15 @@ function proceedToCheckout() {
 
   // Direct checkout & order placement (Payment method commented out as requested)
   toggleCart(false);
-  placeOrder(true, 'Direct Order', 'Confirmed');
+  finalizePaymentAndPlaceOrder('Direct Order', 'Confirmed');
 }
 window.proceedToCheckout = proceedToCheckout;
+
+function placeOrder(isDirect, customMethod, customStatus) {
+  return finalizePaymentAndPlaceOrder(customMethod || 'Direct Order', customStatus || 'Confirmed');
+}
+window.placeOrder = placeOrder;
+
 window.proceedToPaymentPage = proceedToCheckout;
 
 // Payment method app selector (Commented out as requested - not deleted)
@@ -3520,15 +3526,26 @@ function finalizePaymentAndPlaceOrder(customMethod, customStatus) {
     console.warn('Could not save order locally:', err);
   }
 
-  // Asynchronously send to Server Orders Database
-  fetch(`${BACKEND_BASE}/api/orders`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(orderPayload)
-  }).then(r => r.json()).then(resData => {
-    console.log('[Order Sync] Saved successfully to backend database:', resData);
-  }).catch(err => {
-    console.warn('[Order Sync] Backend sync failed, kept locally:', err);
+  // Asynchronously send to Server Orders Database & Owner Management Operations Portal
+  const targetEndpoints = [
+    `${BACKEND_BASE}/api/orders`,
+    'https://subbayya-gari-hotel.onrender.com/api/orders'
+  ];
+  if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+    targetEndpoints.push('http://localhost:5000/api/orders');
+  }
+  const uniqueEndpoints = [...new Set(targetEndpoints)];
+
+  uniqueEndpoints.forEach(endpointUrl => {
+    fetch(endpointUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(orderPayload)
+    }).then(r => r.ok ? r.json() : null).then(resData => {
+      if (resData) console.log(`[Order Sync] Saved successfully to ${endpointUrl}:`, resData);
+    }).catch(err => {
+      console.warn(`[Order Sync] Sync notice for ${endpointUrl}:`, err.message);
+    });
   });
 
   // Clear customer cart

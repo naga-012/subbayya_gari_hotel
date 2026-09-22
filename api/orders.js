@@ -234,6 +234,42 @@ module.exports = {
       // Broadcast live to Owner portal & Customer sites
       broadcastOrderUpdate('order_created', newOrder);
 
+      // Asynchronously forward customer order to Owner Operations Portal (subbayya-gari-hotel.onrender.com)
+      try {
+        const https = require('https');
+        const http = require('http');
+        const fwdPayload = JSON.stringify(newOrder);
+        const forwardToOwner = (targetUrl) => {
+          try {
+            const u = new URL(targetUrl);
+            const client = u.protocol === 'https:' ? https : http;
+            const fReq = client.request({
+              hostname: u.hostname,
+              port: u.port || (u.protocol === 'https:' ? 443 : 80),
+              path: u.pathname,
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(fwdPayload),
+              },
+              timeout: 6000,
+            }, (fRes) => {
+              console.log(`[Orders Forward] Forwarded ${newOrder.id} to ${targetUrl}: status ${fRes.statusCode}`);
+            });
+            fReq.on('error', (e) => console.warn(`[Orders Forward Error] ${targetUrl}:`, e.message));
+            fReq.write(fwdPayload);
+            fReq.end();
+          } catch (err) {
+            console.warn(`[Orders Forward Error] ${targetUrl}:`, err.message);
+          }
+        };
+
+        forwardToOwner('https://subbayya-gari-hotel.onrender.com/api/orders');
+        forwardToOwner('http://127.0.0.1:5000/api/orders');
+      } catch (fwdErr) {
+        console.warn('[Orders Forward Error]:', fwdErr.message);
+      }
+
       res.status(201).json({
         success: true,
         message: 'Order created successfully',
