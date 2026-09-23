@@ -3995,6 +3995,8 @@ function setupReservationForm() {
         phone: phone,
         orderType: 'dine-in',
         branch: branch,
+        branchName: branch,
+        branchId: (branch.toLowerCase().includes('vanasthal') || branch.toLowerCase().includes('vasanth')) ? 'vanasthalipuram' : (branch.toLowerCase().includes('kukat') ? 'kukatpally' : 'kphb'),
         reservationDate: date,
         reservationTime: timeSlot,
         guestsCount: parseInt(guests, 10) || 1,
