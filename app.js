@@ -1612,6 +1612,20 @@ const BRANCHES_DATA = [
     openNow: true
   },
   {
+    id: 'kukatpally',
+    name: 'Kukatpally, Hyderabad',
+    city: 'Hyderabad',
+    lat: 17.4849,
+    lng: 78.4138,
+    address: 'Near Y Junction, Main Road, Kukatpally, Hyderabad, Telangana 500072',
+    phone: '+91 90108 88849',
+    timings: 'Lunch: 11:30 AM - 04:00 PM | Dinner: 07:00 PM - 10:30 PM',
+    mapUrl: 'https://maps.google.com/?q=Subbayya+Gari+Hotel+Kukatpally+Hyderabad',
+    features: ['Unlimited Banana Leaf', 'AC Dining Hall', 'Fast Takeaway Counter'],
+    openNow: true
+  },
+
+  {
     id: 'kondapur',
     name: 'Kondapur / Hitech City, Hyderabad',
     city: 'Hyderabad',
@@ -1886,17 +1900,37 @@ function selectActiveBranch(branchId) {
     if (check) check.style.display = isSelected ? 'inline' : 'none';
   });
 
-  // Sync with Reservation Dropdown
+  // Sync with Reservation Dropdown accurately without false city matches
   const resBranch = document.getElementById('res-branch');
   if (resBranch) {
+    const target = (branch.name || branchId).toLowerCase();
     for (let opt of resBranch.options) {
-      if (opt.value.toLowerCase().includes(branch.city.toLowerCase()) || 
-          opt.value.toLowerCase().includes(branch.name.toLowerCase())) {
+      const val = opt.value.toLowerCase();
+      if ((target.includes('vanasthal') || target.includes('vasanth')) && (val.includes('vanasthal') || val.includes('vasanth'))) {
+        resBranch.value = opt.value;
+        break;
+      } else if (target.includes('kph') && val.includes('kph')) {
+        resBranch.value = opt.value;
+        break;
+      } else if (target.includes('kukat') && val.includes('kukat')) {
+        resBranch.value = opt.value;
+        break;
+      } else if (val.includes(branchId) || target.includes(opt.value.split(',')[0].toLowerCase())) {
         resBranch.value = opt.value;
         break;
       }
     }
   }
+
+  // Sync with Cart Pickup & Delivery dropdowns
+  const pickSelect = document.getElementById('pickup-branch-select');
+  if (pickSelect) pickSelect.value = branchId;
+  const delSelect = document.getElementById('delivery-branch-select');
+  if (delSelect) delSelect.value = branchId;
+  const pickDisplay = document.getElementById('pickup-branch-display');
+  if (pickDisplay) pickDisplay.textContent = branch.name;
+  const nearDisplay = document.getElementById('nearest-branch-display');
+  if (nearDisplay) nearDisplay.textContent = branch.name;
 
   // Sync with Table QR Branch Selector
   const qrBranch = document.getElementById('dinein-branch-select');
@@ -2897,6 +2931,13 @@ function captureCustomerLocationFromModal() {
 window.captureCustomerLocationFromModal = captureCustomerLocationFromModal;
 
 function onModalCitySelect(city) {
+  // If the currently selected branch is already in this city, preserve user selection!
+  const currentBranch = BRANCHES_DATA.find(b => b.id === AppState.selectedBranch);
+  if (currentBranch && currentBranch.city.toLowerCase() === city.toLowerCase()) {
+    const servingBranchEl = document.getElementById('modal-serving-branch-name');
+    if (servingBranchEl) servingBranchEl.textContent = currentBranch.name;
+    return;
+  }
   const branchInCity = BRANCHES_DATA.find(b => b.city.toLowerCase() === city.toLowerCase()) || BRANCHES_DATA[0];
   AppState.selectedBranch = branchInCity.id;
   
@@ -2983,7 +3024,17 @@ function proceedToCheckout() {
     }
   }
 
-  const activeBranchObj = BRANCHES_DATA.find(b => b.id === AppState.selectedBranch) || BRANCHES_DATA[0];
+  // Prioritize active branch selected by user in cart or app
+  let activeBranchId = AppState.selectedBranch;
+  if (isDelivery) {
+    const delSelect = document.getElementById('delivery-branch-select');
+    if (delSelect && delSelect.value) activeBranchId = delSelect.value;
+  } else {
+    const pickSelect = document.getElementById('pickup-branch-select');
+    if (pickSelect && pickSelect.value) activeBranchId = pickSelect.value;
+  }
+  AppState.selectedBranch = activeBranchId;
+  const activeBranchObj = BRANCHES_DATA.find(b => b.id === activeBranchId) || BRANCHES_DATA[0];
 
   const subtotal = AppState.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
   const packagingFee = 30;
@@ -3488,7 +3539,15 @@ function finalizePaymentAndPlaceOrder(customMethod, customStatus) {
     const custName = document.getElementById('order-customer-name')?.value.trim() || AppState.currentUser?.name || 'Guest Customer';
     const custPhone = document.getElementById('order-customer-phone')?.value.trim() || AppState.currentUser?.phone || '9876543210';
     const isDeliv = AppState.orderType === 'delivery';
-    const activeBranchObj = BRANCHES_DATA.find(b => b.id === AppState.selectedBranch) || BRANCHES_DATA[0];
+    let fallbackBranchId = AppState.selectedBranch;
+    if (isDeliv) {
+      const delSelect = document.getElementById('delivery-branch-select');
+      if (delSelect && delSelect.value) fallbackBranchId = delSelect.value;
+    } else {
+      const pickSelect = document.getElementById('pickup-branch-select');
+      if (pickSelect && pickSelect.value) fallbackBranchId = pickSelect.value;
+    }
+    const activeBranchObj = BRANCHES_DATA.find(b => b.id === fallbackBranchId) || BRANCHES_DATA[0];
     const subtotal = (AppState.cart || []).reduce((s, i) => s + ((i.price || 0) * (i.qty || 1)), 0);
     
     if (subtotal === 0 && (!AppState.cart || AppState.cart.length === 0)) {
@@ -3545,6 +3604,7 @@ function finalizePaymentAndPlaceOrder(customMethod, customStatus) {
     customerEmail: AppState.currentUser ? (AppState.currentUser.email || '') : '',
     orderType: AppState.orderType || (data.isDelivery ? 'delivery' : 'pickup'),
     branchId: data.activeBranchObj?.id || 'kphb',
+    branch: data.activeBranchObj?.name || 'KPHB Colony, Hyderabad',
     branchName: data.activeBranchObj?.name || 'KPHB Colony, Kukatpally',
     branchAddress: data.activeBranchObj?.address || 'Road No. 4, KPHB Colony',
     items: orderItemsCopy,
