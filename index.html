@@ -294,13 +294,12 @@
         width: 100% !important;
         max-width: 100vw !important;
         min-width: 100% !important;
-        max-height: 80vh !important;
-        border-radius: 24px 24px 0 0 !important;
+        max-height: 82vh !important;
+        border-radius: 20px 20px 0 0 !important;
         background: #FFFFFF !important;
         color: #1F2937 !important;
-        border: 2px solid #F59E0B !important;
-        border-bottom: none !important;
-        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.45) !important;
+        border: none !important;
+        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.35) !important;
         padding: 1.25rem 1rem calc(2.2rem + env(safe-area-inset-bottom)) !important;
         z-index: 9999999 !important;
         overflow-y: auto !important;
@@ -318,20 +317,103 @@
         z-index: 9999998 !important;
       }
       .branch-popover-header {
-        color: #374151 !important;
-        border-bottom: 1.5px solid #E5E7EB !important;
-        padding-bottom: 0.75rem !important;
-        margin-bottom: 0.5rem !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding-bottom: 0.85rem !important;
+        margin-bottom: 0.65rem !important;
+        border-bottom: 1.5px solid #F1F5F9 !important;
+        background: #FFFFFF !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 5 !important;
       }
-      .branch-opt-title {
-        color: #111827 !important;
+      .branch-header-title-wrap {
+        display: flex !important;
+        align-items: flex-start !important;
+        gap: 0.45rem !important;
       }
-      .branch-opt-sub {
-        color: #6B7280 !important;
+      .branch-header-pin {
+        color: #E11D48 !important;
+        font-size: 1.15rem !important;
+        line-height: 1.1 !important;
+      }
+      .branch-header-title {
+        font-size: 0.95rem !important;
+        font-weight: 800 !important;
+        color: #1E3A5F !important;
+        line-height: 1.2 !important;
+        letter-spacing: 0.04em !important;
+        text-transform: uppercase !important;
+      }
+      .branch-header-right {
+        display: flex !important;
+        align-items: center !important;
+        gap: 1.1rem !important;
+      }
+      .branch-header-count {
+        color: #D97706 !important;
+        font-weight: 800 !important;
+        font-size: 0.9rem !important;
+        letter-spacing: 0.05em !important;
+        text-transform: uppercase !important;
+      }
+      .branch-header-close {
+        background: none !important;
+        border: none !important;
+        font-size: 1.35rem !important;
+        color: #64748B !important;
+        cursor: pointer !important;
+        padding: 4px 6px !important;
+        line-height: 1 !important;
+      }
+      .branch-region-banner {
+        background: #FAF5EB !important;
+        color: #B45309 !important;
+        font-size: 0.82rem !important;
+        font-weight: 800 !important;
+        letter-spacing: 0.06em !important;
+        text-transform: uppercase !important;
+        padding: 0.6rem 0.85rem !important;
+        border-radius: 8px !important;
+        margin: 0.65rem 0 0.4rem !important;
+      }
+      .branch-option-item {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        padding: 0.75rem 1rem !important;
+        border-radius: 14px !important;
+        border: 1.5px solid transparent !important;
+        background: transparent !important;
+        margin-bottom: 0.4rem !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+      }
+      .branch-option-item:hover {
+        background: #ECFDF5 !important;
+        border-color: #A7F3D0 !important;
       }
       .branch-option-item.selected {
-        background: #DCFCE7 !important;
-        border-color: #16A34A !important;
+        background: #ECFDF5 !important;
+        border: 1.5px solid #166534 !important;
+      }
+      .branch-opt-title {
+        font-size: 0.95rem !important;
+        font-weight: 800 !important;
+        color: #0F172A !important;
+        line-height: 1.3 !important;
+      }
+      .branch-opt-sub {
+        font-size: 0.78rem !important;
+        color: #475569 !important;
+        line-height: 1.3 !important;
+        margin-top: 2px !important;
+      }
+      .branch-opt-check {
+        color: #16A34A !important;
+        font-weight: 900 !important;
+        font-size: 1.25rem !important;
       }
       #active-branch-pill-name {
         max-width: 110px !important;
@@ -552,17 +634,20 @@
           <div class="branch-popover-overlay" id="branch-popover-overlay" onclick="toggleBranchPopover(true)"></div>
 
           <!-- Branch Dropdown Popover -->
-          <div class="branch-dropdown-popover" id="branch-dropdown-popover" style="max-height: 380px; overflow-y: auto;">
+          <div class="branch-dropdown-popover" id="branch-dropdown-popover">
             <div class="branch-popover-header">
-              <span style="display: flex; align-items: center; gap: 0.35rem; font-weight: 800;">📍 Select Dining Branch</span>
-              <div style="display: flex; align-items: center; gap: 0.65rem;">
-                <span style="color: var(--color-gold); font-weight: 700; font-size: 0.72rem;">14 Outlets</span>
-                <button type="button" onclick="toggleBranchPopover(true)" style="background: none; border: none; font-size: 1.15rem; color: var(--color-text-muted); cursor: pointer; padding: 2px 6px;" aria-label="Close branch selector">✕</button>
+              <div class="branch-header-title-wrap">
+                <span class="branch-header-pin">📍</span>
+                <span class="branch-header-title">SELECT DINING<br>BRANCH</span>
+              </div>
+              <div class="branch-header-right">
+                <span class="branch-header-count">14 OUTLETS</span>
+                <button type="button" onclick="toggleBranchPopover(true)" class="branch-header-close" aria-label="Close branch selector">✕</button>
               </div>
             </div>
 
             <!-- HYDERABAD -->
-            <div style="padding: 0.35rem 0.75rem; font-size: 0.7rem; font-weight: 800; color: var(--color-gold); background: var(--color-surface-muted); text-transform: uppercase; letter-spacing: 0.05em;">Hyderabad & Telangana</div>
+            <div class="branch-region-banner">HYDERABAD &amp; TELANGANA</div>
 
             <div class="branch-option-item selected" data-branch="kphb" onclick="selectActiveBranch('kphb')">
               <div class="branch-opt-info">
@@ -621,7 +706,7 @@
             </div>
 
             <!-- ANDHRA PRADESH -->
-            <div style="padding: 0.35rem 0.75rem; font-size: 0.7rem; font-weight: 800; color: var(--color-gold); background: var(--color-surface-muted); text-transform: uppercase; letter-spacing: 0.05em;">Andhra Pradesh Outlets</div>
+            <div class="branch-region-banner">ANDHRA PRADESH OUTLETS</div>
 
             <div class="branch-option-item" data-branch="kakinada" onclick="selectActiveBranch('kakinada')">
               <div class="branch-opt-info">
@@ -664,7 +749,7 @@
             </div>
 
             <!-- BENGALURU -->
-            <div style="padding: 0.35rem 0.75rem; font-size: 0.7rem; font-weight: 800; color: var(--color-gold); background: var(--color-surface-muted); text-transform: uppercase; letter-spacing: 0.05em;">Bengaluru Outlets</div>
+            <div class="branch-region-banner">BENGALURU OUTLETS</div>
 
             <div class="branch-option-item" data-branch="bangalore-marathahalli" onclick="selectActiveBranch('bangalore-marathahalli')">
               <div class="branch-opt-info">
