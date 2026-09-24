@@ -5701,16 +5701,23 @@ input[type="date"].form-control {
 /* Mobile responsive adjustments */
 @media (max-width: 768px) {
   .site-header .container.nav-container {
-    padding: 0.5rem 0.65rem;
-    gap: 0.4rem;
+    padding: 0.4rem 0.5rem;
+    gap: 0.3rem;
     justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .brand-logo {
+    gap: 0.35rem;
+    min-width: 0;
+    flex-shrink: 1;
   }
   .brand-logo img {
-    height: 34px;
+    height: 32px;
     width: auto;
   }
   .brand-title {
-    font-size: clamp(0.85rem, 3.4vw, 0.98rem) !important;
+    font-size: clamp(0.78rem, 3.2vw, 0.92rem) !important;
     font-weight: 800 !important;
     white-space: normal !important;
     letter-spacing: 0.02em !important;
@@ -5722,16 +5729,28 @@ input[type="date"].form-control {
     display: none !important;
   }
   .header-actions {
-    gap: 0.35rem;
+    gap: 0.3rem;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
   }
   .branch-select-pill {
-    padding: 0.3rem 0.55rem;
-    font-size: 0.74rem;
-    max-width: 130px;
+    padding: 0.28rem 0.45rem;
+    font-size: 0.72rem;
+    max-width: 110px;
   }
   #active-branch-pill-name {
-    max-width: 80px;
+    max-width: 65px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .cart-toggle-btn {
+    padding: 0.3rem 0.55rem !important;
+    font-size: 0.78rem !important;
+    gap: 0.25rem !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
   }
 
   /* Branch dropdown popover on mobile opens as fixed bottom sheet modal */
