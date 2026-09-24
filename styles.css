@@ -4265,8 +4265,9 @@ input[type="date"].form-control {
   }
 
   .brand-title {
-    font-size: 0.92rem;
-    letter-spacing: -0.01em;
+    font-size: 1.15rem !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.01em !important;
   }
 
   .brand-subtitle {
