@@ -194,16 +194,18 @@
         gap: 0.65rem !important;
       }
       .form-row-2 {
-        display: grid !important;
-        grid-template-columns: 1fr 1fr !important;
-        gap: 0.5rem !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 0.75rem !important;
+        width: 100% !important;
       }
       .form-group {
-        gap: 0.2rem !important;
+        gap: 0.25rem !important;
+        width: 100% !important;
       }
       .form-label {
-        font-size: 0.72rem !important;
-        margin-bottom: 0.15rem !important;
+        font-size: 0.76rem !important;
+        margin-bottom: 0.2rem !important;
         letter-spacing: 0.03em !important;
       }
       .form-control,
@@ -212,36 +214,54 @@
       [data-theme="dark"] .form-control,
       [data-theme="dark"] select.form-control,
       [data-theme="dark"] input[type="date"] {
-        padding: 0.45rem 0.65rem !important;
-        font-size: 0.82rem !important;
-        min-height: 40px !important;
-        height: 40px !important;
-        border-radius: 9px !important;
+        padding: 0.55rem 0.85rem !important;
+        font-size: 0.88rem !important;
+        min-height: 44px !important;
+        height: auto !important;
+        border-radius: 10px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
       }
       select.form-control {
-        background-position: right 0.5rem center !important;
-        padding-right: 1.8rem !important;
+        background-position: right 0.75rem center !important;
+        padding-right: 2.2rem !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
       }
       .seating-type-selector {
-        display: grid !important;
-        grid-template-columns: 1fr 1fr !important;
-        gap: 0.4rem !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 0.5rem !important;
+        width: 100% !important;
       }
       .seating-option {
-        padding: 0.4rem 0.4rem !important;
-        font-size: 0.74rem !important;
-        text-align: center !important;
+        width: 100% !important;
+        padding: 0.6rem 0.85rem !important;
+        font-size: 0.86rem !important;
+        font-weight: 700 !important;
+        text-align: left !important;
+        box-sizing: border-box !important;
+        border-radius: 10px !important;
       }
       #res-submit-btn {
-        min-height: 44px !important;
-        font-size: 0.92rem !important;
+        width: 100% !important;
+        min-height: 48px !important;
+        padding: 0.75rem 1rem !important;
+        font-size: 0.95rem !important;
         font-weight: 800 !important;
+        white-space: normal !important;
+        word-break: break-word !important;
+        text-align: center !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        line-height: 1.35 !important;
+        border-radius: 12px !important;
         background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%) !important;
         color: #000000 !important;
         box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4) !important;
         border: none !important;
-        border-radius: 12px !important;
-        margin-top: 0.5rem !important;
+        margin-top: 0.6rem !important;
       }
       .auth-gate-banner {
         padding: 0.5rem 0.7rem !important;
@@ -1832,7 +1852,7 @@
               <div class="form-row-2">
                 <div class="form-group">
                   <label class="form-label" for="res-date">Dining Date *</label>
-                  <input type="date" id="res-date" class="form-control" style="color-scheme: dark !important; color: #FFFFFF !important; background-color: #18261B !important; font-weight: 700;" required />
+                  <input type="date" id="res-date" class="form-control" required />
                 </div>
                 <div class="form-group">
                   <label class="form-label" for="res-time">Seating Slot *</label>
