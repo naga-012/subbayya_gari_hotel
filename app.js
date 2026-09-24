@@ -3922,12 +3922,17 @@ function setupReservationForm() {
   const form = document.getElementById('table-reservation-form');
   if (!form) return;
 
-  // Set default date to today
+  // Set default date to today and enforce high-contrast dark theme styling
   const resDateInput = document.getElementById('res-date');
-  if (resDateInput && !resDateInput.value) {
+  if (resDateInput) {
     const today = new Date().toISOString().split('T')[0];
-    resDateInput.value = today;
+    if (!resDateInput.value) {
+      resDateInput.value = today;
+    }
     resDateInput.min = today;
+    resDateInput.style.colorScheme = 'dark';
+    resDateInput.style.color = '#FFFFFF';
+    resDateInput.style.backgroundColor = '#18261B';
   }
 
   // Pre-fill user details if logged in
