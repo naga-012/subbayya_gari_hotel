@@ -104,13 +104,13 @@
       font-weight: 800 !important;
     }
 
-    /* Mobile Floating Buttons Overlap Prevention */
+    /* Mobile Floating Buttons & Compact Mobile Sizing Overrides */
     @media (max-width: 991px) {
       .customer-support-btn {
-        bottom: 70px !important;
+        bottom: 68px !important;
         right: 12px !important;
-        height: 44px !important;
-        width: 44px !important;
+        height: 40px !important;
+        width: 40px !important;
         padding: 0 !important;
         border-radius: 50% !important;
         display: flex !important;
@@ -120,14 +120,22 @@
         z-index: 900 !important;
       }
       .customer-support-btn .support-btn-text { display: none !important; }
-      .customer-support-btn .support-btn-icon { font-size: 1.25rem !important; }
+      .customer-support-btn .support-btn-icon { font-size: 1.15rem !important; }
       .theme-toggle-btn {
-        bottom: 70px !important;
+        bottom: 68px !important;
         left: 12px !important;
         right: auto !important;
-        width: 44px !important;
-        height: 44px !important;
-        font-size: 1.2rem !important;
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 1.1rem !important;
+        z-index: 900 !important;
+      }
+      .fab-menu {
+        bottom: 68px !important;
+        right: 58px !important;
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 1.1rem !important;
         z-index: 900 !important;
       }
       .branch-select-pill {
@@ -135,6 +143,46 @@
         border: 1.5px solid #F59E0B !important;
         color: #FBBF24 !important;
         font-weight: 700 !important;
+      }
+    }
+
+    /* Mobile Form Compact Sizing (Less height, tighter padding & clean legibility) */
+    @media (max-width: 768px) {
+      .res-card {
+        padding: 1.15rem 0.85rem 1.75rem !important;
+        border-radius: 16px !important;
+      }
+      .res-form {
+        gap: 0.6rem !important;
+      }
+      .form-group {
+        gap: 0.2rem !important;
+      }
+      .form-label {
+        font-size: 0.72rem !important;
+        margin-bottom: 0.15rem !important;
+        letter-spacing: 0.03em !important;
+      }
+      .form-control,
+      select.form-control,
+      input[type="date"].form-control,
+      [data-theme="dark"] .form-control,
+      [data-theme="dark"] select.form-control,
+      [data-theme="dark"] input[type="date"] {
+        padding: 0.45rem 0.7rem !important;
+        font-size: 0.85rem !important;
+        min-height: 40px !important;
+        height: 40px !important;
+        border-radius: 9px !important;
+      }
+      select.form-control {
+        background-position: right 0.7rem center !important;
+        padding-right: 2.1rem !important;
+      }
+      .auth-gate-banner {
+        padding: 0.5rem 0.7rem !important;
+        font-size: 0.76rem !important;
+        margin-bottom: 0.5rem !important;
       }
     }
   </style>
