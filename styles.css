@@ -4272,9 +4272,12 @@ input[type="date"].form-control {
     font-size: 0.78rem;
   }
 
-  .site-header {
-    height: 60px;
+  .site-header,
+  .site-header.scrolled {
+    height: auto !important;
+    min-height: auto !important;
     width: 100%;
+    background: var(--color-surface);
   }
 
   .nav-container {
