@@ -360,8 +360,9 @@
 
         <!-- Cart Drawer Toggle -->
         <div class="cart-btn-wrap">
-          <button class="cart-toggle-btn" id="cart-toggle-btn" onclick="toggleCart(true)" aria-label="View Plate / Cart">
-            🧺
+          <button class="cart-toggle-btn" id="cart-toggle-btn" onclick="toggleCart(true)" aria-label="View Shopping Cart" title="View Cart">
+            <span style="font-size: 1rem;">🛒</span>
+            <span class="cart-text-label" style="font-weight: 700; font-size: 0.8rem;">Cart</span>
             <span class="cart-count-badge" id="cart-count-badge" style="display: none;">0</span>
           </button>
         </div>
@@ -3720,13 +3721,13 @@
       <span class="float-cart-total" id="float-cart-total">₹0</span>
     </div>
     <div class="float-cart-right">
-      <span>View Plate</span>
+      <span>View Cart 🛒</span>
       <span>→</span>
     </div>
   </div>
 
   <!-- ==========================================================================
-       MOBILE APP-LIKE BOTTOM NAVIGATION DOCK (Home, Menu, Plate, Reserve, Login)
+       MOBILE APP-LIKE BOTTOM NAVIGATION DOCK (Home, Menu, Cart, Reserve, Login)
        ========================================================================== -->
   <nav class="mobile-bottom-dock" aria-label="Mobile Navigation Dock">
     <a href="#hero" class="dock-item active" id="dock-item-home">
@@ -3738,8 +3739,8 @@
       <span>Our Menu</span>
     </a>
     <a href="javascript:void(0)" class="dock-item" onclick="toggleCart(true)" id="dock-item-cart">
-      <span class="dock-icon">🧺</span>
-      <span>Plate</span>
+      <span class="dock-icon">🛒</span>
+      <span>Cart</span>
       <span class="dock-badge" id="dock-cart-badge" style="display: none;">0</span>
     </a>
     <a href="#reservations" class="dock-item" id="dock-item-reserve">
