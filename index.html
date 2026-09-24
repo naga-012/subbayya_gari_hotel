@@ -182,12 +182,21 @@
         gap: 0.3rem !important;
       }
 
+      .reservation-section {
+        padding-bottom: calc(110px + env(safe-area-inset-bottom)) !important;
+      }
       .res-card {
         padding: 1.15rem 0.85rem 1.75rem !important;
         border-radius: 16px !important;
+        margin-bottom: 2rem !important;
       }
       .res-form {
-        gap: 0.6rem !important;
+        gap: 0.65rem !important;
+      }
+      .form-row-2 {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 0.5rem !important;
       }
       .form-group {
         gap: 0.2rem !important;
@@ -203,15 +212,36 @@
       [data-theme="dark"] .form-control,
       [data-theme="dark"] select.form-control,
       [data-theme="dark"] input[type="date"] {
-        padding: 0.45rem 0.7rem !important;
-        font-size: 0.85rem !important;
+        padding: 0.45rem 0.65rem !important;
+        font-size: 0.82rem !important;
         min-height: 40px !important;
         height: 40px !important;
         border-radius: 9px !important;
       }
       select.form-control {
-        background-position: right 0.7rem center !important;
-        padding-right: 2.1rem !important;
+        background-position: right 0.5rem center !important;
+        padding-right: 1.8rem !important;
+      }
+      .seating-type-selector {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 0.4rem !important;
+      }
+      .seating-option {
+        padding: 0.4rem 0.4rem !important;
+        font-size: 0.74rem !important;
+        text-align: center !important;
+      }
+      #res-submit-btn {
+        min-height: 44px !important;
+        font-size: 0.92rem !important;
+        font-weight: 800 !important;
+        background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%) !important;
+        color: #000000 !important;
+        box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4) !important;
+        border: none !important;
+        border-radius: 12px !important;
+        margin-top: 0.5rem !important;
       }
       .auth-gate-banner {
         padding: 0.5rem 0.7rem !important;
