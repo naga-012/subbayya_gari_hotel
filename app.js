@@ -4165,6 +4165,7 @@ function setupEventListeners() {
   // Theme toggle
   const themeToggle = document.getElementById('theme-toggle-btn');
   if (themeToggle) {
+    themeToggle.textContent = AppState.activeTheme === 'dark' ? '☀️' : '🌙';
     themeToggle.addEventListener('click', () => {
       AppState.activeTheme = AppState.activeTheme === 'light' ? 'dark' : 'light';
       document.documentElement.setAttribute('data-theme', AppState.activeTheme);
