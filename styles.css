@@ -3562,6 +3562,35 @@ button {
   font-weight: 700;
 }
 
+/* Order Details Modal should always overlay on top of Profile Modal */
+#order-details-modal {
+  z-index: 10005 !important;
+}
+
+/* Inline Card Tracker in Customer Orders list */
+.cust-card-tracker {
+  background: var(--color-surface-muted, #F9FAFB);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.5rem 0.45rem;
+  margin-bottom: 0.75rem;
+  border: 1px solid var(--color-border);
+}
+.cust-card-tracker .order-tracker-steps {
+  margin: 0.4rem 0 0.15rem;
+}
+.cust-card-tracker .order-tracker-steps::before {
+  top: 11px;
+}
+.cust-card-tracker .order-tracker-dot {
+  width: 22px;
+  height: 22px;
+  font-size: 0.65rem;
+  margin-bottom: 2px;
+}
+.cust-card-tracker .order-tracker-label {
+  font-size: 0.62rem;
+}
+
 .modal-close-btn {
   position: absolute;
   top: 1.25rem;

@@ -5472,6 +5472,58 @@ window.updateHeaderMyOrdersBadge = updateHeaderMyOrdersBadge;
 // Cache of fetched customer orders
 let currentCustomerOrders = [];
 
+// Helper: Generate Live Kitchen & Delivery Tracker Steps HTML
+function getTrackerStepsHtml(statusStr, orderType) {
+  const s = (statusStr || 'Received').toLowerCase().trim();
+  const isDelivery = orderType === 'delivery';
+  const step3Label = isDelivery ? 'Out for Delivery' : (orderType === 'dine-in' ? 'Table Ready' : 'Ready for Pickup');
+  const step4Label = isDelivery ? 'Delivered' : (orderType === 'dine-in' ? 'Seated' : 'Picked Up');
+
+  let s1 = 'active', s2 = '', s3 = '', s4 = '';
+  if (s === 'received' || s === 'placed' || s === 'order placed' || s === 'pending') {
+    s1 = 'active';
+  } else if (s === 'in kitchen' || s === 'preparing' || s === 'cooking' || s === 'accepted' || s === 'accepted & cooking' || s === 'received & cooking') {
+    s1 = 'completed';
+    s2 = 'active';
+  } else if (s === 'out for delivery' || s === 'ready' || s === 'ready for pickup') {
+    s1 = 'completed';
+    s2 = 'completed';
+    s3 = 'active';
+  } else if (s === 'delivered' || s === 'completed' || s === 'picked up') {
+    s1 = 'completed';
+    s2 = 'completed';
+    s3 = 'completed';
+    s4 = 'completed';
+  } else if (s === 'cancelled') {
+    s1 = 'cancelled';
+  } else {
+    s1 = 'completed';
+    s2 = 'active';
+  }
+
+  return `
+    <div class="order-tracker-steps">
+      <div class="order-tracker-step ${s1}">
+        <div class="order-tracker-dot">${s1 === 'completed' ? '✓' : (s1 === 'cancelled' ? '✕' : '1')}</div>
+        <div class="order-tracker-label">Placed</div>
+      </div>
+      <div class="order-tracker-step ${s2}">
+        <div class="order-tracker-dot">${s2 === 'completed' ? '✓' : '2'}</div>
+        <div class="order-tracker-label">Cooking</div>
+      </div>
+      <div class="order-tracker-step ${s3}">
+        <div class="order-tracker-dot">${s3 === 'completed' ? '✓' : '3'}</div>
+        <div class="order-tracker-label">${step3Label}</div>
+      </div>
+      <div class="order-tracker-step ${s4}">
+        <div class="order-tracker-dot">${s4 === 'completed' ? '✓' : '4'}</div>
+        <div class="order-tracker-label">${step4Label}</div>
+      </div>
+    </div>
+  `;
+}
+window.getTrackerStepsHtml = getTrackerStepsHtml;
+
 // Fetch customer orders from API and local storage, and render itemized cards
 async function fetchAndRenderCustomerOrders() {
   const container = document.getElementById('customer-orders-container') || document.getElementById('prof-customer-orders-container');
@@ -5669,7 +5721,7 @@ async function fetchAndRenderCustomerOrders() {
           </div>
 
           <!-- Dishes Ordered -->
-          <div class="cust-order-items-box" style="background: var(--color-surface-muted); border-radius: var(--radius-sm); padding: 0.75rem 0.85rem; margin-bottom: 0.75rem; border: 1px dashed rgba(15, 90, 39, 0.2);">
+          <div class="cust-order-items-box" style="background: var(--color-surface-muted); border-radius: var(--radius-sm); padding: 0.75rem 0.85rem; margin-bottom: 0.65rem; border: 1px dashed rgba(15, 90, 39, 0.2);">
             <div style="font-size: 0.72rem; font-weight: 800; color: var(--color-gold); text-transform: uppercase; margin-bottom: 0.4rem; letter-spacing: 0.04em; display: flex; justify-content: space-between; align-items: center;">
               <span>🍽️ Dishes Ordered (${ord.itemCount || (ord.items ? ord.items.length : 0)} items)</span>
               <span style="font-size: 0.7rem; color: var(--color-text-muted); font-weight: 600;">Subtotal: ₹${subtotalVal}</span>
@@ -5677,6 +5729,15 @@ async function fetchAndRenderCustomerOrders() {
             <div style="display: flex; flex-direction: column;">
               ${itemsListHtml || '<div style="font-size: 0.78rem; color: var(--color-text-muted);">Royal Butta Feast Selection</div>'}
             </div>
+          </div>
+
+          <!-- Live Kitchen & Delivery Progress Tracker on Card -->
+          <div class="cust-card-tracker">
+            <div style="font-size: 0.68rem; font-weight: 700; color: var(--color-gold); text-transform: uppercase; letter-spacing: 0.04em; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+              <span>🔥 Live Kitchen Status</span>
+              <span style="font-weight: 700; color: var(--color-primary); font-size: 0.72rem;">${ord.status || 'Received'}</span>
+            </div>
+            ${getTrackerStepsHtml(ord.status, ord.orderType)}
           </div>
 
           <!-- Footer & Action Buttons -->
@@ -5804,59 +5865,7 @@ async function openOrderDetailsModal(orderId) {
   // Live Tracker Steps: Step 1 Placed -> Step 2 Cooking (only once owner accepts) -> Step 3 Out for Delivery -> Step 4 Delivered
   const trackerContainer = document.getElementById('dtl-order-tracker-steps');
   if (trackerContainer) {
-    const isDelivery = ord.orderType === 'delivery';
-    const step3Label = isDelivery ? 'Out for Delivery' : 'Ready for Pickup';
-    const step4Label = isDelivery ? 'Delivered' : 'Picked Up';
-
-    let s1 = 'active', s2 = '', s3 = '', s4 = '';
-    if (statusStr === 'received' || statusStr === 'placed' || statusStr === 'order placed' || statusStr === 'pending') {
-      s1 = 'active';
-      s2 = '';
-      s3 = '';
-      s4 = '';
-    } else if (statusStr === 'in kitchen' || statusStr === 'preparing' || statusStr === 'cooking' || statusStr === 'accepted' || statusStr === 'accepted & cooking' || statusStr === 'received & cooking') {
-      s1 = 'completed';
-      s2 = 'active';
-      s3 = '';
-      s4 = '';
-    } else if (statusStr === 'out for delivery' || statusStr === 'ready' || statusStr === 'ready for pickup') {
-      s1 = 'completed';
-      s2 = 'completed';
-      s3 = 'active';
-      s4 = '';
-    } else if (statusStr === 'delivered' || statusStr === 'completed' || statusStr === 'picked up') {
-      s1 = 'completed';
-      s2 = 'completed';
-      s3 = 'completed';
-      s4 = 'completed';
-    } else if (statusStr === 'cancelled') {
-      s1 = 'cancelled';
-      s2 = '';
-      s3 = '';
-      s4 = '';
-    } else {
-      s1 = 'completed';
-      s2 = 'active';
-    }
-
-    trackerContainer.innerHTML = `
-      <div class="order-tracker-step ${s1}">
-        <div class="order-tracker-dot">${s1 === 'completed' ? '✓' : (s1 === 'cancelled' ? '✕' : '1')}</div>
-        <div class="order-tracker-label">Placed</div>
-      </div>
-      <div class="order-tracker-step ${s2}">
-        <div class="order-tracker-dot">${s2 === 'completed' ? '✓' : '2'}</div>
-        <div class="order-tracker-label">Cooking</div>
-      </div>
-      <div class="order-tracker-step ${s3}">
-        <div class="order-tracker-dot">${s3 === 'completed' ? '✓' : '3'}</div>
-        <div class="order-tracker-label">${step3Label}</div>
-      </div>
-      <div class="order-tracker-step ${s4}">
-        <div class="order-tracker-dot">${s4 === 'completed' ? '✓' : '4'}</div>
-        <div class="order-tracker-label">${step4Label}</div>
-      </div>
-    `;
+    trackerContainer.innerHTML = getTrackerStepsHtml(ord.status, ord.orderType);
   }
 
   // Patron & Destination Details
@@ -6005,7 +6014,10 @@ async function openOrderDetailsModal(orderId) {
   modal.style.visibility = 'visible';
   modal.style.opacity = '1';
   modal.style.pointerEvents = 'auto';
-  modal.style.zIndex = '9999';
+  modal.style.zIndex = '10005';
+
+  const modalCard = modal.querySelector('.modal-card');
+  if (modalCard) modalCard.scrollTop = 0;
 }
 window.openOrderDetailsModal = openOrderDetailsModal;
 
