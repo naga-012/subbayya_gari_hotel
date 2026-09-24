@@ -17,7 +17,7 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧺</text></svg>" />
 
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="styles.css?v=3.1" />
+  <link rel="stylesheet" href="styles.css?v=3.2" />
 </head>
 <body>
 
@@ -87,15 +87,18 @@
         <div class="branch-selector-wrapper" id="branch-selector-wrapper">
           <button class="branch-select-pill" id="branch-select-pill" onclick="toggleBranchPopover()" aria-label="Change Dining Branch" title="Click to Change Branch">
             <span class="status-dot"></span>
-            <span id="active-branch-pill-name">Jubilee Hills, Hyd</span>
-            <span style="font-size: 0.75rem;">▾</span>
+            <span id="active-branch-pill-name">Jubilee Hills</span>
+            <span style="font-size: 0.75rem; color: var(--color-gold);">▾</span>
           </button>
 
           <!-- Branch Dropdown Popover -->
           <div class="branch-dropdown-popover" id="branch-dropdown-popover" style="max-height: 380px; overflow-y: auto;">
             <div class="branch-popover-header">
-              <span>Select Dining Branch</span>
-              <span style="color: var(--color-primary); font-weight: 700;">14 Outlets</span>
+              <span style="display: flex; align-items: center; gap: 0.35rem; font-weight: 800;">📍 Select Dining Branch</span>
+              <div style="display: flex; align-items: center; gap: 0.65rem;">
+                <span style="color: var(--color-gold); font-weight: 700; font-size: 0.72rem;">14 Outlets</span>
+                <button type="button" onclick="toggleBranchPopover(true)" style="background: none; border: none; font-size: 1.15rem; color: var(--color-text-muted); cursor: pointer; padding: 2px 6px;" aria-label="Close branch selector">✕</button>
+              </div>
             </div>
 
             <!-- HYDERABAD -->
@@ -3787,6 +3790,6 @@
 
   <!-- Scripts -->
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-  <script src="app.js?v=4.0"></script>
+  <script src="app.js?v=4.1"></script>
 </body>
 </html>

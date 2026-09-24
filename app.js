@@ -1889,7 +1889,7 @@ function selectActiveBranch(branchId) {
   // Update Pill Label
   const pillName = document.getElementById('active-branch-pill-name');
   if (pillName) {
-    pillName.textContent = branch.name.split(',')[0] + (branch.city && !branch.name.includes(branch.city) ? `, ${branch.city}` : '');
+    pillName.textContent = branch.name.split(',')[0];
   }
 
   // Update Popover items checkmark state
