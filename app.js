@@ -1865,7 +1865,11 @@ function saveCart() {
 }
 
 // Branch Popover Dropdown Controller
-function toggleBranchPopover(forceClose = false) {
+function toggleBranchPopover(eOrForceClose = false) {
+  if (eOrForceClose && typeof eOrForceClose === 'object' && eOrForceClose.stopPropagation) {
+    eOrForceClose.stopPropagation();
+  }
+  const forceClose = (typeof eOrForceClose === 'boolean') ? eOrForceClose : false;
   const popover = document.getElementById('branch-dropdown-popover');
   const pill = document.getElementById('branch-select-pill');
   if (!popover) return;

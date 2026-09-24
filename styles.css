@@ -567,6 +567,7 @@ button {
 
 .branch-selector-wrapper {
   position: relative;
+  z-index: 10005;
 }
 
 .branch-select-pill {
@@ -620,21 +621,31 @@ button {
   top: calc(100% + 8px);
   right: 0;
   min-width: 320px;
-  max-width: 360px;
+  max-width: 380px;
   background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  border: 1.5px solid var(--color-gold);
   border-radius: var(--radius-lg);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
   padding: 0.75rem;
   display: none;
   flex-direction: column;
   gap: 0.35rem;
-  z-index: 1000;
+  z-index: 100005 !important;
   animation: dropdownPop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .branch-dropdown-popover.show {
-  display: flex;
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+[data-theme="dark"] .branch-dropdown-popover {
+  background: #18181B !important;
+  border-color: #F59E0B !important;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.75) !important;
+  color: #F3F4F6 !important;
 }
 
 @keyframes dropdownPop {
@@ -4166,7 +4177,7 @@ input[type="date"].form-control {
   .fixed-top-container {
     width: 100%;
     max-width: 100vw;
-    overflow: hidden;
+    overflow: visible !important;
   }
   
   .announcement-bar {
@@ -5651,25 +5662,25 @@ input[type="date"].form-control {
     max-width: 80px;
   }
 
-  /* Branch dropdown popover turns into bottom sheet modal on mobile */
+  /* Branch dropdown popover drops DOWN from top header pill button */
   .branch-dropdown-popover {
-    position: fixed;
-    top: auto;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 100% !important;
-    border-radius: 20px 20px 0 0;
-    max-height: 80vh;
-    overflow-y: auto;
-    z-index: 100005;
-    box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.6);
-    padding: 1.25rem 1rem 2.5rem;
-    border: 1px solid var(--color-border);
-    border-bottom: none;
-    animation: slideUpMobile 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    position: absolute !important;
+    top: calc(100% + 8px) !important;
+    right: 0 !important;
+    left: auto !important;
+    bottom: auto !important;
+    width: min(340px, calc(100vw - 20px)) !important;
+    max-width: calc(100vw - 20px) !important;
+    min-width: 280px !important;
+    border-radius: 16px !important;
+    max-height: 75vh !important;
+    overflow-y: auto !important;
+    z-index: 100005 !important;
+    box-shadow: 0 16px 45px rgba(0, 0, 0, 0.6) !important;
+    padding: 0.85rem 0.75rem 1.25rem !important;
+    border: 1.5px solid var(--color-gold) !important;
+    animation: dropdownPop 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    background: var(--color-surface) !important;
   }
 
   /* Customer support floating button compact on mobile */
