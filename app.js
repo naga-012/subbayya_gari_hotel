@@ -6321,22 +6321,16 @@ function openSupportModal() {
     console.warn('Could not autofill user in support modal', e);
   }
 
-  // Update helpline and WhatsApp link with selected branch phone if available
+  // Update helpline with selected branch phone if available
   const activeBranch = AppState.activeBranch || 'jubilee-hills';
   const branchObj = (typeof branchesData !== 'undefined' && branchesData[activeBranch]) ? branchesData[activeBranch] : null;
   const branchPhone = (branchObj && branchObj.phone) ? branchObj.phone.replace(/[^0-9+]/g, '') : '+919010888842';
-  const cleanPhone = branchPhone.replace('+', '');
 
   const callBtn = document.getElementById('support-channel-call');
   if (callBtn) {
     callBtn.href = `tel:${branchPhone}`;
     const sub = callBtn.querySelector('.support-channel-sub');
     if (sub) sub.textContent = branchPhone;
-  }
-
-  const waBtn = document.getElementById('support-channel-whatsapp');
-  if (waBtn) {
-    waBtn.href = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent('Hi Subbayya Gari Hotel, I need support with my order / table booking')}`;
   }
 
   modal.classList.add('active');
@@ -6393,14 +6387,8 @@ function handleSupportSubmit(event) {
   const form = document.getElementById('support-ticket-form');
   const successEl = document.getElementById('support-ticket-success');
   const refEl = document.getElementById('support-ticket-ref');
-  const waLink = document.getElementById('support-ticket-wa-link');
 
   if (refEl) refEl.textContent = ticketId;
-
-  if (waLink) {
-    const waText = `Hi Subbayya Gari Hotel Support Team,\nI have raised support ticket *${ticketId}*.\nName: ${name}\nPhone: ${phone}\nCategory: ${category}\nOrder ID: ${orderId}\nQuery: ${message}`;
-    waLink.href = `https://api.whatsapp.com/send?phone=919010888842&text=${encodeURIComponent(waText)}`;
-  }
 
   if (form) form.style.display = 'none';
   if (successEl) successEl.style.display = 'block';
