@@ -148,37 +148,64 @@
 
     /* Mobile Form Compact Sizing & Enhanced Brand Header */
     @media (max-width: 768px) {
+      /* Hide top announcement bar on mobile to give space to header */
+      .announcement-bar {
+        display: none !important;
+      }
+
+      /* 2-Row Clean Mobile Header (Row 1: Brand Logo & Title, Row 2: Branch, Cart & Profile) */
       .site-header .container.nav-container {
-        padding: 0.4rem 0.5rem !important;
-        gap: 0.3rem !important;
+        display: flex !important;
+        flex-direction: column !important;
+        padding: 0.55rem 0.75rem 0.5rem !important;
+        gap: 0.45rem !important;
         width: 100% !important;
         box-sizing: border-box !important;
       }
       .brand-logo {
-        gap: 0.35rem !important;
-        min-width: 0 !important;
-        flex-shrink: 1 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 0.6rem !important;
+        width: 100% !important;
+        text-decoration: none !important;
       }
       .brand-logo img {
-        height: 32px !important;
+        height: 38px !important;
         width: auto !important;
       }
       .brand-title {
-        font-size: clamp(0.78rem, 3.2vw, 0.92rem) !important;
+        font-size: 1.05rem !important;
         font-weight: 800 !important;
-        letter-spacing: 0.02em !important;
+        letter-spacing: 0.03em !important;
         color: #167E3A !important;
         white-space: normal !important;
-        line-height: 1.05 !important;
+        line-height: 1.1 !important;
         display: flex !important;
         flex-direction: column !important;
+        text-align: center !important;
+      }
+      .brand-title-main {
+        display: block !important;
+        text-align: center !important;
       }
       .brand-title-sub {
+        display: block !important;
         font-size: 0.82em !important;
-        letter-spacing: 0.12em !important;
+        letter-spacing: 0.14em !important;
         line-height: 1.1 !important;
         text-align: center !important;
         width: 100% !important;
+      }
+      .brand-subtitle {
+        display: block !important;
+        font-size: 0.62rem !important;
+        color: #D97706 !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.08em !important;
+        text-align: center !important;
+        width: 100% !important;
+        margin-top: 2px !important;
       }
       .menu-view-switcher,
       .filter-tags-row,
@@ -195,22 +222,36 @@
         color: #4ADE80 !important;
       }
       #btn-header-my-orders,
-      #btn-header-support {
+      #btn-header-support,
+      .mobile-menu-btn {
         display: none !important;
       }
       .header-actions {
         display: flex !important;
         align-items: center !important;
-        gap: 0.3rem !important;
-        flex-shrink: 0 !important;
+        justify-content: space-between !important;
+        gap: 0.4rem !important;
+        width: 100% !important;
+        padding-top: 0.35rem !important;
+        border-top: 1px solid rgba(0, 0, 0, 0.06) !important;
+      }
+      [data-theme="dark"] .header-actions {
+        border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+      }
+      .branch-selector-wrapper {
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
       }
       .branch-select-pill {
-        padding: 0.28rem 0.45rem !important;
-        font-size: 0.72rem !important;
-        max-width: 110px !important;
+        width: 100% !important;
+        max-width: none !important;
+        justify-content: center !important;
+        padding: 0.35rem 0.55rem !important;
+        font-size: 0.76rem !important;
+        box-sizing: border-box !important;
       }
       #active-branch-pill-name {
-        max-width: 65px !important;
+        max-width: 110px !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
         white-space: nowrap !important;
@@ -220,8 +261,8 @@
         flex-shrink: 0 !important;
       }
       .cart-toggle-btn {
-        padding: 0.3rem 0.55rem !important;
-        font-size: 0.78rem !important;
+        padding: 0.35rem 0.7rem !important;
+        font-size: 0.8rem !important;
         font-weight: 800 !important;
         background: linear-gradient(135deg, #167E3A, #0B4F23) !important;
         border: 1.5px solid #22C55E !important;
@@ -238,6 +279,17 @@
         background: linear-gradient(135deg, #15803D, #166534) !important;
         border: 1.5px solid #4ADE80 !important;
         color: #FFFFFF !important;
+      }
+      #auth-header-container {
+        flex-shrink: 0 !important;
+      }
+      #auth-header-btn {
+        padding: 0.35rem 0.65rem !important;
+        font-size: 0.78rem !important;
+        font-weight: 700 !important;
+        max-width: 110px !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
       }
       .cart-count-badge {
         background: #EF4444 !important;
