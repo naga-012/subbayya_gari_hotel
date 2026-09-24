@@ -6138,7 +6138,7 @@ function openProfileModal(initialTab = 'account') {
   if (!modal) return;
 
   // Close other modals if any are open
-  ['auth-modal', 'order-details-modal', 'order-confirmation-modal', 'review-modal', 'reservation-pass-modal', 'delivery-location-modal'].forEach(id => {
+  ['auth-modal', 'order-details-modal', 'order-confirmation-modal', 'review-modal', 'reservation-pass-modal', 'delivery-location-modal', 'support-modal'].forEach(id => {
     const m = document.getElementById(id);
     if (m) {
       m.classList.remove('active');
@@ -6238,7 +6238,7 @@ window.handleUserLogout = handleUserLogout;
 
 // Modal Backdrop and Escape Key Listeners
 document.addEventListener('DOMContentLoaded', () => {
-  ['auth-modal', 'profile-modal', 'order-details-modal', 'order-confirmation-modal', 'review-modal', 'reservation-pass-modal', 'delivery-location-modal'].forEach(id => {
+  ['auth-modal', 'profile-modal', 'order-details-modal', 'order-confirmation-modal', 'review-modal', 'reservation-pass-modal', 'delivery-location-modal', 'support-modal'].forEach(id => {
     const modal = document.getElementById(id);
     if (modal) {
       modal.addEventListener('click', (e) => {
@@ -6260,6 +6260,7 @@ document.addEventListener('DOMContentLoaded', () => {
       closeOrderDetailsModal();
       closeReservationPassModal();
       closeDeliveryLocationModal();
+      closeSupportModal();
       const confModal = document.getElementById('order-confirmation-modal');
       if (confModal) {
         confModal.classList.remove('active');
@@ -6295,3 +6296,132 @@ if (sghBroadcast) {
     }
   });
 }
+
+// ==========================================================================
+// CUSTOMER SUPPORT MODAL & HELPDESK FUNCTIONS
+// ==========================================================================
+function openSupportModal() {
+  const modal = document.getElementById('support-modal');
+  if (!modal) return;
+
+  // Pre-fill user data if logged in
+  try {
+    const user = AppState.currentUser || JSON.parse(localStorage.getItem('sgh_user') || 'null');
+    if (user) {
+      const nameInput = document.getElementById('sup-name');
+      const phoneInput = document.getElementById('sup-phone');
+      if (nameInput && !nameInput.value && user.name) {
+        nameInput.value = user.name;
+      }
+      if (phoneInput && !phoneInput.value && user.phone) {
+        phoneInput.value = user.phone.replace('+91', '').trim();
+      }
+    }
+  } catch (e) {
+    console.warn('Could not autofill user in support modal', e);
+  }
+
+  // Update helpline and WhatsApp link with selected branch phone if available
+  const activeBranch = AppState.activeBranch || 'jubilee-hills';
+  const branchObj = (typeof branchesData !== 'undefined' && branchesData[activeBranch]) ? branchesData[activeBranch] : null;
+  const branchPhone = (branchObj && branchObj.phone) ? branchObj.phone.replace(/[^0-9+]/g, '') : '+919010888842';
+  const cleanPhone = branchPhone.replace('+', '');
+
+  const callBtn = document.getElementById('support-channel-call');
+  if (callBtn) {
+    callBtn.href = `tel:${branchPhone}`;
+    const sub = callBtn.querySelector('.support-channel-sub');
+    if (sub) sub.textContent = branchPhone;
+  }
+
+  const waBtn = document.getElementById('support-channel-whatsapp');
+  if (waBtn) {
+    waBtn.href = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent('Hi Subbayya Gari Hotel, I need support with my order / table booking')}`;
+  }
+
+  modal.classList.add('active');
+  modal.style.display = 'flex';
+  modal.style.visibility = 'visible';
+  modal.style.opacity = '1';
+  modal.style.pointerEvents = 'auto';
+}
+
+function closeSupportModal() {
+  const modal = document.getElementById('support-modal');
+  if (!modal) return;
+  modal.classList.remove('active');
+  modal.style.display = 'none';
+  modal.style.visibility = 'hidden';
+  modal.style.opacity = '0';
+  modal.style.pointerEvents = 'none';
+}
+
+function handleSupportSubmit(event) {
+  event.preventDefault();
+  const name = document.getElementById('sup-name')?.value.trim();
+  const phone = document.getElementById('sup-phone')?.value.trim();
+  const category = document.getElementById('sup-category')?.value;
+  const orderId = document.getElementById('sup-order-id')?.value.trim() || 'N/A';
+  const message = document.getElementById('sup-message')?.value.trim();
+
+  if (!name || !phone || !message) {
+    if (typeof showToast === 'function') showToast('⚠️ Please fill in all required fields');
+    return;
+  }
+
+  const ticketId = 'SGH-SUP-' + Math.floor(1000 + Math.random() * 9000);
+  
+  // Save ticket to localStorage for reference
+  try {
+    const tickets = JSON.parse(localStorage.getItem('sgh_support_tickets') || '[]');
+    tickets.unshift({
+      ticketId,
+      name,
+      phone,
+      category,
+      orderId,
+      message,
+      createdAt: new Date().toISOString(),
+      status: 'Open'
+    });
+    localStorage.setItem('sgh_support_tickets', JSON.stringify(tickets.slice(0, 20)));
+  } catch (err) {
+    console.warn('Error saving support ticket', err);
+  }
+
+  // Show success view
+  const form = document.getElementById('support-ticket-form');
+  const successEl = document.getElementById('support-ticket-success');
+  const refEl = document.getElementById('support-ticket-ref');
+  const waLink = document.getElementById('support-ticket-wa-link');
+
+  if (refEl) refEl.textContent = ticketId;
+
+  if (waLink) {
+    const waText = `Hi Subbayya Gari Hotel Support Team,\nI have raised support ticket *${ticketId}*.\nName: ${name}\nPhone: ${phone}\nCategory: ${category}\nOrder ID: ${orderId}\nQuery: ${message}`;
+    waLink.href = `https://api.whatsapp.com/send?phone=919010888842&text=${encodeURIComponent(waText)}`;
+  }
+
+  if (form) form.style.display = 'none';
+  if (successEl) successEl.style.display = 'block';
+
+  if (typeof showToast === 'function') {
+    showToast(`✅ Support ticket ${ticketId} created! Our care team is on it.`);
+  }
+}
+
+function resetSupportForm() {
+  const form = document.getElementById('support-ticket-form');
+  const successEl = document.getElementById('support-ticket-success');
+  if (form) {
+    form.reset();
+    form.style.display = 'flex';
+  }
+  if (successEl) successEl.style.display = 'none';
+}
+
+window.openSupportModal = openSupportModal;
+window.closeSupportModal = closeSupportModal;
+window.handleSupportSubmit = handleSupportSubmit;
+window.resetSupportForm = resetSupportForm;
+

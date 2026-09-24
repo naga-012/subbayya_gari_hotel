@@ -17,7 +17,7 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧺</text></svg>" />
 
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="styles.css?v=2.8" />
+  <link rel="stylesheet" href="styles.css?v=2.9" />
 </head>
 <body>
 
@@ -244,6 +244,12 @@
         <button type="button" class="btn btn-outline-gold btn-sm" id="btn-header-my-orders" onclick="openProfileModal('orders')" title="View All My Orders & Live Status" style="display: inline-flex; flex-shrink: 0; padding: 0.4rem 0.75rem; font-size: 0.8rem; font-weight: 700; align-items: center; gap: 0.35rem; border-radius: 50px; white-space: nowrap;">
           <span>📦</span>
           <span>My Orders</span>
+        </button>
+
+        <!-- Customer Support Button -->
+        <button type="button" class="btn btn-outline-gold btn-sm" id="btn-header-support" onclick="openSupportModal()" title="24/7 Customer Support & Help" style="display: inline-flex; flex-shrink: 0; padding: 0.4rem 0.75rem; font-size: 0.8rem; font-weight: 700; align-items: center; gap: 0.35rem; border-radius: 50px; white-space: nowrap;">
+          <span>🎧</span>
+          <span>Support</span>
         </button>
 
         <!-- User Account / Login Button -->
@@ -3555,6 +3561,7 @@
         </a>
       </li>
       <li id="mobile-drawer-my-orders" style="display: block;"><a href="javascript:void(0)" class="mobile-drawer-link" onclick="openProfileModal('orders'); toggleMobileDrawer(false);" style="background: rgba(15, 90, 39, 0.08); color: var(--color-primary); font-weight: 800; border-radius: var(--radius-md);"><span>📦</span> My Orders & Live Status</a></li>
+      <li id="mobile-drawer-support" style="display: block;"><a href="javascript:void(0)" class="mobile-drawer-link" onclick="openSupportModal(); toggleMobileDrawer(false);" style="background: rgba(217, 119, 6, 0.08); color: var(--color-gold); font-weight: 800; border-radius: var(--radius-md);"><span>🎧</span> 24/7 Customer Support</a></li>
       <li><a href="#hero" class="mobile-drawer-link" onclick="toggleMobileDrawer(false)"><span>🏠</span> Home</a></li>
       <li><a href="#unbox" class="mobile-drawer-link" onclick="toggleMobileDrawer(false)"><span>🧺</span> Butta Bhojanam Unbox</a></li>
       <li><a href="#menu" class="mobile-drawer-link" onclick="toggleMobileDrawer(false)"><span>🍛</span> Authentic Veg Menu</a></li>
@@ -3616,6 +3623,165 @@
     </a>
   </nav>
 
+  <!-- ==========================================================================
+       MODAL: CUSTOMER SUPPORT & HELPDESK
+       ========================================================================== -->
+  <div class="modal-overlay" id="support-modal">
+    <div class="modal-card" style="max-width: 520px; padding: 1.75rem;">
+      <button class="modal-close-btn" onclick="closeSupportModal()" aria-label="Close Support Modal">✕</button>
+
+      <!-- Support Header -->
+      <div style="display: flex; align-items: center; gap: 0.85rem; margin-bottom: 1.25rem;">
+        <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(15, 90, 39, 0.12); display: flex; align-items: center; justify-content: center; font-size: 1.45rem; flex-shrink: 0; border: 1.5px solid rgba(15, 90, 39, 0.25);">
+          🎧
+        </div>
+        <div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+            <h3 style="font-family: var(--font-brand); font-size: 1.25rem; color: var(--color-primary); margin: 0; line-height: 1.2;">
+              Customer Support Care
+            </h3>
+            <span style="display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px; border-radius: 50px; background: rgba(34, 197, 94, 0.12); color: #16A34A; font-size: 0.68rem; font-weight: 800;">
+              <span style="width: 6px; height: 6px; border-radius: 50%; background: #22C55E;"></span> LIVE
+            </span>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--color-text-muted); margin: 3px 0 0;">
+            Subbayya Gari Hospitality • 9:00 AM – 11:30 PM Everyday
+          </p>
+        </div>
+      </div>
+
+      <!-- Quick Channels -->
+      <div class="support-channels-grid">
+        <a href="https://api.whatsapp.com/send?phone=919010888842&text=Hi%20Subbayya%20Gari%20Hotel,%20I%20need%20assistance%20with%20my%20order/reservation" target="_blank" class="support-channel-card" id="support-channel-whatsapp">
+          <span class="support-channel-icon">💬</span>
+          <span class="support-channel-title">WhatsApp</span>
+          <span class="support-channel-sub">Instant 1-min reply</span>
+        </a>
+        <a href="tel:+919010888842" class="support-channel-card" id="support-channel-call">
+          <span class="support-channel-icon">📞</span>
+          <span class="support-channel-title">Direct Helpline</span>
+          <span class="support-channel-sub">+91 9010 888 842</span>
+        </a>
+        <div class="support-channel-card" onclick="closeSupportModal(); openProfileModal('orders');" id="support-channel-orders">
+          <span class="support-channel-icon">📦</span>
+          <span class="support-channel-title">Live Orders</span>
+          <span class="support-channel-sub">Track Bhojanam</span>
+        </div>
+      </div>
+
+      <!-- Support Callback & Ticket Form -->
+      <div style="background: var(--color-surface-muted, #F9FAFB); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 1.15rem; margin-bottom: 1.25rem;">
+        <h4 style="font-size: 0.92rem; font-weight: 800; color: var(--color-primary); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.4rem;">
+          <span>📝</span> Request Callback / Raise Ticket
+        </h4>
+
+        <form id="support-ticket-form" onsubmit="handleSupportSubmit(event)" style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem;">
+            <div class="form-group" style="margin: 0;">
+              <label class="form-label" for="sup-name" style="font-size: 0.78rem;">Your Name *</label>
+              <input type="text" id="sup-name" class="form-control" placeholder="e.g. Ramesh" required style="font-size: 0.85rem; padding: 0.5rem 0.7rem;" />
+            </div>
+            <div class="form-group" style="margin: 0;">
+              <label class="form-label" for="sup-phone" style="font-size: 0.78rem;">Phone Number *</label>
+              <input type="tel" id="sup-phone" class="form-control" placeholder="10-digit number" required style="font-size: 0.85rem; padding: 0.5rem 0.7rem;" />
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 0.65rem;">
+            <div class="form-group" style="margin: 0;">
+              <label class="form-label" for="sup-category" style="font-size: 0.78rem;">Issue Category *</label>
+              <select id="sup-category" class="form-control" required style="font-size: 0.85rem; padding: 0.5rem 0.7rem;">
+                <option value="order">🛵 Active Order / Delivery Query</option>
+                <option value="reservation">🎟️ Table Reservation Change</option>
+                <option value="catering">🍛 Bulk Catering Inquiry</option>
+                <option value="quality">🌿 Food Quality / Ghee Feedback</option>
+                <option value="refund">💳 Payment / Refund Status</option>
+                <option value="other">💬 General Inquiry</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin: 0;">
+              <label class="form-label" for="sup-order-id" style="font-size: 0.78rem;">Order / Booking ID</label>
+              <input type="text" id="sup-order-id" class="form-control" placeholder="e.g. #SGH-1042 (optional)" style="font-size: 0.85rem; padding: 0.5rem 0.7rem;" />
+            </div>
+          </div>
+
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label" for="sup-message" style="font-size: 0.78rem;">How can we help you? *</label>
+            <textarea id="sup-message" class="form-control" rows="2" placeholder="Tell us how our team can assist you..." required style="font-size: 0.85rem; padding: 0.5rem 0.7rem;"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="btn-submit-support" style="width: 100%; font-size: 0.88rem; padding: 0.65rem; font-weight: 800;">
+            <span>🚀 Send Support Request</span>
+          </button>
+        </form>
+
+        <!-- Ticket Success State -->
+        <div id="support-ticket-success" style="display: none; text-align: center; padding: 0.5rem 0;">
+          <div style="font-size: 2.2rem; margin-bottom: 0.35rem;">🎉</div>
+          <h4 style="font-size: 1.05rem; color: var(--color-primary); font-weight: 800; margin-bottom: 0.25rem;">
+            Ticket Created Successfully!
+          </h4>
+          <p style="font-size: 0.82rem; color: var(--color-text-muted); margin-bottom: 0.85rem;">
+            Reference ID: <strong id="support-ticket-ref" style="color: var(--color-gold); font-size: 0.95rem; font-family: monospace;">SGH-SUP-9482</strong>
+          </p>
+          <div style="display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap;">
+            <a id="support-ticket-wa-link" href="#" target="_blank" class="btn btn-gold btn-sm" style="font-weight: 700;">
+              <span>💬 Forward on WhatsApp</span>
+            </a>
+            <button type="button" class="btn btn-outline btn-sm" onclick="resetSupportForm()">
+              <span>New Request</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick FAQs Accordion -->
+      <div>
+        <h4 style="font-size: 0.88rem; font-weight: 800; color: var(--color-text); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+          <span>❓</span> Common Support FAQs
+        </h4>
+
+        <div class="support-faq-item">
+          <div class="support-faq-header" onclick="this.parentElement.classList.toggle('open')">
+            <span>🛵 How fast does delivery arrive & is it piping hot?</span>
+            <span>▾</span>
+          </div>
+          <div class="support-faq-body">
+            All Butta Bhojanam and Andhra meals are packed inside insulated eco-friendly containers with warm pure ghee in a sealed bottle. Orders typically arrive within 35–45 minutes of preparation.
+          </div>
+        </div>
+
+        <div class="support-faq-item">
+          <div class="support-faq-header" onclick="this.parentElement.classList.toggle('open')">
+            <span>🍛 Can I request extra podi, ghee, or mild spice?</span>
+            <span>▾</span>
+          </div>
+          <div class="support-faq-body">
+            Yes! During checkout or by contacting your branch right after ordering, you can customize spice intensity or request extra Kandi Podi and Gongura pickle.
+          </div>
+        </div>
+
+        <div class="support-faq-item">
+          <div class="support-faq-header" onclick="this.parentElement.classList.toggle('open')">
+            <span>🎟️ How can I cancel or reschedule my table booking?</span>
+            <span>▾</span>
+          </div>
+          <div class="support-faq-body">
+            You can modify your booking anytime through the 'My Profile > Reservations' tab or by dialing +91 9010 888 842 at least 30 minutes before your booked time slot.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Floating Customer Support Action Button (Bottom Right) -->
+  <button class="customer-support-btn" id="customer-support-btn" onclick="openSupportModal()" aria-label="Customer Support & Helpdesk" title="24/7 Customer Support & Help">
+    <span class="support-btn-icon">🎧</span>
+    <span class="support-btn-text">Support</span>
+    <span class="support-status-dot" title="Support Online"></span>
+  </button>
+
   <!-- Floating Dark / Light Theme Toggle (Bottom Right) -->
   <button class="theme-toggle-btn" id="theme-toggle-btn" aria-label="Toggle Dark or Light Mode" title="Toggle Light / Dark Mode">
     🌙
@@ -3623,6 +3789,6 @@
 
   <!-- Scripts -->
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-  <script src="app.js?v=3.7"></script>
+  <script src="app.js?v=3.8"></script>
 </body>
 </html>
