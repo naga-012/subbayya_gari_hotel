@@ -180,8 +180,15 @@
         text-align: center !important;
         width: 100% !important;
       }
-      .menu-view-switcher {
+      .menu-view-switcher,
+      .desktop-only {
         display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: hidden !important;
+        pointer-events: none !important;
       }
       [data-theme="dark"] .brand-title {
         color: #4ADE80 !important;
@@ -891,8 +898,8 @@
             <button class="category-tab" data-category="rice" role="tab">🍚 Pulao & Tiffins</button>
           </div>
 
-          <!-- View Mode Switcher -->
-          <div class="menu-view-switcher">
+          <!-- View Mode Switcher (Desktop Only) -->
+          <div class="menu-view-switcher desktop-only" id="menu-view-switcher">
             <span class="view-switch-label">View Style:</span>
             <div class="view-switch-btns">
               <button class="view-btn active" id="view-toggle-cards" onclick="switchMenuView('cards')">

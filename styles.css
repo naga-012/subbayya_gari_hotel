@@ -5145,9 +5145,16 @@ input[type="date"].form-control {
   border-top: 1px dashed var(--color-border);
 }
 
-@media (max-width: 768px) {
-  .menu-view-switcher {
+@media (max-width: 1024px) {
+  .menu-view-switcher,
+  .desktop-only {
     display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
   }
 }
 
