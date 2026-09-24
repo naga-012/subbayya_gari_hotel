@@ -4265,10 +4265,11 @@ input[type="date"].form-control {
   }
 
   .brand-title {
-    font-size: 1.32rem !important;
-    font-weight: 900 !important;
-    letter-spacing: 0.01em !important;
+    font-size: clamp(0.88rem, 3.8vw, 1.05rem) !important;
+    font-weight: 800 !important;
+    letter-spacing: 0 !important;
     line-height: 1.1 !important;
+    white-space: nowrap !important;
   }
 
   .brand-subtitle {
@@ -5684,10 +5685,10 @@ input[type="date"].form-control {
     width: auto;
   }
   .brand-title {
-    font-size: 1.32rem !important;
-    font-weight: 900 !important;
-    white-space: nowrap;
-    letter-spacing: 0.01em !important;
+    font-size: clamp(0.88rem, 3.8vw, 1.05rem) !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+    letter-spacing: 0 !important;
     line-height: 1.1 !important;
   }
   .brand-subtitle {

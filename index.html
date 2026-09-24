@@ -149,12 +149,14 @@
     /* Mobile Form Compact Sizing & Enhanced Brand Header */
     @media (max-width: 768px) {
       .brand-title {
-        font-size: 1.32rem !important;
-        font-weight: 900 !important;
-        letter-spacing: 0.01em !important;
+        font-size: clamp(0.88rem, 3.8vw, 1.05rem) !important;
+        font-weight: 800 !important;
+        letter-spacing: 0 !important;
         color: #167E3A !important;
         white-space: nowrap !important;
         line-height: 1.1 !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
       }
       [data-theme="dark"] .brand-title {
         color: #4ADE80 !important;
