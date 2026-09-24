@@ -17,7 +17,7 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧺</text></svg>" />
 
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="styles.css?v=3.2" />
+  <link rel="stylesheet" href="styles.css?v=3.3" />
 </head>
 <body>
 
@@ -3334,15 +3334,15 @@
       <button class="modal-close-btn" onclick="closeProfileModal()" aria-label="Close Profile Modal">✕</button>
 
       <!-- Dynamic Header Title -->
-      <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--color-border); padding-bottom: 0.75rem; margin-bottom: 1rem;">
-        <div style="display: flex; align-items: center; gap: 0.6rem;">
-          <span id="prof-modal-icon" style="font-size: 1.4rem;">👤</span>
-          <div>
-            <h3 style="font-size: 1.15rem; font-weight: 800; margin: 0; color: var(--color-primary);" id="prof-modal-title">Customer Profile</h3>
-            <div style="font-size: 0.75rem; color: var(--color-text-muted);" id="prof-modal-subtitle">Subbayya Gari Royal Patron Dashboard</div>
+      <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--color-border); padding-bottom: 0.75rem; margin-bottom: 1rem; padding-right: 2.8rem; gap: 0.75rem;">
+        <div style="display: flex; align-items: center; gap: 0.6rem; min-width: 0;">
+          <span id="prof-modal-icon" style="font-size: 1.4rem; flex-shrink: 0;">👤</span>
+          <div style="min-width: 0;">
+            <h3 style="font-size: 1.15rem; font-weight: 800; margin: 0; color: var(--color-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="prof-modal-title">Customer Profile</h3>
+            <div style="font-size: 0.75rem; color: var(--color-text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="prof-modal-subtitle">Subbayya Gari Royal Patron Dashboard</div>
           </div>
         </div>
-        <button type="button" class="btn btn-outline btn-sm" onclick="handleUserLogout()" id="prof-header-logout-btn" style="font-size: 0.74rem; padding: 0.3rem 0.65rem; color: var(--color-spice); border-color: rgba(220, 38, 38, 0.4);" title="Log out of account">
+        <button type="button" class="btn btn-outline btn-sm" onclick="handleUserLogout()" id="prof-header-logout-btn" style="font-size: 0.74rem; padding: 0.3rem 0.65rem; color: var(--color-spice); border-color: rgba(220, 38, 38, 0.4); border-radius: 50px; flex-shrink: 0;" title="Log out of account">
           🚪 Logout
         </button>
       </div>
@@ -3790,6 +3790,6 @@
 
   <!-- Scripts -->
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-  <script src="app.js?v=4.1"></script>
+  <script src="app.js?v=4.2"></script>
 </body>
 </html>
