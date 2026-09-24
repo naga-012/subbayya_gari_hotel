@@ -146,20 +146,21 @@
       }
     }
 
-    /* Mobile Form Compact Sizing (Less height, tighter padding & clean legibility) */
+    /* Mobile Form Compact Sizing & Enhanced Brand Header */
     @media (max-width: 768px) {
       .brand-title {
-        font-size: 1.12rem !important;
+        font-size: 1.32rem !important;
         font-weight: 900 !important;
         letter-spacing: 0.01em !important;
         color: #167E3A !important;
         white-space: nowrap !important;
+        line-height: 1.1 !important;
       }
       [data-theme="dark"] .brand-title {
         color: #4ADE80 !important;
       }
       .brand-logo img {
-        height: 34px !important;
+        height: 36px !important;
         width: auto !important;
       }
       #btn-header-my-orders,
@@ -171,15 +172,31 @@
         flex-shrink: 0 !important;
       }
       .cart-toggle-btn {
-        padding: 0.32rem 0.6rem !important;
-        font-size: 0.78rem !important;
-        background: rgba(245, 158, 11, 0.18) !important;
-        border: 1.5px solid #F59E0B !important;
-        color: #FBBF24 !important;
+        padding: 0.38rem 0.72rem !important;
+        font-size: 0.82rem !important;
+        font-weight: 800 !important;
+        background: linear-gradient(135deg, #167E3A, #0B4F23) !important;
+        border: 1.5px solid #22C55E !important;
+        color: #FFFFFF !important;
         border-radius: 50px !important;
         display: inline-flex !important;
         align-items: center !important;
-        gap: 0.3rem !important;
+        gap: 0.35rem !important;
+        box-shadow: 0 3px 10px rgba(22, 126, 58, 0.35) !important;
+      }
+      [data-theme="dark"] .cart-toggle-btn {
+        background: linear-gradient(135deg, #15803D, #166534) !important;
+        border: 1.5px solid #4ADE80 !important;
+        color: #FFFFFF !important;
+      }
+      .cart-count-badge {
+        background: #EF4444 !important;
+        color: #FFFFFF !important;
+        font-weight: 900 !important;
+        font-size: 0.75rem !important;
+        border-radius: 50px !important;
+        padding: 2px 6px !important;
+        line-height: 1 !important;
       }
 
       .reservation-section {
