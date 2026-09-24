@@ -5145,6 +5145,12 @@ input[type="date"].form-control {
   border-top: 1px dashed var(--color-border);
 }
 
+@media (max-width: 768px) {
+  .menu-view-switcher {
+    display: none !important;
+  }
+}
+
 .view-switch-label {
   font-size: 0.85rem;
   font-weight: 700;
