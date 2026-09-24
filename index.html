@@ -181,6 +181,7 @@
         width: 100% !important;
       }
       .menu-view-switcher,
+      .filter-tags-row,
       .desktop-only {
         display: none !important;
         visibility: hidden !important;
@@ -877,7 +878,7 @@
               />
             </div>
 
-            <div class="filter-tags-row">
+            <div class="filter-tags-row desktop-only" id="filter-tags-row">
               <button class="diet-filter-pill active" data-filter="all">All Dishes</button>
               <button class="diet-filter-pill" data-filter="bestseller">⭐ Bestsellers</button>
               <button class="diet-filter-pill" data-filter="chef-special">👑 Chef Special</button>

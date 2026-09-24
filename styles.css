@@ -1413,6 +1413,18 @@ button {
   flex-wrap: wrap;
 }
 
+@media (max-width: 1024px) {
+  .filter-tags-row {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+  }
+}
+
 .diet-filter-pill {
   padding: 0.45rem 0.9rem;
   border-radius: var(--radius-full);
