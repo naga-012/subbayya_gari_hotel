@@ -1871,14 +1871,27 @@ function toggleBranchPopover(eOrForceClose = false) {
   }
   const forceClose = (typeof eOrForceClose === 'boolean') ? eOrForceClose : false;
   const popover = document.getElementById('branch-dropdown-popover');
+  const overlay = document.getElementById('branch-popover-overlay');
   const pill = document.getElementById('branch-select-pill');
   if (!popover) return;
 
-  if (forceClose || popover.classList.contains('show')) {
+  const isCurrentlyOpen = popover.classList.contains('show') || popover.style.display === 'flex';
+
+  if (forceClose || isCurrentlyOpen) {
     popover.classList.remove('show');
+    popover.style.display = 'none';
+    if (overlay) {
+      overlay.classList.remove('show');
+      overlay.style.display = 'none';
+    }
     if (pill) pill.classList.remove('active');
   } else {
     popover.classList.add('show');
+    popover.style.display = 'flex';
+    if (overlay) {
+      overlay.classList.add('show');
+      overlay.style.display = 'block';
+    }
     if (pill) pill.classList.add('active');
   }
 }
