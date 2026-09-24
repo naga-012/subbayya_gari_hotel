@@ -5874,12 +5874,12 @@ input[type="date"].form-control {
     max-height: 82vh !important;
     overflow-y: auto !important;
     z-index: 1000000 !important;
-    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.75) !important;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.25) !important;
     padding: 1.25rem 1rem 2rem !important;
-    border: 1.5px solid #F59E0B !important;
+    border: 2px solid #F59E0B !important;
     border-bottom: none !important;
-    background: #142217 !important;
-    color: #FFFFFF !important;
+    background: #FFFFFF !important;
+    color: #1F2937 !important;
     animation: slideUpMobile 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
   }
 
