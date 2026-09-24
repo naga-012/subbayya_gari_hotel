@@ -629,153 +629,6 @@
             <span id="active-branch-pill-name">Jubilee Hills</span>
             <span style="font-size: 0.75rem; color: var(--color-gold);">▾</span>
           </button>
-
-          <!-- Branch Popover Backdrop Overlay -->
-          <div class="branch-popover-overlay" id="branch-popover-overlay" onclick="toggleBranchPopover(true)"></div>
-
-          <!-- Branch Dropdown Popover -->
-          <div class="branch-dropdown-popover" id="branch-dropdown-popover">
-            <div class="branch-popover-header">
-              <div class="branch-header-title-wrap">
-                <span class="branch-header-pin">📍</span>
-                <span class="branch-header-title">SELECT DINING<br>BRANCH</span>
-              </div>
-              <div class="branch-header-right">
-                <span class="branch-header-count">14 OUTLETS</span>
-                <button type="button" onclick="toggleBranchPopover(true)" class="branch-header-close" aria-label="Close branch selector">✕</button>
-              </div>
-            </div>
-
-            <!-- HYDERABAD -->
-            <div class="branch-region-banner">HYDERABAD &amp; TELANGANA</div>
-
-            <div class="branch-option-item selected" data-branch="kphb" onclick="selectActiveBranch('kphb')">
-              <div class="branch-opt-info">
-                <div class="branch-opt-title">KPHB Colony, Hyderabad</div>
-                <div class="branch-opt-sub">MIG 295, Rd No. 4, Kukatpally</div>
-              </div>
-              <span class="branch-opt-check" id="check-kphb">✓</span>
-            </div>
-
-            <div class="branch-option-item" data-branch="kondapur" onclick="selectActiveBranch('kondapur')">
-              <div class="branch-opt-info">
-                <div class="branch-opt-title">Kondapur / Hitech City</div>
-                <div class="branch-opt-sub">Raghavendra Colony, Opp Harsha Toyota</div>
-              </div>
-              <span class="branch-opt-check" id="check-kondapur" style="display: none;">✓</span>
-            </div>
-
-            <div class="branch-option-item" data-branch="ameerpet" onclick="selectActiveBranch('ameerpet')">
-              <div class="branch-opt-info">
-                <div class="branch-opt-title">Ameerpet, Hyderabad</div>
-                <div class="branch-opt-sub">Beside Metro Pillar 1070, Behind VRK Silks</div>
-              </div>
-              <span class="branch-opt-check" id="check-ameerpet" style="display: none;">✓</span>
-            </div>
-
-            <div class="branch-option-item" data-branch="jubilee-hills" onclick="selectActiveBranch('jubilee-hills')">
-              <div class="branch-opt-info">
-                <div class="branch-opt-title">Jubilee Hills, Hyderabad</div>
-                <div class="branch-opt-sub">Road No. 36, Near Peddamma Temple</div>
-              </div>
-              <span class="branch-opt-check" id="check-jubilee-hills" style="display: none;">✓</span>
-            </div>
-
-            <div class="branch-option-item" data-branch="malakpet" onclick="selectActiveBranch('malakpet')">
-              <div class="branch-opt-info">
-                <div class="branch-opt-title">Malakpet, Hyderabad</div>
-                <div class="branch-opt-sub">Beside Yashoda Hospital, Main Road</div>
-              </div>
-              <span class="branch-opt-check" id="check-malakpet" style="display: none;">✓</span>
-            </div>
-
-            <div class="branch-option-item" data-branch="vanasthalipuram" onclick="selectActiveBranch('vanasthalipuram')">
-              <div class="branch-opt-info">
-                <div class="branch-opt-title">Vanasthalipuram, Hyderabad</div>
-                <div class="branch-opt-sub">Sahara Road, Near Rythu Bazar</div>
-              </div>
-              <span class="branch-opt-check" id="check-vanasthalipuram" style="display: none;">✓</span>
-            </div>
-
-            <div class="branch-option-item" data-branch="suryapet" onclick="selectActiveBranch('suryapet')">
-              <div class="branch-opt-info">
-                <div class="branch-opt-title">Suryapet Highway Branch</div>
-                <div class="branch-opt-sub">NH-65 Highway, Near Janagaon Cross</div>
-              </div>
-              <span class="branch-opt-check" id="check-suryapet" style="display: none;">✓</span>
-            </div>
-
-            <!-- ANDHRA PRADESH -->
-            <div class="branch-region-banner">ANDHRA PRADESH OUTLETS</div>
-
-            <div class="branch-option-item" data-branch="kakinada" onclick="selectActiveBranch('kakinada')">
-              <div class="branch-opt-info">
-                <div class="branch-opt-title">Heritage Flagship, Kakinada</div>
-                <div class="branch-opt-sub">Ramaraopeta, Since 1950 Original Hub</div>
-              </div>
-              <span class="branch-opt-check" id="check-kakinada" style="display: none;">✓</span>
-            </div>
-
-            <div class="branch-option-item" data-branch="vizag-dwarakanagar" onclick="selectActiveBranch('vizag-dwarakanagar')">
-              <div class="branch-opt-info">
-                <div class="branch-opt-title">Dwaraka Nagar, Vizag</div>
-                <div class="branch-opt-sub">47-10-18, Diamond Park Road</div>
-              </div>
-              <span class="branch-opt-check" id="check-vizag-dwarakanagar" style="display: none;">✓</span>
-            </div>
-
-            <div class="branch-option-item" data-branch="vizag-gajuwaka" onclick="selectActiveBranch('vizag-gajuwaka')">
-              <div class="branch-opt-info">
-                <div class="branch-opt-title">Gajuwaka, Visakhapatnam</div>
-                <div class="branch-opt-sub">Main Road, Old Gajuwaka Junction</div>
-              </div>
-              <span class="branch-opt-check" id="check-vizag-gajuwaka" style="display: none;">✓</span>
-            </div>
-
-            <div class="branch-option-item" data-branch="vijayawada" onclick="selectActiveBranch('vijayawada')">
-              <div class="branch-opt-info">
-                <div class="branch-opt-title">MG Road, Vijayawada</div>
-                <div class="branch-opt-sub">Near Benz Circle, Bandar Road</div>
-              </div>
-              <span class="branch-opt-check" id="check-vijayawada" style="display: none;">✓</span>
-            </div>
-
-            <div class="branch-option-item" data-branch="rajahmundry" onclick="selectActiveBranch('rajahmundry')">
-              <div class="branch-opt-info">
-                <div class="branch-opt-title">Pushkar Ghat, Rajahmundry</div>
-                <div class="branch-opt-sub">Godavari Bund, Main Road</div>
-              </div>
-              <span class="branch-opt-check" id="check-rajahmundry" style="display: none;">✓</span>
-            </div>
-
-            <!-- BENGALURU -->
-            <div class="branch-region-banner">BENGALURU OUTLETS</div>
-
-            <div class="branch-option-item" data-branch="bangalore-marathahalli" onclick="selectActiveBranch('bangalore-marathahalli')">
-              <div class="branch-opt-info">
-                <div class="branch-opt-title">Marathahalli, Bengaluru</div>
-                <div class="branch-opt-sub">Outer Ring Road, Opp Innovative Multiplex</div>
-              </div>
-              <span class="branch-opt-check" id="check-bangalore-marathahalli" style="display: none;">✓</span>
-            </div>
-
-            <div class="branch-option-item" data-branch="bangalore-koramangala" onclick="selectActiveBranch('bangalore-koramangala')">
-              <div class="branch-opt-info">
-                <div class="branch-opt-title">Koramangala, Bengaluru</div>
-                <div class="branch-opt-sub">80 Feet Road, 4th Block</div>
-              </div>
-              <span class="branch-opt-check" id="check-bangalore-koramangala" style="display: none;">✓</span>
-            </div>
-
-            <div class="branch-option-item" data-branch="bangalore-brookefield" onclick="selectActiveBranch('bangalore-brookefield')">
-              <div class="branch-opt-info">
-                <div class="branch-opt-title">Brookefield / Whitefield</div>
-                <div class="branch-opt-sub">ITPL Main Road, AECS Layout</div>
-              </div>
-              <span class="branch-opt-check" id="check-bangalore-brookefield" style="display: none;">✓</span>
-            </div>
-
-          </div>
         </div>
 
 
@@ -4325,6 +4178,133 @@
         </div>
       </div>
 
+    </div>
+  </div>
+
+  <!-- Branch Selector Popover Overlay & Bottom Sheet -->
+  <div class="branch-popover-overlay" id="branch-popover-overlay" onclick="toggleBranchPopover(true)" style="display: none;"></div>
+  <div class="branch-dropdown-popover" id="branch-dropdown-popover" style="display: none;">
+    <div class="branch-popover-header">
+      <span style="font-weight: 800; color: #1E3A8A; font-size: 0.85rem; letter-spacing: 0.05em; display: flex; align-items: center; gap: 0.35rem;">
+        <span>📍</span> SELECT DINING BRANCH
+      </span>
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <span style="font-size: 0.72rem; font-weight: 700; color: #B45309; background: #FEF3C7; padding: 0.15rem 0.45rem; border-radius: 4px;">14 OUTLETS</span>
+        <button type="button" onclick="toggleBranchPopover(true)" aria-label="Close" style="background: none; border: none; font-size: 1.15rem; line-height: 1; cursor: pointer; color: #6B7280; padding: 0.2rem 0.4rem; border-radius: 4px;">✕</button>
+      </div>
+    </div>
+    
+    <div class="branch-popover-scrollable" style="overflow-y: auto; max-height: calc(55vh - 55px); -webkit-overflow-scrolling: touch; display: flex; flex-direction: column; gap: 0.35rem; padding: 0.35rem 0.15rem;">
+      <div class="branch-region-header">HYDERABAD & TELANGANA</div>
+      <div class="branch-option-item selected" data-branch="jubilee-hills" onclick="selectActiveBranch('jubilee-hills'); toggleBranchPopover(true);">
+        <div class="branch-opt-info">
+          <span class="branch-opt-title">Jubilee Hills, Hyderabad</span>
+          <span class="branch-opt-sub">Road No. 36, Near Peddamma Temple</span>
+        </div>
+        <span class="branch-opt-check" style="display: inline;">✓</span>
+      </div>
+      <div class="branch-option-item" data-branch="kphb" onclick="selectActiveBranch('kphb'); toggleBranchPopover(true);">
+        <div class="branch-opt-info">
+          <span class="branch-opt-title">KPHB Colony, Hyderabad</span>
+          <span class="branch-opt-sub">Road No. 4, KPHB Colony, Kukatpally</span>
+        </div>
+        <span class="branch-opt-check" style="display: none;">✓</span>
+      </div>
+      <div class="branch-option-item" data-branch="kukatpally" onclick="selectActiveBranch('kukatpally'); toggleBranchPopover(true);">
+        <div class="branch-opt-info">
+          <span class="branch-opt-title">Kukatpally, Hyderabad</span>
+          <span class="branch-opt-sub">Near Y Junction, Main Road</span>
+        </div>
+        <span class="branch-opt-check" style="display: none;">✓</span>
+      </div>
+      <div class="branch-option-item" data-branch="kondapur" onclick="selectActiveBranch('kondapur'); toggleBranchPopover(true);">
+        <div class="branch-opt-info">
+          <span class="branch-opt-title">Kondapur / Hitech City, Hyderabad</span>
+          <span class="branch-opt-sub">Opp Harsha Toyota, Kondapur</span>
+        </div>
+        <span class="branch-opt-check" style="display: none;">✓</span>
+      </div>
+      <div class="branch-option-item" data-branch="ameerpet" onclick="selectActiveBranch('ameerpet'); toggleBranchPopover(true);">
+        <div class="branch-opt-info">
+          <span class="branch-opt-title">Ameerpet, Hyderabad</span>
+          <span class="branch-opt-sub">Behind VRK Silks, Metro Pillar 1070</span>
+        </div>
+        <span class="branch-opt-check" style="display: none;">✓</span>
+      </div>
+      <div class="branch-option-item" data-branch="malakpet" onclick="selectActiveBranch('malakpet'); toggleBranchPopover(true);">
+        <div class="branch-opt-info">
+          <span class="branch-opt-title">Malakpet, Hyderabad</span>
+          <span class="branch-opt-sub">Beside Yashoda Hospital, Main Road</span>
+        </div>
+        <span class="branch-opt-check" style="display: none;">✓</span>
+      </div>
+      <div class="branch-option-item" data-branch="vanasthalipuram" onclick="selectActiveBranch('vanasthalipuram'); toggleBranchPopover(true);">
+        <div class="branch-opt-info">
+          <span class="branch-opt-title">Vanasthalipuram, Hyderabad</span>
+          <span class="branch-opt-sub">Plot 14, Sahara Road, Near Rythu Bazar</span>
+        </div>
+        <span class="branch-opt-check" style="display: none;">✓</span>
+      </div>
+      <div class="branch-option-item" data-branch="suryapet" onclick="selectActiveBranch('suryapet'); toggleBranchPopover(true);">
+        <div class="branch-opt-info">
+          <span class="branch-opt-title">Suryapet Highway Branch</span>
+          <span class="branch-opt-sub">NH-65 Hyderabad-Vijayawada Highway</span>
+        </div>
+        <span class="branch-opt-check" style="display: none;">✓</span>
+      </div>
+
+      <div class="branch-region-header">ANDHRA PRADESH OUTLETS</div>
+      <div class="branch-option-item" data-branch="kakinada" onclick="selectActiveBranch('kakinada'); toggleBranchPopover(true);">
+        <div class="branch-opt-info">
+          <span class="branch-opt-title">Heritage Flagship (Since 1950), Kakinada</span>
+          <span class="branch-opt-sub">Subbayya Hotel Junction, Ramaraopeta</span>
+        </div>
+        <span class="branch-opt-check" style="display: none;">✓</span>
+      </div>
+      <div class="branch-option-item" data-branch="vizag-dwarakanagar" onclick="selectActiveBranch('vizag-dwarakanagar'); toggleBranchPopover(true);">
+        <div class="branch-opt-info">
+          <span class="branch-opt-title">Dwaraka Nagar, Visakhapatnam</span>
+          <span class="branch-opt-sub">Diamond Park Road, Dwaraka Nagar</span>
+        </div>
+        <span class="branch-opt-check" style="display: none;">✓</span>
+      </div>
+      <div class="branch-option-item" data-branch="vizag-gajuwaka" onclick="selectActiveBranch('vizag-gajuwaka'); toggleBranchPopover(true);">
+        <div class="branch-opt-info">
+          <span class="branch-opt-title">Gajuwaka, Visakhapatnam</span>
+          <span class="branch-opt-sub">Main Road, Near Old Gajuwaka Junction</span>
+        </div>
+        <span class="branch-opt-check" style="display: none;">✓</span>
+      </div>
+      <div class="branch-option-item" data-branch="vijayawada" onclick="selectActiveBranch('vijayawada'); toggleBranchPopover(true);">
+        <div class="branch-opt-info">
+          <span class="branch-opt-title">MG Road, Vijayawada</span>
+          <span class="branch-opt-sub">Near Benz Circle, Bandar Road</span>
+        </div>
+        <span class="branch-opt-check" style="display: none;">✓</span>
+      </div>
+      <div class="branch-option-item" data-branch="rajahmundry" onclick="selectActiveBranch('rajahmundry'); toggleBranchPopover(true);">
+        <div class="branch-opt-info">
+          <span class="branch-opt-title">Pushkar Ghat Road, Rajahmundry</span>
+          <span class="branch-opt-sub">Near Pushkar Ghat & Godavari Bund</span>
+        </div>
+        <span class="branch-opt-check" style="display: none;">✓</span>
+      </div>
+
+      <div class="branch-region-header">BENGALURU OUTLETS</div>
+      <div class="branch-option-item" data-branch="bangalore-marathahalli" onclick="selectActiveBranch('bangalore-marathahalli'); toggleBranchPopover(true);">
+        <div class="branch-opt-info">
+          <span class="branch-opt-title">Marathahalli, Bengaluru</span>
+          <span class="branch-opt-sub">Outer Ring Road, Opp Innovative Multiplex</span>
+        </div>
+        <span class="branch-opt-check" style="display: none;">✓</span>
+      </div>
+      <div class="branch-option-item" data-branch="bangalore-koramangala" onclick="selectActiveBranch('bangalore-koramangala'); toggleBranchPopover(true);">
+        <div class="branch-opt-info">
+          <span class="branch-opt-title">Koramangala, Bengaluru</span>
+          <span class="branch-opt-sub">80 Feet Road, 4th Block, Koramangala</span>
+        </div>
+        <span class="branch-opt-check" style="display: none;">✓</span>
+      </div>
     </div>
   </div>
 
