@@ -468,7 +468,9 @@ button {
   display: block;
   font-size: 0.85em;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
+  text-align: center;
+  width: 100%;
 }
 
 [data-theme="dark"] .brand-title {
@@ -483,6 +485,8 @@ button {
   text-transform: uppercase;
   white-space: nowrap;
   margin-top: 1px;
+  text-align: center;
+  width: 100%;
 }
 
 /* Nav Links */
