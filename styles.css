@@ -100,6 +100,7 @@ body {
   background-color: var(--color-bg);
   color: var(--color-text);
   line-height: 1.6;
+  padding-top: 154px;
   overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   transition: background-color var(--transition-normal), color var(--transition-normal);
@@ -315,8 +316,7 @@ button {
    FIXED TOP NAVIGATION CONTAINER (Stays fixed when scrolling)
    ========================================================================== */
 .fixed-top-container {
-  position: -webkit-sticky !important;
-  position: sticky !important;
+  position: fixed !important;
   top: 0 !important;
   left: 0 !important;
   right: 0 !important;
@@ -4232,6 +4232,7 @@ input[type="date"].form-control {
   }
 
   body {
+    padding-top: 110px !important;
     padding-bottom: calc(75px + env(safe-area-inset-bottom));
   }
 
