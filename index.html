@@ -17,7 +17,7 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧺</text></svg>" />
 
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="styles.css?v=6.2" />
+  <link rel="stylesheet" href="styles.css?v=6.3" />
   <style>
     :root { color-scheme: dark light; }
     [data-theme="dark"] { color-scheme: dark !important; }
@@ -181,12 +181,22 @@
         background: #0C120D !important;
       }
 
+      .app-mode-bar {
+        padding: 0.25rem 0.5rem !important;
+        gap: 0.35rem !important;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.07) !important;
+      }
+      .mode-btn {
+        padding: 0.35rem 0.75rem !important;
+        font-size: 0.76rem !important;
+      }
+
       /* 2-Row Clean Mobile Header (Row 1: Brand Logo & Title, Row 2: Branch, Cart & Profile) */
       .site-header .container.nav-container {
         display: flex !important;
         flex-direction: column !important;
-        padding: 0.55rem 0.75rem 0.5rem !important;
-        gap: 0.45rem !important;
+        padding: 0.25rem 0.75rem 0.3rem !important;
+        gap: 0.25rem !important;
         width: 100% !important;
         box-sizing: border-box !important;
       }
@@ -194,15 +204,15 @@
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        gap: 0.65rem !important;
+        gap: 0.55rem !important;
         width: 100% !important;
         text-decoration: none !important;
       }
       .brand-logo img {
-        height: 60px !important;
-        max-height: 64px !important;
+        height: 44px !important;
+        max-height: 48px !important;
         width: auto !important;
-        max-width: 85px !important;
+        max-width: 75px !important;
         object-fit: contain !important;
       }
       .brand-text {
@@ -213,12 +223,12 @@
         text-align: center !important;
       }
       .brand-title {
-        font-size: clamp(0.88rem, 3.8vw, 1.15rem) !important;
+        font-size: clamp(0.92rem, 4vw, 1.15rem) !important;
         font-weight: 800 !important;
         letter-spacing: 0.03em !important;
         color: #167E3A !important;
         white-space: nowrap !important;
-        line-height: 1.2 !important;
+        line-height: 1.1 !important;
         display: flex !important;
         flex-direction: row !important;
         align-items: baseline !important;
@@ -241,13 +251,13 @@
       }
       .brand-subtitle {
         display: block !important;
-        font-size: 0.65rem !important;
+        font-size: 0.62rem !important;
         color: #D97706 !important;
         font-weight: 700 !important;
         letter-spacing: 0.1em !important;
         text-align: center !important;
         width: 100% !important;
-        margin-top: 2px !important;
+        margin-top: 1px !important;
         white-space: nowrap !important;
       }
       .menu-view-switcher,

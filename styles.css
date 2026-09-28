@@ -410,7 +410,7 @@ button {
 }
 
 .brand-logo img {
-  height: 64px;
+  height: 52px;
   width: auto;
   max-width: 85px;
   object-fit: contain;
@@ -5754,15 +5754,15 @@ input[type="date"].form-control {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 0.65rem !important;
+    gap: 0.55rem !important;
     width: 100% !important;
     text-decoration: none !important;
   }
   .brand-logo img {
-    height: 60px !important;
-    max-height: 64px !important;
+    height: 44px !important;
+    max-height: 48px !important;
     width: auto !important;
-    max-width: 85px !important;
+    max-width: 75px !important;
     object-fit: contain !important;
   }
   .brand-text {
@@ -5773,12 +5773,12 @@ input[type="date"].form-control {
     text-align: center !important;
   }
   .brand-title {
-    font-size: clamp(0.88rem, 3.8vw, 1.15rem) !important;
+    font-size: clamp(0.92rem, 4vw, 1.15rem) !important;
     font-weight: 800 !important;
     letter-spacing: 0.03em !important;
     color: var(--color-primary) !important;
     white-space: nowrap !important;
-    line-height: 1.2 !important;
+    line-height: 1.1 !important;
     display: flex !important;
     flex-direction: row !important;
     align-items: baseline !important;
@@ -5801,13 +5801,13 @@ input[type="date"].form-control {
   }
   .brand-subtitle {
     display: block !important;
-    font-size: 0.65rem !important;
+    font-size: 0.62rem !important;
     color: var(--color-gold) !important;
     font-weight: 700 !important;
     letter-spacing: 0.1em !important;
     text-align: center !important;
     width: 100% !important;
-    margin-top: 2px !important;
+    margin-top: 1px !important;
     white-space: nowrap !important;
   }
   #btn-header-my-orders,
