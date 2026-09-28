@@ -5750,23 +5750,23 @@ input[type="date"].form-control {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 0.45rem !important;
+    gap: 0.55rem !important;
     width: 100% !important;
     text-decoration: none !important;
   }
   .brand-logo img {
-    height: 24px !important;
-    max-height: 24px !important;
+    height: 36px !important;
+    max-height: 36px !important;
     width: auto !important;
     object-fit: contain !important;
   }
   .brand-title {
-    font-size: 0.82rem !important;
+    font-size: 0.96rem !important;
     font-weight: 800 !important;
     letter-spacing: 0.03em !important;
     color: var(--color-primary) !important;
     white-space: normal !important;
-    line-height: 1.05 !important;
+    line-height: 1.08 !important;
     display: flex !important;
     flex-direction: column !important;
     text-align: center !important;
@@ -5777,21 +5777,21 @@ input[type="date"].form-control {
   }
   .brand-title-sub {
     display: block !important;
-    font-size: 0.8em !important;
+    font-size: 0.82em !important;
     letter-spacing: 0.12em !important;
-    line-height: 1.05 !important;
+    line-height: 1.08 !important;
     text-align: center !important;
     width: 100% !important;
   }
   .brand-subtitle {
     display: block !important;
-    font-size: 0.52rem !important;
+    font-size: 0.58rem !important;
     color: var(--color-gold) !important;
     font-weight: 700 !important;
-    letter-spacing: 0.06em !important;
+    letter-spacing: 0.07em !important;
     text-align: center !important;
     width: 100% !important;
-    margin-top: 1px !important;
+    margin-top: 2px !important;
   }
   #btn-header-my-orders,
   #btn-header-support {
