@@ -100,7 +100,7 @@ body {
   background-color: var(--color-bg);
   color: var(--color-text);
   line-height: 1.6;
-  padding-top: 154px;
+  padding-top: 165px;
   overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   transition: background-color var(--transition-normal), color var(--transition-normal);
@@ -4232,7 +4232,7 @@ input[type="date"].form-control {
   }
 
   body {
-    padding-top: 110px !important;
+    padding-top: 145px !important;
     padding-bottom: calc(75px + env(safe-area-inset-bottom));
   }
 
