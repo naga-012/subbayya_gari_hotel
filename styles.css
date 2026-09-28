@@ -410,9 +410,9 @@ button {
 }
 
 .brand-logo img {
-  height: 48px;
+  height: 64px;
   width: auto;
-  max-width: 56px;
+  max-width: 85px;
   object-fit: contain;
   display: block;
   flex-shrink: 0;
@@ -5759,9 +5759,10 @@ input[type="date"].form-control {
     text-decoration: none !important;
   }
   .brand-logo img {
-    height: 44px !important;
-    max-height: 44px !important;
+    height: 60px !important;
+    max-height: 64px !important;
     width: auto !important;
+    max-width: 85px !important;
     object-fit: contain !important;
   }
   .brand-text {
