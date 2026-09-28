@@ -4310,13 +4310,16 @@ input[type="date"].form-control {
   }
 
   .brand-title {
-    font-size: clamp(0.85rem, 3.4vw, 0.98rem) !important;
+    font-size: clamp(0.88rem, 3.8vw, 1.15rem) !important;
     font-weight: 800 !important;
-    letter-spacing: 0.02em !important;
-    line-height: 1.05 !important;
+    letter-spacing: 0.03em !important;
+    line-height: 1.2 !important;
     display: flex !important;
-    flex-direction: column !important;
-    white-space: normal !important;
+    flex-direction: row !important;
+    align-items: baseline !important;
+    justify-content: center !important;
+    gap: 0.32rem !important;
+    white-space: nowrap !important;
   }
 
   .brand-subtitle {
@@ -5756,43 +5759,55 @@ input[type="date"].form-control {
     text-decoration: none !important;
   }
   .brand-logo img {
-    height: 48px !important;
-    max-height: 48px !important;
+    height: 44px !important;
+    max-height: 44px !important;
     width: auto !important;
     object-fit: contain !important;
   }
-  .brand-title {
-    font-size: 1.15rem !important;
-    font-weight: 800 !important;
-    letter-spacing: 0.04em !important;
-    color: var(--color-primary) !important;
-    white-space: normal !important;
-    line-height: 1.15 !important;
+  .brand-text {
     display: flex !important;
     flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+  .brand-title {
+    font-size: clamp(0.88rem, 3.8vw, 1.15rem) !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.03em !important;
+    color: var(--color-primary) !important;
+    white-space: nowrap !important;
+    line-height: 1.2 !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: baseline !important;
+    justify-content: center !important;
+    gap: 0.32rem !important;
     text-align: center !important;
   }
   .brand-title-main {
-    display: block !important;
-    text-align: center !important;
+    display: inline !important;
+    white-space: nowrap !important;
   }
   .brand-title-sub {
-    display: block !important;
-    font-size: 0.85em !important;
-    letter-spacing: 0.15em !important;
-    line-height: 1.15 !important;
-    text-align: center !important;
-    width: 100% !important;
+    display: inline !important;
+    font-size: 1em !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.03em !important;
+    line-height: inherit !important;
+    width: auto !important;
+    white-space: nowrap !important;
   }
   .brand-subtitle {
     display: block !important;
-    font-size: 0.68rem !important;
+    font-size: 0.65rem !important;
     color: var(--color-gold) !important;
     font-weight: 700 !important;
-    letter-spacing: 0.09em !important;
+    letter-spacing: 0.1em !important;
     text-align: center !important;
     width: 100% !important;
-    margin-top: 3px !important;
+    margin-top: 2px !important;
+    white-space: nowrap !important;
   }
   #btn-header-my-orders,
   #btn-header-support {
