@@ -17,7 +17,7 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧺</text></svg>" />
 
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="styles.css?v=6.6" />
+  <link rel="stylesheet" href="styles.css?v=6.7" />
   <style>
     :root { color-scheme: dark light; }
     [data-theme="dark"] { color-scheme: dark !important; }
@@ -265,15 +265,25 @@
         white-space: nowrap !important;
       }
       .section-padding {
-        padding: 2.25rem 0 2rem !important;
+        padding: 1.25rem 0 1rem !important;
+      }
+      .section-padding + .section-padding {
+        padding-top: 0.75rem !important;
       }
       .section-header {
-        margin: 0 auto 1.25rem !important;
+        margin: 0 auto 0.75rem !important;
         text-align: center !important;
       }
+      .section-pretitle {
+        margin-bottom: 0.2rem !important;
+        font-size: 0.76rem !important;
+      }
+      .section-title {
+        margin-bottom: 0.35rem !important;
+      }
       .section-desc {
-        font-size: 0.9rem !important;
-        line-height: 1.5 !important;
+        font-size: 0.88rem !important;
+        line-height: 1.45 !important;
         margin-bottom: 0 !important;
       }
       .menu-view-switcher,
